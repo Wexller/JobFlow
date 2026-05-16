@@ -30,10 +30,11 @@ The MVP should provide:
 - TypeScript
 - Pinia
 - Tailwind CSS
-- Nuxt UI or shadcn-vue
+- Nuxt UI
 - VueUse
 - date-fns
-- ECharts, ApexCharts, or Chart.js
+- Zod
+- ECharts / vue-echarts
 - Vitest
 - Vue Test Utils
 - Playwright
@@ -41,6 +42,61 @@ The MVP should provide:
 The project should support English and Russian UI localization. Browser language
 should be used as the default locale source, with a fallback locale defined by
 the application.
+
+## Architecture Decisions
+
+The current architecture kickoff decisions are documented in:
+
+- `docs/architecture/overview.md`
+- `docs/architecture/adr/0001-frontend-only-google-sheets.md`
+- `docs/architecture/adr/0002-i18n-browser-locale.md`
+- `docs/architecture/adr/0003-data-state-boundaries.md`
+
+Key decisions:
+
+- Build a Nuxt 3 frontend-only MVP first.
+- Use Google Identity Services token model and Google Sheets REST API directly
+  from the browser for the MVP.
+- Keep Google Sheets details behind service/repository boundaries.
+- Use `@nuxtjs/i18n` for English and Russian, with browser locale detection and
+  English fallback.
+- Store stable enum IDs in data; translate labels only in the UI.
+- Use Zod for runtime validation at form, import, and Sheets boundaries.
+
+## Planned Commands
+
+Application commands will be added when Nuxt is scaffolded. The intended command
+set is:
+
+```bash
+pnpm dev
+pnpm build
+pnpm preview
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm test:unit
+pnpm test:nuxt
+pnpm test:e2e
+pnpm test:ci
+```
+
+## Planned Environment Variables
+
+```env
+NUXT_PUBLIC_GOOGLE_CLIENT_ID=
+NUXT_PUBLIC_JOBFLOW_SPREADSHEET_ID=
+NUXT_PUBLIC_GOOGLE_SHEETS_SCOPE=https://www.googleapis.com/auth/spreadsheets
+NUXT_PUBLIC_GOOGLE_API_BASE=https://sheets.googleapis.com/v4
+NUXT_PUBLIC_DEFAULT_LOCALE=en
+NUXT_PUBLIC_FALLBACK_LOCALE=en
+NUXT_PUBLIC_APP_ENV=local
+NUXT_PUBLIC_SENTRY_DSN=
+```
+
+Private environment variables are not required for the frontend-only MVP. OAuth
+client IDs and spreadsheet IDs are public browser configuration values, not
+secrets.
 
 ## Agent Operating Model
 

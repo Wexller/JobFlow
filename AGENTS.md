@@ -44,6 +44,10 @@ See `docs/agents/registry.md` for the complete registry.
   the Product Owner explicitly changes the constraint.
 - Never store private keys, service account secrets, refresh tokens, or client
   secrets in frontend code.
+- The UI must support English and Russian. Default locale must be detected from
+  the browser, with English as the fallback locale.
+- User-facing text must go through i18n messages. Domain data must store stable
+  IDs and enum keys, never localized labels.
 - Every non-trivial change needs tests and useful logging.
 - Verification evidence beats confidence. "Looks right" is not a release gate.
 - `README.md` is required, must be written in English, and must be kept current
@@ -129,6 +133,8 @@ A feature is done only when:
 - Keep Google Sheets details behind repository/service boundaries.
 - Prefer stable IDs over row numbers. Row numbers are implementation details.
 - Do not physically delete spreadsheet rows in MVP unless explicitly approved.
+- Keep localization at the presentation boundary. Filters, sorting, metrics, and
+  persistence must operate on stable enum IDs, not translated labels.
 - Normalize dates, empty values, numbers, booleans, and enum fields at the data
   boundary.
 - Use structured errors and typed results for cross-layer communication.
