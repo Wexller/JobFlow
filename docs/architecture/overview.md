@@ -2,7 +2,7 @@
 
 ## Summary
 
-Jobflow starts as a Nuxt 3 + TypeScript frontend-only MVP for one user. Google
+Jobflow starts as a Nuxt 4 + TypeScript frontend-only MVP for one user. Google
 Sheets remains the data source, accessed from the browser through Google
 Identity Services and the Google Sheets REST API. The application must support
 English and Russian from the first scaffold, with browser locale detection and
@@ -10,19 +10,27 @@ English fallback.
 
 ## Recommended Stack
 
+Runtime:
+
+- Node.js 22 or newer
+- pnpm 9.14.4 or newer
+
 Runtime dependencies:
 
-- Nuxt 3
+- Nuxt 4
 - Vue 3
 - TypeScript
 - `@nuxtjs/i18n`
 - `@pinia/nuxt` and Pinia
 - `@vueuse/nuxt` and VueUse
-- Nuxt UI
+- Nuxt UI v4
 - Tailwind CSS
 - date-fns
 - Zod
 - ECharts and vue-echarts
+
+Nuxt Fonts remote providers are disabled in project configuration. The MVP uses
+system font fallbacks until a deliberate local/self-hosted font decision is made.
 
 Development and testing dependencies:
 
@@ -79,9 +87,6 @@ app/
     offers.ts
     pipeline.ts
     vacancies.ts
-  i18n/locales/
-    en.json
-    ru.json
   pages/
     index.vue
     vacancies/index.vue
@@ -119,6 +124,10 @@ tests/
   unit/
   nuxt/
   e2e/
+i18n/
+  locales/
+    en.json
+    ru.json
 ```
 
 Nuxt may generate or prefer small variations in folder names. Keep the same
@@ -131,7 +140,7 @@ Use `@nuxtjs/i18n` with:
 - locales: `en`, `ru`;
 - `defaultLocale: 'en'`;
 - `strategy: 'prefix_except_default'`;
-- lazy locale files in `app/i18n/locales`;
+- lazy locale files in `i18n/locales`;
 - browser locale detection enabled;
 - locale cookie key: `jobflow_locale`;
 - fallback locale: `en`.
@@ -203,7 +212,8 @@ tests. Live Google Sheets checks stay manual until release automation exists.
 - Nuxt i18n browser locale: https://i18n.nuxtjs.org/docs/composables/use-browser-locale
 - Pinia with Nuxt: https://pinia.vuejs.org/ssr/nuxt.html
 - VueUse with Nuxt: https://vueuse.org/guide/
-- Nuxt testing: https://nuxt.com/docs/3.x/getting-started/testing
+- Nuxt testing: https://nuxt.com/docs/4.x/getting-started/testing
 - Nuxt UI module: https://nuxt.com/modules/ui/
+- Nuxt Fonts configuration: https://fonts.nuxt.com/get-started/configuration/
 - Zod: https://zod.dev/
 - Playwright: https://playwright.dev/docs/intro

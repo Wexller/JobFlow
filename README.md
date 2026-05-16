@@ -1,6 +1,6 @@
 # Jobflow
 
-Jobflow is a planned Nuxt 3 and TypeScript web application for tracking a
+Jobflow is a planned Nuxt 4 and TypeScript web application for tracking a
 personal job search process on top of Google Sheets.
 
 The first MVP goal is to turn an existing Google Sheets tracker into a small
@@ -10,8 +10,8 @@ metrics.
 
 ## Current Status
 
-The repository currently contains the project agent operating model. Application
-scaffolding has not been generated yet.
+The repository contains the project agent operating model, architecture
+decisions, and the initial Nuxt application scaffold.
 
 ## Product Direction
 
@@ -25,7 +25,7 @@ The MVP should provide:
 
 ## Preferred Stack
 
-- Nuxt 3
+- Nuxt 4
 - Vue 3
 - TypeScript
 - Pinia
@@ -43,6 +43,11 @@ The project should support English and Russian UI localization. Browser language
 should be used as the default locale source, with a fallback locale defined by
 the application.
 
+## Runtime Requirements
+
+- Node.js 22 or newer
+- pnpm 9.14.4 or newer
+
 ## Architecture Decisions
 
 The current architecture kickoff decisions are documented in:
@@ -54,7 +59,7 @@ The current architecture kickoff decisions are documented in:
 
 Key decisions:
 
-- Build a Nuxt 3 frontend-only MVP first.
+- Build a Nuxt 4 frontend-only MVP first.
 - Use Google Identity Services token model and Google Sheets REST API directly
   from the browser for the MVP.
 - Keep Google Sheets details behind service/repository boundaries.
@@ -63,10 +68,9 @@ Key decisions:
 - Store stable enum IDs in data; translate labels only in the UI.
 - Use Zod for runtime validation at form, import, and Sheets boundaries.
 
-## Planned Commands
+## Commands
 
-Application commands will be added when Nuxt is scaffolded. The intended command
-set is:
+Use pnpm:
 
 ```bash
 pnpm dev
@@ -119,5 +123,5 @@ deployment, or release workflow changes.
 
 ## Repository Status
 
-No application commands are available yet. They will be added after the Nuxt
-project is scaffolded.
+The Nuxt 4 scaffold is in place. Install dependencies with `pnpm install`, then
+run `pnpm dev` to start local development.

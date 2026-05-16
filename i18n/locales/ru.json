@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Jobflow"
+  },
+  "layout": {
+    "languageNav": "Выбор языка"
+  },
+  "home": {
+    "badge": "MVP scaffold",
+    "title": "CRM для поиска работы поверх Google Sheets",
+    "description": "Отслеживай вакансии, отклики, этапы, интервью, оферы и метрики в одном сфокусированном Nuxt-приложении.",
+    "cards": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Будущий обзор откликов, активных процессов, интервью, оферов и следующих действий."
+      },
+      "vacancies": {
+        "title": "Vacancies",
+        "description": "Типизированное рабочее пространство для таблицы и kanban с устойчивыми ID статусов."
+      },
+      "sheets": {
+        "title": "Google Sheets",
+        "description": "Первый источник данных остается Google Sheets, изолированный за repositories и validation."
+      }
+    }
+  }
+}
