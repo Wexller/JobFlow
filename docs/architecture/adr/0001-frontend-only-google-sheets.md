@@ -12,7 +12,7 @@ must not expose private keys or service account secrets in frontend code.
 
 ## Decision
 
-Build the MVP as a Nuxt 3 frontend-only application. Use Google Identity
+Build the MVP as a Nuxt 4 frontend-only application. Use Google Identity
 Services token model in the browser and call the Google Sheets REST API directly
 with short-lived access tokens.
 

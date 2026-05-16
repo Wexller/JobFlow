@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Jobflow"
+  },
+  "layout": {
+    "languageNav": "Language selection"
+  },
+  "home": {
+    "badge": "MVP scaffold",
+    "title": "A job-search CRM on top of Google Sheets",
+    "description": "Track vacancies, applications, pipeline stages, interviews, offers, and dashboard metrics from one focused Nuxt application.",
+    "cards": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "A future overview of applications, active processes, interviews, offers, and next actions."
+      },
+      "vacancies": {
+        "title": "Vacancies",
+        "description": "A typed workspace for table and kanban views backed by stable status IDs."
+      },
+      "sheets": {
+        "title": "Google Sheets",
+        "description": "The first data source remains Google Sheets, isolated behind repositories and validation."
+      }
+    }
+  }
+}
