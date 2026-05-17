@@ -6,22 +6,57 @@
     "languageNav": "Language selection"
   },
   "home": {
-    "badge": "MVP scaffold",
+    "badge": "Mock CRM dashboard",
     "title": "A job-search CRM on top of Google Sheets",
     "description": "Track vacancies, applications, pipeline stages, interviews, offers, and dashboard metrics from one focused Nuxt application.",
-    "cards": {
-      "dashboard": {
-        "title": "Dashboard",
-        "description": "A future overview of applications, active processes, interviews, offers, and next actions."
-      },
-      "vacancies": {
-        "title": "Vacancies",
-        "description": "A typed workspace for table and kanban views backed by stable status IDs."
-      },
-      "sheets": {
-        "title": "Google Sheets",
-        "description": "The first data source remains Google Sheets, isolated behind repositories and validation."
-      }
+    "sync": {
+      "loaded": "Loaded from mock data"
+    },
+    "metrics": {
+      "total_applications": "Total applications",
+      "active_processes": "Active processes",
+      "interviews_this_week": "Interviews this week",
+      "offers": "Offers",
+      "reply_rate": "Reply rate",
+      "interview_rate": "Interview rate",
+      "offer_rate": "Offer rate",
+      "next_actions": "Next actions"
+    },
+    "active": {
+      "title": "Active pipeline",
+      "description": "Open opportunities sorted by the current store state."
+    },
+    "table": {
+      "company": "Company",
+      "role": "Role",
+      "status": "Status",
+      "priority": "Priority",
+      "nextAction": "Next action"
+    },
+    "nextActions": {
+      "title": "Next actions",
+      "description": "Upcoming follow-ups from the mock vacancy tracker.",
+      "empty": "No upcoming actions."
+    }
+  },
+  "domain": {
+    "status": {
+      "wishlist": "Wishlist",
+      "applied": "Applied",
+      "screening": "Screening",
+      "interviewing": "Interviewing",
+      "offer": "Offer",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "archived": "Archived",
+      "unknown": "Unknown"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent",
+      "unknown": "Unknown"
     }
   }
 }

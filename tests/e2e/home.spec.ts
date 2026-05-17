@@ -4,6 +4,9 @@ test('renders the localized home page', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+  await expect(page.getByText('Total applications')).toBeVisible()
+  await expect(page.getByRole('cell', { name: 'Northstar Labs' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Next actions' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'EN' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'RU' })).toBeVisible()
 })

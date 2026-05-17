@@ -89,7 +89,7 @@ Owner agents:
 
 Checklist:
 
-- [ ] Dashboard shows total applications, active processes, interviews this week,
+- [x] Dashboard shows total applications, active processes, interviews this week,
   offers, reply rate, interview rate, offer rate, and next actions.
 - [ ] Vacancies table supports filters by status, source, priority, format,
   level, location, and tech stack.

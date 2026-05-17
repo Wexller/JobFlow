@@ -6,22 +6,57 @@
     "languageNav": "Выбор языка"
   },
   "home": {
-    "badge": "MVP scaffold",
+    "badge": "Mock CRM dashboard",
     "title": "CRM для поиска работы поверх Google Sheets",
     "description": "Отслеживай вакансии, отклики, этапы, интервью, оферы и метрики в одном сфокусированном Nuxt-приложении.",
-    "cards": {
-      "dashboard": {
-        "title": "Dashboard",
-        "description": "Будущий обзор откликов, активных процессов, интервью, оферов и следующих действий."
-      },
-      "vacancies": {
-        "title": "Vacancies",
-        "description": "Типизированное рабочее пространство для таблицы и kanban с устойчивыми ID статусов."
-      },
-      "sheets": {
-        "title": "Google Sheets",
-        "description": "Первый источник данных остается Google Sheets, изолированный за repositories и validation."
-      }
+    "sync": {
+      "loaded": "Загружено из mock-данных"
+    },
+    "metrics": {
+      "total_applications": "Всего откликов",
+      "active_processes": "Активные процессы",
+      "interviews_this_week": "Интервью на неделе",
+      "offers": "Оферы",
+      "reply_rate": "Процент ответов",
+      "interview_rate": "Процент интервью",
+      "offer_rate": "Процент оферов",
+      "next_actions": "Следующие действия"
+    },
+    "active": {
+      "title": "Активная воронка",
+      "description": "Открытые возможности, отсортированные текущим состоянием store."
+    },
+    "table": {
+      "company": "Компания",
+      "role": "Роль",
+      "status": "Статус",
+      "priority": "Приоритет",
+      "nextAction": "Следующее действие"
+    },
+    "nextActions": {
+      "title": "Следующие действия",
+      "description": "Ближайшие follow-up из mock-трекера вакансий.",
+      "empty": "Ближайших действий нет."
+    }
+  },
+  "domain": {
+    "status": {
+      "wishlist": "Вишлист",
+      "applied": "Отклик отправлен",
+      "screening": "Скрининг",
+      "interviewing": "Интервью",
+      "offer": "Офер",
+      "accepted": "Принято",
+      "rejected": "Отказ",
+      "archived": "Архив",
+      "unknown": "Неизвестно"
+    },
+    "priority": {
+      "low": "Низкий",
+      "medium": "Средний",
+      "high": "Высокий",
+      "urgent": "Срочный",
+      "unknown": "Неизвестно"
     }
   }
 }

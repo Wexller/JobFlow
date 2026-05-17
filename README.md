@@ -14,7 +14,8 @@ The repository contains the project agent operating model, architecture
 decisions, the initial Nuxt application scaffold, typed domain enum IDs, Zod
 runtime schemas, form-payload mappers, a mock repository with realistic fixture
 data, a Pinia state layer for mock CRM data, and unit coverage for the first
-data-boundary and selector contracts.
+data-boundary and selector contracts. The home page now renders the first mock
+dashboard with metrics, an active pipeline table, and next actions.
 
 ## Product Direction
 
