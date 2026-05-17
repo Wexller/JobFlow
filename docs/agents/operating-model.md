@@ -34,6 +34,8 @@ together from request intake to release.
    - Testing Agent defines and verifies the test strategy.
    - Observability Agent verifies logging for important flows.
    - Security & Review Agent performs final code and security review.
+   - Before any Codex-created commit, the Lead runs the pre-commit agent review
+     gate and resolves all blocking findings.
 
 6. Release
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
@@ -94,6 +96,28 @@ fixes limited to one subsystem or one to three files. Leave small task mode when
 the task crosses subsystem boundaries, changes public interfaces, touches Google
 Sheets or OAuth, changes architecture or dependencies, or introduces security,
 observability, release, or data integrity risk.
+
+## Pre-Commit Agent Review
+
+Codex must run this gate automatically before creating any commit:
+
+- Testing Agent reviews the changed surface, confirms the required verification
+  commands, and reports test gaps or residual risk.
+- Security & Review Agent reviews the diff for correctness, security, privacy,
+  secret handling, dependency risk, and project-rule violations.
+- Observability Agent joins when logging, audit events, errors, Google Sheets
+  flows, sync state, or important user actions are touched.
+- Documentation Agent joins when README, setup, commands, dependencies,
+  environment variables, architecture, testing, CI, deployment, or release
+  workflow changes.
+- Release / DevOps Agent joins when CI, deploy previews, production release,
+  release scripts, or rollback workflow changes.
+- Performance Agent joins when bundle size, rendering performance, charts, large
+  lists, or Core Web Vitals risk changes.
+
+The Lead must not commit with unresolved blocking findings. The pre-commit
+handoff must include the agent review summary, executed commands, and accepted
+non-blocking risks.
 
 ## Token Budget Rules
 

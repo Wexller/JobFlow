@@ -32,10 +32,10 @@ Checklist:
 - [x] English/Russian locale files created.
 - [x] README documents stack, commands, and environment variables.
 - [x] Add `.nvmrc` with the active Node.js version.
-- [ ] Add Nuxt component test example under `tests/nuxt`.
-- [ ] Add basic app smoke e2e test to CI checklist.
-- [ ] Add a lightweight logger and redaction utility.
-- [ ] Add typed result/error utility.
+- [x] Add Nuxt component test example under `tests/nuxt`.
+- [x] Add basic app smoke e2e test to CI checklist.
+- [x] Add a lightweight logger and redaction utility.
+- [x] Add typed result/error utility.
 - [ ] Confirm `pnpm test:ci` and `pnpm dev` with `nvm use`.
 
 Exit criteria:

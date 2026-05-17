@@ -62,6 +62,13 @@ See `docs/agents/registry.md` for the complete registry.
 - Parallel work is allowed only for independent scopes with no shared write set.
 - The Lead merges agent outputs into a single technical decision or release
   recommendation.
+- Before any Codex-created commit, the Lead must run the pre-commit agent review
+  gate. This gate always includes Testing Agent and Security & Review Agent, and
+  adds Observability, Documentation, Release / DevOps, Performance, Google
+  Sheets Platform, or other owner agents when their trigger areas are touched.
+- Codex must not create a commit while the pre-commit agent review has blocking
+  findings. The final handoff before commit must summarize agent findings,
+  executed commands, and any accepted residual risk.
 
 ## Token Budget And Small Task Mode
 
@@ -143,6 +150,22 @@ A feature is done only when:
 - Observability Agent confirms important flows are logged safely.
 - Release / DevOps Agent is required for CI, deploy preview, production deploy,
   or release checklist work.
+
+## Required Gates Before Commit
+
+- Testing Agent confirms the focused and broad verification commands appropriate
+  for the change.
+- Security & Review Agent reviews the diff for code quality, data leakage,
+  secret handling, dependency risk, and MVP boundary violations.
+- Observability Agent is required when logging, audit events, errors, Google
+  Sheets flows, or important user actions are touched.
+- Documentation Agent is required when setup, commands, dependencies,
+  environment variables, architecture, testing, CI, deployment, or release
+  workflow change.
+- Release / DevOps Agent is required when CI, deploy previews, production
+  release, or release scripts change.
+- Performance Agent is required when bundle size, rendering cost, charts, large
+  lists, or Core Web Vitals risk changes.
 
 ## Project Rules
 

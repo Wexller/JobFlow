@@ -92,6 +92,24 @@ pnpm test:e2e
 pnpm test:ci
 ```
 
+`pnpm test:ci` is the full local quality gate. It runs linting, TypeScript
+checking, unit tests, Nuxt component tests, Playwright e2e smoke tests, and the
+production build.
+
+Playwright e2e tests start the Nuxt dev server on `127.0.0.1:3000`. Install the
+Chromium browser binary before running `pnpm test:e2e` or `pnpm test:ci` in a
+fresh local environment:
+
+```bash
+pnpm exec playwright install chromium
+```
+
+In Linux CI environments, install browser system dependencies as well:
+
+```bash
+pnpm exec playwright install --with-deps chromium
+```
+
 ## Planned Environment Variables
 
 ```env
