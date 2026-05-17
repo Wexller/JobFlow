@@ -12,8 +12,8 @@ metrics.
 
 The repository contains the project agent operating model, architecture
 decisions, the initial Nuxt application scaffold, typed domain enum IDs, Zod
-runtime schemas, form-payload mappers, and unit coverage for the first
-data-boundary contracts.
+runtime schemas, form-payload mappers, a mock repository with realistic fixture
+data, and unit coverage for the first data-boundary contracts.
 
 ## Product Direction
 

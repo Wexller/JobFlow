@@ -63,7 +63,7 @@ Checklist:
 - [x] Add Zod schemas for `Vacancy`, `PipelineEvent`, `Interview`, `Offer`, and
   `SummaryMetric`.
 - [x] Add mappers for form payloads and normalized domain objects.
-- [ ] Add mock repository with realistic fixture data.
+- [x] Add mock repository with realistic fixture data.
 - [ ] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
   sync state.
 - [ ] Add unit tests for schemas, normalization, selectors, filters, sorting, and
