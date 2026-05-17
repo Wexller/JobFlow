@@ -64,7 +64,7 @@ Checklist:
   `SummaryMetric`.
 - [x] Add mappers for form payloads and normalized domain objects.
 - [x] Add mock repository with realistic fixture data.
-- [ ] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
+- [x] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
   sync state.
 - [ ] Add unit tests for schemas, normalization, selectors, filters, sorting, and
   dashboard metrics.
