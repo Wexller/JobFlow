@@ -1,7 +1,7 @@
 # Jobflow Agent Operating Contract
 
 This file is the primary contract for AI agents and human contributors working on
-Jobflow, a Nuxt 3 + TypeScript job-search CRM built on top of Google Sheets.
+Jobflow, a Nuxt 4 + TypeScript job-search CRM built on top of Google Sheets.
 
 ## Roles
 
@@ -37,7 +37,7 @@ See `docs/agents/registry.md` for the complete registry.
 ## Core Principles
 
 - Product intent comes before implementation.
-- Prefer simple, typed, testable Nuxt 3 + Vue 3 + TypeScript code.
+- Prefer simple, typed, testable Nuxt 4 + Vue 3 + TypeScript code.
 - Use proven libraries where they reduce risk, especially Pinia, VueUse,
   date-fns, Nuxt UI or shadcn-vue, Vitest, Vue Test Utils, and Playwright.
 - Google Sheets is the MVP data source; do not introduce a custom backend unless

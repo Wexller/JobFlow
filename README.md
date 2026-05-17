@@ -48,11 +48,18 @@ the application.
 - Node.js 22 or newer
 - pnpm 9.14.4 or newer
 
+Use the repository Node version with:
+
+```bash
+nvm use
+```
+
 ## Architecture Decisions
 
 The current architecture kickoff decisions are documented in:
 
 - `docs/architecture/overview.md`
+- `docs/roadmap.md`
 - `docs/architecture/adr/0001-frontend-only-google-sheets.md`
 - `docs/architecture/adr/0002-i18n-browser-locale.md`
 - `docs/architecture/adr/0003-data-state-boundaries.md`
