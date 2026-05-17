@@ -24,19 +24,51 @@
     },
     "active": {
       "title": "Active pipeline",
-      "description": "Open opportunities sorted by the current store state."
+      "description": "Open opportunities sorted by the current store state.",
+      "tableLabel": "Active pipeline table"
     },
     "table": {
       "company": "Company",
       "role": "Role",
       "status": "Status",
       "priority": "Priority",
-      "nextAction": "Next action"
+      "nextAction": "Next action",
+      "format": "Format",
+      "location": "Location",
+      "matchScore": "Match",
+      "salary": "Salary"
     },
     "nextActions": {
       "title": "Next actions",
       "description": "Upcoming follow-ups from the mock vacancy tracker.",
       "empty": "No upcoming actions."
+    },
+    "vacancies": {
+      "title": "Vacancies",
+      "description": "Filter and sort the full mock vacancy list by stable CRM fields.",
+      "tableLabel": "Vacancies table"
+    },
+    "filters": {
+      "all": "All",
+      "format": "Format",
+      "level": "Level",
+      "location": "Location",
+      "priority": "Priority",
+      "reset": "Reset filters",
+      "search": "Search",
+      "searchPlaceholder": "Company, role, source, stack",
+      "sort": "Sort",
+      "source": "Source",
+      "status": "Status",
+      "statusAria": "Vacancy status filter",
+      "techStack": "Tech stack"
+    },
+    "sort": {
+      "appliedDesc": "Newest applications first",
+      "appliedAsc": "Oldest applications first",
+      "priorityDesc": "Highest priority first",
+      "matchScoreDesc": "Best match first",
+      "salaryDesc": "Highest salary first"
     }
   },
   "domain": {
@@ -56,6 +88,12 @@
       "medium": "Medium",
       "high": "High",
       "urgent": "Urgent",
+      "unknown": "Unknown"
+    },
+    "format": {
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "onsite": "On-site",
       "unknown": "Unknown"
     }
   }

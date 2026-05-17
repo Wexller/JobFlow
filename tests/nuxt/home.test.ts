@@ -13,5 +13,8 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Northstar Labs')
     expect(wrapper.text()).toContain('SignalWorks')
     expect(wrapper.text()).toContain('Next actions')
+    expect(wrapper.text()).toContain('Vacancies')
+    expect(wrapper.text()).toContain('Reset filters')
+    expect(wrapper.text()).toContain('Highest salary first')
   })
 })

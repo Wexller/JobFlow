@@ -91,9 +91,9 @@ Checklist:
 
 - [x] Dashboard shows total applications, active processes, interviews this week,
   offers, reply rate, interview rate, offer rate, and next actions.
-- [ ] Vacancies table supports filters by status, source, priority, format,
+- [x] Vacancies table supports filters by status, source, priority, format,
   level, location, and tech stack.
-- [ ] Vacancies table supports sorting by date applied, priority, match score,
+- [x] Vacancies table supports sorting by date applied, priority, match score,
   and salary.
 - [ ] Kanban groups vacancies by current status.
 - [ ] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
