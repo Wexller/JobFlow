@@ -74,6 +74,20 @@
       "title": "Kanban по статусам",
       "description": "Доска статусов на тех же нормализованных данных вакансий.",
       "empty": "В этом статусе нет вакансий."
+    },
+    "details": {
+      "title": "Детали вакансии",
+      "open": "Детали",
+      "mainInfo": "Основное",
+      "techStack": "Технологии",
+      "timeline": "Таймлайн воронки",
+      "interviews": "Интервью",
+      "noInterviews": "Интервью пока нет.",
+      "offer": "Офер",
+      "decisionDue": "Решение до",
+      "noOffer": "Офер не записан.",
+      "notes": "Заметки",
+      "noNotes": "Заметок пока нет."
     }
   },
   "domain": {
@@ -99,6 +113,41 @@
       "remote": "Удаленно",
       "hybrid": "Гибрид",
       "onsite": "В офисе",
+      "unknown": "Неизвестно"
+    },
+    "stage": {
+      "sourced": "Найдена",
+      "applied": "Отклик",
+      "recruiter_screen": "Скрининг рекрутера",
+      "technical_screen": "Технический скрининг",
+      "take_home": "Тестовое",
+      "onsite": "Финальный этап",
+      "offer": "Офер",
+      "decision": "Решение",
+      "unknown": "Неизвестно"
+    },
+    "stageStatus": {
+      "planned": "Запланировано",
+      "scheduled": "Назначено",
+      "completed": "Завершено",
+      "skipped": "Пропущено",
+      "failed": "Провалено",
+      "unknown": "Неизвестно"
+    },
+    "interviewResult": {
+      "pending": "Ожидается",
+      "passed": "Пройдено",
+      "failed": "Не пройдено",
+      "cancelled": "Отменено",
+      "no_show": "Не состоялось",
+      "unknown": "Неизвестно"
+    },
+    "offerDecision": {
+      "pending": "Ожидает решения",
+      "accepted": "Принят",
+      "declined": "Отклонён",
+      "expired": "Истёк",
+      "withdrawn": "Отозван",
       "unknown": "Неизвестно"
     }
   }

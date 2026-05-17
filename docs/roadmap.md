@@ -96,7 +96,7 @@ Checklist:
 - [x] Vacancies table supports sorting by date applied, priority, match score,
   and salary.
 - [x] Kanban groups vacancies by current status.
-- [ ] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
+- [x] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
   and next step.
 - [ ] Add/edit vacancy form validates required fields.
 - [ ] Loading, empty, error, and success states are present.

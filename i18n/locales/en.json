@@ -74,6 +74,20 @@
       "title": "Kanban by status",
       "description": "A status-board view of the same normalized vacancy data.",
       "empty": "No vacancies in this status."
+    },
+    "details": {
+      "title": "Vacancy details",
+      "open": "Details",
+      "mainInfo": "Main info",
+      "techStack": "Tech stack",
+      "timeline": "Pipeline timeline",
+      "interviews": "Interviews",
+      "noInterviews": "No interviews yet.",
+      "offer": "Offer",
+      "decisionDue": "Decision due",
+      "noOffer": "No offer recorded.",
+      "notes": "Notes",
+      "noNotes": "No notes yet."
     }
   },
   "domain": {
@@ -99,6 +113,41 @@
       "remote": "Remote",
       "hybrid": "Hybrid",
       "onsite": "On-site",
+      "unknown": "Unknown"
+    },
+    "stage": {
+      "sourced": "Sourced",
+      "applied": "Applied",
+      "recruiter_screen": "Recruiter screen",
+      "technical_screen": "Technical screen",
+      "take_home": "Take-home",
+      "onsite": "On-site",
+      "offer": "Offer",
+      "decision": "Decision",
+      "unknown": "Unknown"
+    },
+    "stageStatus": {
+      "planned": "Planned",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "skipped": "Skipped",
+      "failed": "Failed",
+      "unknown": "Unknown"
+    },
+    "interviewResult": {
+      "pending": "Pending",
+      "passed": "Passed",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "no_show": "No-show",
+      "unknown": "Unknown"
+    },
+    "offerDecision": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "expired": "Expired",
+      "withdrawn": "Withdrawn",
       "unknown": "Unknown"
     }
   }

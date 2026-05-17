@@ -18,5 +18,8 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Highest salary first')
     expect(wrapper.text()).toContain('Kanban by status')
     expect(wrapper.text()).toContain('No vacancies in this status.')
+    expect(wrapper.text()).toContain('Pipeline timeline')
+    expect(wrapper.text()).toContain('Vue architecture interview')
+    expect(wrapper.text()).toContain('Strong product engineering fit.')
   })
 })
