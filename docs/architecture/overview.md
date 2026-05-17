@@ -87,6 +87,8 @@ app/
     offers.ts
     pipeline.ts
     vacancies.ts
+  mappers/
+    formPayloads.ts
   pages/
     index.vue
     vacancies/index.vue

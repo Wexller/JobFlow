@@ -62,7 +62,7 @@ Checklist:
   stage statuses, interview results, and offer decisions.
 - [x] Add Zod schemas for `Vacancy`, `PipelineEvent`, `Interview`, `Offer`, and
   `SummaryMetric`.
-- [ ] Add mappers for form payloads and normalized domain objects.
+- [x] Add mappers for form payloads and normalized domain objects.
 - [ ] Add mock repository with realistic fixture data.
 - [ ] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
   sync state.
