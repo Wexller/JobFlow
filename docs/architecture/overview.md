@@ -100,9 +100,11 @@ app/
     googleSheetsRepository.ts
     mockRepository.ts
   schemas/
+    common.schema.ts
     interviews.schema.ts
     offers.schema.ts
     pipeline.schema.ts
+    summary-metrics.schema.ts
     vacancies.schema.ts
   services/google/
     googleIdentity.client.ts

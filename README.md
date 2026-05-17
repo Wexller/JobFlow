@@ -11,7 +11,8 @@ metrics.
 ## Current Status
 
 The repository contains the project agent operating model, architecture
-decisions, and the initial Nuxt application scaffold.
+decisions, the initial Nuxt application scaffold, typed domain enum IDs, Zod
+runtime schemas, and unit coverage for the first data-boundary contracts.
 
 ## Product Direction
 

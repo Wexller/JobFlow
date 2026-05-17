@@ -36,7 +36,7 @@ Checklist:
 - [x] Add basic app smoke e2e test to CI checklist.
 - [x] Add a lightweight logger and redaction utility.
 - [x] Add typed result/error utility.
-- [ ] Confirm `pnpm test:ci` and `pnpm dev` with `nvm use`.
+- [x] Confirm `pnpm test:ci` and `pnpm dev` with `nvm use`.
 
 Exit criteria:
 
@@ -58,9 +58,9 @@ Owner agents:
 
 Checklist:
 
-- [ ] Define stable enum IDs for vacancy statuses, priorities, formats, stages,
+- [x] Define stable enum IDs for vacancy statuses, priorities, formats, stages,
   stage statuses, interview results, and offer decisions.
-- [ ] Add Zod schemas for `Vacancy`, `PipelineEvent`, `Interview`, `Offer`, and
+- [x] Add Zod schemas for `Vacancy`, `PipelineEvent`, `Interview`, `Offer`, and
   `SummaryMetric`.
 - [ ] Add mappers for form payloads and normalized domain objects.
 - [ ] Add mock repository with realistic fixture data.
