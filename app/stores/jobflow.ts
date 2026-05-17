@@ -6,6 +6,7 @@ import type { Offer } from '../schemas/offers.schema'
 import type { PipelineEvent } from '../schemas/pipeline.schema'
 import type { SummaryMetric } from '../schemas/summary-metrics.schema'
 import type { Vacancy } from '../schemas/vacancies.schema'
+import { normalizeVacancyPayload } from '../mappers/formPayloads'
 import { createMockRepository, type JobflowRepository } from '../repositories/mockRepository'
 
 export type VacancySortKey = 'applied_at' | 'match_score' | 'priority' | 'salary'
@@ -288,6 +289,24 @@ export const useJobflowStore = defineStore('jobflow', {
     },
     setSort(sort: VacancySort) {
       this.sort = sort
+    },
+    saveVacancy(payload: unknown) {
+      const result = normalizeVacancyPayload(payload)
+
+      if (!result.ok) {
+        return result
+      }
+
+      const index = this.vacancies.findIndex((vacancy) => vacancy.id === result.value.id)
+
+      if (index === -1) {
+        this.vacancies = [...this.vacancies, result.value]
+      }
+      else {
+        this.vacancies = this.vacancies.map((vacancy) => vacancy.id === result.value.id ? result.value : vacancy)
+      }
+
+      return result
     },
     vacancyDetails(vacancyId: string): VacancyDetails | undefined {
       const vacancy = this.vacancies.find((item) => item.id === vacancyId)

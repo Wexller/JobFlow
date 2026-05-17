@@ -106,4 +106,72 @@ describe('jobflow store', () => {
     ])
     expect(details?.offer).toBeUndefined()
   })
+
+  it('creates and updates vacancies through the validated form boundary', async () => {
+    const store = useJobflowStore()
+    await store.load()
+
+    const createResult = store.saveVacancy({
+      id: 'vacancy-new',
+      company: ' NewCo ',
+      role: ' Staff Frontend Engineer ',
+      status: 'wishlist',
+      priority: 'medium',
+      format: 'remote',
+      techStack: 'Vue, TypeScript',
+      createdAt: '2026-05-17T10:00:00Z',
+      updatedAt: '2026-05-17T10:00:00Z',
+    })
+
+    expect(createResult).toMatchObject({
+      ok: true,
+      value: {
+        company: 'NewCo',
+        id: 'vacancy-new',
+        techStack: ['Vue', 'TypeScript'],
+      },
+    })
+    expect(store.vacancies.some((vacancy) => vacancy.id === 'vacancy-new')).toBe(true)
+
+    const updateResult = store.saveVacancy({
+      ...store.vacancies.find((vacancy) => vacancy.id === 'vacancy-new'),
+      priority: 'urgent',
+      role: 'Principal Frontend Engineer',
+      updatedAt: '2026-05-18T10:00:00Z',
+    })
+
+    expect(updateResult).toMatchObject({
+      ok: true,
+      value: {
+        priority: 'urgent',
+        role: 'Principal Frontend Engineer',
+      },
+    })
+    expect(store.vacancies.filter((vacancy) => vacancy.id === 'vacancy-new')).toHaveLength(1)
+  })
+
+  it('rejects invalid vacancy form payloads without mutating state', async () => {
+    const store = useJobflowStore()
+    await store.load()
+    const initialCount = store.vacancies.length
+
+    const result = store.saveVacancy({
+      id: 'vacancy-invalid',
+      company: '',
+      role: 'Frontend Engineer',
+      status: 'localized status',
+      priority: 'medium',
+      format: 'remote',
+      createdAt: '2026-05-17T10:00:00Z',
+      updatedAt: '2026-05-17T10:00:00Z',
+    })
+
+    expect(result).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+      },
+    })
+    expect(store.vacancies).toHaveLength(initialCount)
+  })
 })
