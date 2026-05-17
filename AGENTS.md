@@ -63,6 +63,23 @@ See `docs/agents/registry.md` for the complete registry.
 - The Lead merges agent outputs into a single technical decision or release
   recommendation.
 
+## Token Budget And Small Task Mode
+
+- Treat LLM/Codex context as a project budget. Prefer narrow prompts, targeted
+  file reads, and concise handoffs over broad repository dumps.
+- Use small task mode for low-risk changes limited to one subsystem or one to
+  three files. Small task mode uses one owner agent, only relevant context, and
+  targeted verification.
+- Do not load every persona or the full agent registry unless the task crosses
+  subsystem boundaries, changes architecture, touches release flow, or has
+  security, observability, or Google Sheets risk.
+- For debugging, start with the nearest failure, a short hypothesis, and the
+  smallest useful command before proposing or applying a patch.
+- Do not paste generated or dependency artifacts into prompts unless they are
+  the subject of the task. Exclude `.nuxt`, `.output`, `node_modules`,
+  `pnpm-lock.yaml`, coverage output, Playwright reports, and long logs by
+  default.
+
 ## Intent Mapping
 
 - New feature: Product / Domain Agent, then Solution Architect Agent when needed,

@@ -16,6 +16,8 @@ together from request intake to release.
    - Discoverable facts are resolved from the repository before asking the
      Product Owner.
    - Product or tradeoff questions are escalated to the Product Owner.
+   - Generated artifacts, dependency folders, lockfiles, coverage reports,
+     Playwright reports, and long logs are excluded unless directly relevant.
 
 3. Specification
    - Product / Domain Agent is used when behavior, user flows, or acceptance
@@ -67,6 +69,9 @@ Release readiness:
 
 ## Required Review Paths
 
+- Small task mode:
+  One owner agent -> targeted verification
+
 - Feature touching UI only:
   Frontend UI Agent -> Testing Agent -> Security & Review Agent
 
@@ -83,6 +88,38 @@ Release readiness:
 
 - Release or deployment:
   Testing Agent -> Security & Review Agent -> Release / DevOps Agent
+
+Use small task mode for low-risk documentation, style, copy, or localized test
+fixes limited to one subsystem or one to three files. Leave small task mode when
+the task crosses subsystem boundaries, changes public interfaces, touches Google
+Sheets or OAuth, changes architecture or dependencies, or introduces security,
+observability, release, or data integrity risk.
+
+## Token Budget Rules
+
+- Treat LLM/Codex tokens as a shared engineering budget.
+- Define scope before implementation: one subsystem or one to three files when
+  practical, explicit out-of-scope items, expected output format, and the
+  smallest useful verification command.
+- Owner agents study only relevant files and commands. Use targeted search and
+  reads before expanding context.
+- Do not paste generated or dependency artifacts into prompts unless they are
+  the subject of the task: `.nuxt`, `.output`, `node_modules`,
+  `pnpm-lock.yaml`, coverage output, Playwright reports, and build artifacts are
+  excluded by default.
+- For failures, share the command, expected result, actual result, and the last
+  30-80 relevant log lines instead of full command output.
+- For debugging, ask for or provide the nearest cause hypothesis and the minimum
+  check before patching.
+- Use narrow commands first, such as a single spec, `pnpm test:unit`,
+  `pnpm typecheck`, or a focused `rg`. Run `pnpm test:ci` only after localized
+  checks pass or before release.
+- For UI debugging, provide a screenshot, viewport, expected behavior, and
+  actual behavior instead of a broad visual description.
+- For Google Sheets work, provide sheet/tab schemas and two or three fixture
+  rows instead of full private spreadsheets.
+- Reviews should lead with findings only. Avoid restating the full architecture
+  unless the architecture is the subject of the review.
 
 ## Quality Gates
 

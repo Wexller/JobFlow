@@ -118,9 +118,12 @@ implementation, testing, observability, and review responsibilities clear.
 - `docs/agents/registry.md` lists active and reserve agents.
 - `docs/agents/operating-model.md` describes the delivery lifecycle and gates.
 - `docs/agents/personas/` contains one persona file per agent.
+- `docs/debugging.md` describes focused, token-efficient debugging handoffs.
 
 The active MVP team is Variant B. Variant C is preserved as reserve agents and
 activated only when its triggers are present.
+Small task mode keeps low-risk work scoped to one owner, narrow context, and
+targeted verification.
 
 ## Documentation Rule
 
