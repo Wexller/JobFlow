@@ -207,4 +207,77 @@ describe('form payload mappers', () => {
       },
     })
   })
+
+  it('normalizes optional text, array lists, and date fields at the form boundary', () => {
+    const vacancyResult = normalizeVacancyPayload({
+      ...validPayloads.vacancy,
+      location: ' Berlin ',
+      level: ' senior ',
+      notes: '  Follow up after technical screen  ',
+      source: ' referral ',
+      techStack: [' Vue ', '', null, 'TypeScript', '  Nuxt  '],
+      nextActionAt: '2026-05-21T10:00:00+02:00',
+    })
+
+    expect(vacancyResult).toMatchObject({
+      ok: true,
+      value: {
+        level: 'senior',
+        location: 'Berlin',
+        nextActionAt: '2026-05-21T10:00:00+02:00',
+        notes: 'Follow up after technical screen',
+        source: 'referral',
+        techStack: ['Vue', 'TypeScript', 'Nuxt'],
+      },
+    })
+
+    const interviewResult = normalizeInterviewPayload({
+      ...validPayloads.interview,
+      interviewerNames: [' Ada ', '', undefined, 'Grace'],
+      location: ' Google Meet ',
+      pipelineEventId: ' pipeline-1 ',
+    })
+
+    expect(interviewResult).toMatchObject({
+      ok: true,
+      value: {
+        interviewerNames: ['Ada', 'Grace'],
+        location: 'Google Meet',
+        pipelineEventId: 'pipeline-1',
+      },
+    })
+  })
+
+  it('rejects invalid numbers, impossible dates, and reversed salary ranges', () => {
+    expect(normalizeVacancyPayload({
+      ...validPayloads.vacancy,
+      matchScore: 'not-a-number',
+    })).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+      },
+    })
+
+    expect(normalizeVacancyPayload({
+      ...validPayloads.vacancy,
+      appliedAt: '2026-02-31',
+    })).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+      },
+    })
+
+    expect(normalizeOfferPayload({
+      ...validPayloads.offer,
+      salaryMax: '100000',
+      salaryMin: '150000',
+    })).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+      },
+    })
+  })
 })

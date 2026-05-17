@@ -66,7 +66,7 @@ Checklist:
 - [x] Add mock repository with realistic fixture data.
 - [x] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
   sync state.
-- [ ] Add unit tests for schemas, normalization, selectors, filters, sorting, and
+- [x] Add unit tests for schemas, normalization, selectors, filters, sorting, and
   dashboard metrics.
 
 Exit criteria:
