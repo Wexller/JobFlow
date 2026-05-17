@@ -16,5 +16,7 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Vacancies')
     expect(wrapper.text()).toContain('Reset filters')
     expect(wrapper.text()).toContain('Highest salary first')
+    expect(wrapper.text()).toContain('Kanban by status')
+    expect(wrapper.text()).toContain('No vacancies in this status.')
   })
 })

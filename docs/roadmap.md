@@ -95,7 +95,7 @@ Checklist:
   level, location, and tech stack.
 - [x] Vacancies table supports sorting by date applied, priority, match score,
   and salary.
-- [ ] Kanban groups vacancies by current status.
+- [x] Kanban groups vacancies by current status.
 - [ ] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
   and next step.
 - [ ] Add/edit vacancy form validates required fields.

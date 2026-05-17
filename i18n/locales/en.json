@@ -69,6 +69,11 @@
       "priorityDesc": "Highest priority first",
       "matchScoreDesc": "Best match first",
       "salaryDesc": "Highest salary first"
+    },
+    "kanban": {
+      "title": "Kanban by status",
+      "description": "A status-board view of the same normalized vacancy data.",
+      "empty": "No vacancies in this status."
     }
   },
   "domain": {
