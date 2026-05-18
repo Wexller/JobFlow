@@ -24,10 +24,10 @@ type DbVacancyRow = {
   location: string | null
   level: string | null
   tech_stack: string[] | null
-  salary_min: number | null
-  salary_max: number | null
+  salary_min: number | string | null
+  salary_max: number | string | null
   currency: string | null
-  match_score: number | null
+  match_score: number | string | null
   applied_at: string | Date | null
   next_action_at: string | Date | null
   created_at: string | Date
@@ -66,10 +66,23 @@ type DbOfferRow = {
   decision: string
   offered_at: string | Date | null
   decision_due_at: string | Date | null
-  salary_min: number | null
-  salary_max: number | null
+  salary_min: number | string | null
+  salary_max: number | string | null
   currency: string | null
   notes: string | null
+}
+
+function toOptionalNumber(value: number | string | null | undefined): number | undefined {
+  if (value === null || value === undefined) {
+    return undefined
+  }
+
+  const parsed = typeof value === 'number' ? value : Number(value)
+  if (Number.isNaN(parsed)) {
+    return undefined
+  }
+
+  return parsed
 }
 
 type PgErrorShape = {
@@ -115,10 +128,10 @@ function toVacancy(row: DbVacancyRow): Result<Vacancy> {
     location: row.location ?? undefined,
     level: row.level ?? undefined,
     techStack: row.tech_stack ?? [],
-    salaryMin: row.salary_min ?? undefined,
-    salaryMax: row.salary_max ?? undefined,
+    salaryMin: toOptionalNumber(row.salary_min),
+    salaryMax: toOptionalNumber(row.salary_max),
     currency: row.currency ?? undefined,
-    matchScore: row.match_score ?? undefined,
+    matchScore: toOptionalNumber(row.match_score),
     appliedAt: isoDate(row.applied_at),
     nextActionAt: isoDateTime(row.next_action_at),
     createdAt: isoDateTime(row.created_at),
@@ -187,8 +200,8 @@ function toOffer(row: DbOfferRow): Result<Offer> {
     decision: row.decision,
     offeredAt: isoDateTime(row.offered_at),
     decisionDueAt: isoDateTime(row.decision_due_at),
-    salaryMin: row.salary_min ?? undefined,
-    salaryMax: row.salary_max ?? undefined,
+    salaryMin: toOptionalNumber(row.salary_min),
+    salaryMax: toOptionalNumber(row.salary_max),
     currency: row.currency ?? undefined,
     notes: row.notes ?? undefined,
   })

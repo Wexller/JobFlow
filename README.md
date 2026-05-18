@@ -116,6 +116,7 @@ pnpm db:test:down
 pnpm db:test:url
 pnpm db:check:migrations-seed
 pnpm db:check:repository
+pnpm db:check:http
 pnpm db:check
 ```
 
@@ -208,7 +209,8 @@ Run Postgres verification lane with Node-based wrappers:
 ```bash
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:migrations-seed
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:repository
-JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:http
+pnpm db:check
 ```
 
 ## Environment Variables

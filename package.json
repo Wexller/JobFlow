@@ -31,7 +31,8 @@
     "db:test:down:compose": "docker compose -f docker-compose.test-db.yml down -v",
     "db:check:repository": "pnpm db:seed && node scripts/db/check-repository.mjs",
     "db:check:migrations-seed": "pnpm db:migrate && pnpm db:seed && node scripts/db/check-migrations-seed.mjs",
-    "db:check": "pnpm db:check:migrations-seed && pnpm db:check:repository"
+    "db:check": "pnpm db:check:migrations-seed && pnpm db:check:repository && pnpm db:check:http",
+    "db:check:http": "pnpm db:seed && node scripts/db/check-http-routes.mjs"
   },
   "dependencies": {
     "@nuxt/ui": "latest",
