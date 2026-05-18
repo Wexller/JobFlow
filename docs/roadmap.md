@@ -74,7 +74,7 @@ Checklist:
 - [x] Define and automate an ephemeral Postgres test database workflow.
 - [x] Add repository integration coverage against an isolated real Postgres
   instance.
-- [ ] Add migration and seed smoke verification against that isolated database.
+- [x] Add migration and seed smoke verification against that isolated database.
 - [ ] Document local database setup and production runtime expectations.
 
 Exit criteria:
