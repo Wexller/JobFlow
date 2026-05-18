@@ -17,16 +17,16 @@ The repository currently includes:
 - a Nuxt/Nitro BFF with read/write API routes;
 - a server-side application layer and repository contracts;
 - an implemented Postgres runtime path with migrations and seed scripts;
-- a development in-memory persistence adapter behind the BFF contracts;
+- an optional in-memory persistence adapter behind the same BFF contracts for
+  troubleshooting;
 - a mock CRM dashboard, vacancy list, filters, kanban, details, and vacancy save
   flow using `useFetch` for reads and `$fetch`-compatible writes;
 - unit and Nuxt coverage for stores, mappers, logging, server application
   behavior, and the main home page flow.
 
-Managed Postgres is the documented production target, and the repository already
-contains the Postgres adapter path. This workspace still ships with the
-in-memory server adapter as the default runtime, and automated verification
-against a real Postgres instance is still pending.
+Managed Postgres is the documented production target, and this workspace now
+runs Postgres-first by default. Real-DB verification is available through
+`pnpm db:check`.
 
 ## Runtime Model
 
@@ -139,7 +139,7 @@ pnpm exec playwright install --with-deps chromium
 
 ## Local Development
 
-Today, local development works out of the box with the in-memory server adapter:
+Local development is now Postgres-first:
 
 ```bash
 pnpm install
@@ -148,17 +148,14 @@ pnpm dev
 
 The BFF defaults to:
 
-- `JOBFLOW_PERSISTENCE_DRIVER=memory`
-- seeded mock CRM data behind the server API
+- `JOBFLOW_PERSISTENCE_DRIVER=postgres`
+- `JOBFLOW_DATABASE_URL` must point to a reachable Postgres instance
 
-The documented target path for shared and production-like environments is:
+The same Postgres-first runtime applies to shared and production-like environments.
+
+If you need the legacy mock adapter for isolated troubleshooting, set:
 
 - `JOBFLOW_PERSISTENCE_DRIVER=postgres`
-- `JOBFLOW_DATABASE_URL=...`
-
-The Postgres adapter is implemented in this workspace, but `memory` remains the
-safe default for local development until the real-database verification lane is
-in place.
 
 For local Postgres setup work, run schema migration and seed fixtures manually:
 
@@ -228,7 +225,7 @@ NUXT_PUBLIC_SENTRY_DSN=
 Private server runtime variables:
 
 ```env
-JOBFLOW_PERSISTENCE_DRIVER=memory
+JOBFLOW_PERSISTENCE_DRIVER=postgres
 JOBFLOW_DATABASE_URL=
 JOBFLOW_GOOGLE_SHEETS_SPREADSHEET_ID=
 JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL=
@@ -249,30 +246,21 @@ The current automated checks cover:
 - Playwright smoke coverage for the localized dashboard, filters, details, form
   save, and locale switching.
 
-The current automated checks do not yet require a real Postgres test database.
-They validate the in-memory/runtime-agnostic layers, but they do not prove the
-SQL adapter, migrations, or seed path against a live database.
+The current automated checks include a dedicated Postgres verification lane via
+`pnpm db:check` (migration/seed and repository behavior checks against a live
+database).
 
-The next verification lane should add:
-
-- route-level contract coverage for Nitro handlers;
-- repository integration coverage against an isolated ephemeral Postgres
-  instance;
-- migration and seed smoke verification against that same isolated database;
-- sync/import coverage for Google Sheets gateways.
-
-Planned test database direction:
+Current test database direction:
 
 - `unit`, `nuxt`, and `e2e smoke` remain database-free;
-- a separate integration suite should use a disposable Postgres database;
-- that suite should become mandatory before `postgres` becomes the default
-  staging or CI runtime path.
+- `db:check` validates Postgres-specific behavior and should run before release
+  and in CI for PG-first environments.
 
 ## Postgres Runtime Expectations
 
 Local development:
 
-- Default mode remains `JOBFLOW_PERSISTENCE_DRIVER=memory`.
+- Default mode remains `JOBFLOW_PERSISTENCE_DRIVER=postgres`.
 - To run the Postgres path locally, set:
   - `JOBFLOW_PERSISTENCE_DRIVER=postgres`
   - `JOBFLOW_DATABASE_URL=postgres://...`

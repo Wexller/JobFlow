@@ -9,9 +9,8 @@ validation, orchestration, and persistence boundaries.
 The target persistence model is DB-first with managed Postgres as the primary
 store. Google Sheets remains important, but as an import/sync/export
 integration boundary rather than the main online datastore. The current
-workspace ships with an in-memory development adapter behind the same repository
-contracts so delivery can continue while real-database integration verification
-is still pending.
+workspace now runs Postgres-first by default, while an in-memory adapter remains
+available as an explicit troubleshooting fallback.
 
 ## Recommended Stack
 
@@ -124,7 +123,7 @@ tests/
 
 - Target primary store: managed Postgres.
 - Implemented Postgres path: server repository + SQL client + migrations + seed.
-- Current development adapter: in-memory repository with seeded CRM data.
+- Default development adapter: Postgres repository with explicit migration/seed workflow.
 - Google Sheets is planned as a server-side integration gateway for import and
   reconciliation.
 - Source-of-truth policy is DB-first. Dual-write is intentionally deferred.
@@ -173,8 +172,7 @@ Never log:
 
 ## Testing Strategy
 
-- Unit tests: schemas, mappers, result handling, logger redaction, in-memory
-  repository behavior, store selectors, and server application services.
+- Unit tests: schemas, mappers, result handling, logger redaction, repository behavior, store selectors, and server application services.
 - Nuxt tests: the main home page flow with mocked `useFetch` data.
 - E2E smoke: dashboard, filters, kanban, details, vacancy save, locale switch.
 - Planned integration tests: Postgres adapter, migrations, seed path, and Google

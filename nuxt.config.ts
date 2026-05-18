@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     googleSheetsServiceAccountEmail: process.env.JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL ?? '',
     googleSheetsSpreadsheetId: process.env.JOBFLOW_GOOGLE_SHEETS_SPREADSHEET_ID ?? '',
     googleSheetsPrivateKey: process.env.JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY ?? '',
-    jobflowPersistenceDriver: process.env.JOBFLOW_PERSISTENCE_DRIVER ?? 'memory',
+    jobflowPersistenceDriver: process.env.JOBFLOW_PERSISTENCE_DRIVER ?? 'postgres',
     public: {
       appEnv: process.env.NUXT_PUBLIC_APP_ENV ?? 'local',
       defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE ?? 'en',
