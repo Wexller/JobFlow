@@ -115,10 +115,77 @@ Exit criteria:
   calls.
 - Future screens can be added without bypassing the Nuxt server.
 
-## Milestone 4: Google Sheets Import And Sync
+## Milestone 4: Postgres Runtime Hardening
 
-Goal: keep Google Sheets as an integration surface without making it the primary
-runtime source again.
+Goal: make Postgres the required runtime path for local/staging usage and
+stabilize database-first verification.
+
+Owner agents:
+
+- Backend / BFF Agent
+- Data & State Agent
+- Testing Agent
+- Observability Agent
+- Security & Review Agent
+
+Checklist:
+
+- [ ] Make `postgres` the default persistence driver for local and staging
+  runtime profiles.
+- [ ] Add a `schema_migrations` tracking table and idempotent migration runner
+  behavior.
+- [ ] Extend database constraints and indexes for common read/write paths
+  (`status`, `priority`, `next_action_at`, timeline queries).
+- [ ] Add `updated_at` trigger strategy for mutable entities.
+- [ ] Align BFF error mapping with Postgres error categories (409/422/404/500
+  contract consistency).
+- [ ] Add explicit backup/restore runbook for local and staging Postgres flows.
+- [ ] Add seed profiles (`dev`, `e2e`, `perf`) and document when each profile
+  is used.
+
+Exit criteria:
+
+- Postgres is the default runtime path for active environments.
+- Migration lifecycle is deterministic and tracked.
+- Data constraints and indexes support expected product usage patterns.
+
+## Milestone 5: Hardening And Release Readiness
+
+Goal: prepare the BFF-backed MVP for daily use.
+
+Owner agents:
+
+- Testing Agent
+- Observability Agent
+- Security & Review Agent
+- Documentation Agent
+- Release / DevOps Agent
+
+Checklist:
+
+- [ ] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
+- [ ] Playwright smoke coverage stays green for dashboard, filters, details, form
+  save, and locale switching.
+- [ ] Add HTTP-level integration coverage for core BFF CRUD routes against a
+  real Postgres instance.
+- [ ] Add `db:check` to the required local/CI verification lane.
+- [ ] README documents runtime modes, environment variables, and local setup.
+- [ ] Architecture docs and ADRs match the implemented BFF model.
+- [ ] Release notes capture the remaining verification and operational gap before
+  Postgres becomes a required runtime path.
+- [ ] Production deploy expectations for the server runtime are documented.
+
+Exit criteria:
+
+- The BFF-backed app is understandable, testable, and safe to evolve.
+- Remaining infrastructure gaps are documented and accepted by the Product Owner.
+
+## Deferred Milestone: Google Sheets Import And Sync
+
+Goal: keep Google Sheets as a future integration surface without making it the
+primary runtime source again.
+
+Status: deferred by Product Owner while PG-first scope is active.
 
 Owner agents:
 
@@ -144,34 +211,6 @@ Exit criteria:
 - Sheets data can be imported without exposing secrets to the browser.
 - Invalid external data does not corrupt the primary store.
 - Sync behavior is explicit and observable.
-
-## Milestone 5: Hardening And Release Readiness
-
-Goal: prepare the BFF-backed MVP for daily use.
-
-Owner agents:
-
-- Testing Agent
-- Observability Agent
-- Security & Review Agent
-- Documentation Agent
-- Release / DevOps Agent
-
-Checklist:
-
-- [ ] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
-- [ ] Playwright smoke coverage stays green for dashboard, filters, details, form
-  save, and locale switching.
-- [ ] README documents runtime modes, environment variables, and local setup.
-- [ ] Architecture docs and ADRs match the implemented BFF model.
-- [ ] Release notes capture the remaining verification and operational gap before
-  Postgres becomes a required runtime path.
-- [ ] Production deploy expectations for the server runtime are documented.
-
-Exit criteria:
-
-- The BFF-backed app is understandable, testable, and safe to evolve.
-- Remaining infrastructure gaps are documented and accepted by the Product Owner.
 
 ## V2 Candidates
 
