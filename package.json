@@ -49,6 +49,7 @@
     "echarts": "latest",
     "pg": "^8.20.0",
     "pinia": "latest",
+    "pino": "^10.3.1",
     "vue-echarts": "latest",
     "zod": "latest"
   },

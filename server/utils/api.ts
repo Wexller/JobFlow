@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import type { H3Event } from 'h3'
 import { createError, getRequestHeader, setResponseHeader } from 'h3'
-import { logger } from '../../app/utils/logger'
 import { createAppError, type AppError, type Result } from '../../app/utils/result'
+import { serverLogger } from './serverLogger'
 
 function isResult<T>(value: unknown): value is Result<T> {
   return typeof value === 'object' && value !== null && 'ok' in value
@@ -57,7 +57,7 @@ export async function runApiHandler<T>(
   const requestId = getRequestHeader(event, 'x-request-id') ?? randomUUID()
   setResponseHeader(event, 'x-request-id', requestId)
 
-  logger.info('api.request.started', {
+  serverLogger.info('api.request.started', {
     action,
     entityType: 'api_request',
     requestId,
@@ -74,7 +74,7 @@ export async function runApiHandler<T>(
           })()
       : result
 
-    logger.info('api.request.completed', {
+    serverLogger.info('api.request.completed', {
       action,
       durationMs: Date.now() - startedAt,
       entityType: 'api_request',
@@ -88,7 +88,7 @@ export async function runApiHandler<T>(
     const appError = toAppError(error)
     const publicMessage = publicMessageForError(appError)
 
-    logger.error('api.request.failed', {
+    serverLogger.error('api.request.failed', {
       action,
       durationMs: Date.now() - startedAt,
       entityType: 'api_request',

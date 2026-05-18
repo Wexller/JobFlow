@@ -59,7 +59,7 @@ application data.
 - date-fns
 - Zod
 - Prisma (planned migration target for Postgres adapter)
-- Pino (planned server logging sink)
+- Pino (server logging sink)
 - ECharts / vue-echarts
 - Vitest
 - Vue Test Utils
@@ -327,6 +327,7 @@ Private server runtime variables:
 JOBFLOW_PERSISTENCE_DRIVER=postgres
 JOBFLOW_DATABASE_URL=
 JOBFLOW_POSTGRES_ADAPTER=sql
+JOBFLOW_LOG_LEVEL=info
 JOBFLOW_GOOGLE_SHEETS_SPREADSHEET_ID=
 JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL=
 JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY=
