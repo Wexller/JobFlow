@@ -125,6 +125,8 @@ pnpm db:check:http
 pnpm db:check
 pnpm db:backup
 pnpm db:restore
+pnpm prisma:validate
+pnpm prisma:generate
 ```
 
 `pnpm test:ci` is the full local quality gate. It runs linting, TypeScript

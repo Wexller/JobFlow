@@ -201,7 +201,7 @@ Checklist:
 - [x] Add Docker runtime artifacts (`Dockerfile`, `docker-compose.local.yml`,
   `docker-compose.prod.yml`) with one-off migration job.
 - [x] Document Docker verification flow (build, migrate, app up, API smoke).
-- [ ] Scaffold Prisma schema/client while keeping SQL repository as fallback.
+- [x] Scaffold Prisma schema/client while keeping SQL repository as fallback.
 - [ ] Implement Prisma-backed repository parity with existing Postgres contracts.
 - [ ] Add adapter toggle and cutover plan (`sql` -> `prisma`) with rollback path.
 - [ ] Integrate Pino as server logger sink without breaking redaction policy.
