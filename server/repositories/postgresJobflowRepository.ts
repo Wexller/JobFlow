@@ -222,7 +222,7 @@ function mapPgError(error: unknown, fallbackMessage: string) {
     return createAppError('conflict', pgError.message ?? fallbackMessage)
   }
 
-  if (pgError.code === '23503') {
+  if (pgError.code === '23503' || pgError.code === '23514' || pgError.code === '23502' || pgError.code === '22P02') {
     return createAppError('validation', pgError.message ?? fallbackMessage)
   }
 

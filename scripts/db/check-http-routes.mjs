@@ -42,6 +42,20 @@ async function requestJson(path, init = {}) {
   return { body, response }
 }
 
+function readErrorCode(body) {
+  if (body && typeof body === 'object') {
+    if (typeof body.code === 'string') {
+      return body.code
+    }
+
+    if (body.data && typeof body.data === 'object' && typeof body.data.code === 'string') {
+      return body.data.code
+    }
+  }
+
+  return undefined
+}
+
 const devServer = spawn('pnpm', ['exec', 'nuxi', 'dev', '--host', '127.0.0.1', '--port', port], {
   cwd: process.cwd(),
   env: {
@@ -97,6 +111,11 @@ try {
     throw new Error('GET /api/vacancies/:id failed in HTTP db check')
   }
 
+  const missingVacancy = await requestJson('/api/vacancies/vacancy-missing-http-check', { method: 'GET' })
+  if (missingVacancy.response.status !== 404 || readErrorCode(missingVacancy.body) !== 'not_found') {
+    throw new Error('GET /api/vacancies/:id missing-case mapping failed in HTTP db check')
+  }
+
   const pipelineCreated = await requestJson('/api/pipeline-events', {
     method: 'POST',
     body: JSON.stringify({
@@ -139,6 +158,28 @@ try {
   })
   if (!offerCreated.response.ok || offerCreated.body.id !== 'offer-http-check') {
     throw new Error('POST /api/offers failed in HTTP db check')
+  }
+
+  const duplicateVacancy = await requestJson('/api/vacancies', {
+    body: JSON.stringify(vacancyPayload),
+    method: 'POST',
+  })
+  if (duplicateVacancy.response.status !== 409 || readErrorCode(duplicateVacancy.body) !== 'conflict') {
+    throw new Error('POST /api/vacancies conflict mapping failed in HTTP db check')
+  }
+
+  const invalidPipeline = await requestJson('/api/pipeline-events', {
+    method: 'POST',
+    body: JSON.stringify({
+      id: 'pipeline-http-invalid',
+      vacancyId: vacancyPayload.id,
+      stage: 'applied',
+      status: 'planned',
+      scheduledAt: 'not-a-date',
+    }),
+  })
+  if (invalidPipeline.response.status !== 400 || readErrorCode(invalidPipeline.body) !== 'validation') {
+    throw new Error('POST /api/pipeline-events validation mapping failed in HTTP db check')
   }
 
   console.log('postgres HTTP route integration check passed')
