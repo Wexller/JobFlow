@@ -145,8 +145,8 @@
 <script setup lang="ts">
 import { parseISO } from 'date-fns'
 import type { Offer } from '../../schemas/offers.schema'
+import type { VacancyDetails } from '../../schemas/jobflow.schema'
 import type { Vacancy } from '../../schemas/vacancies.schema'
-import type { VacancyDetails } from '../../stores/jobflow'
 
 defineProps<{
   details: VacancyDetails | undefined

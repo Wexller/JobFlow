@@ -1,7 +1,8 @@
 # Jobflow Agent Operating Contract
 
 This file is the primary contract for AI agents and human contributors working on
-Jobflow, a Nuxt 4 + TypeScript job-search CRM built on top of Google Sheets.
+Jobflow, a Nuxt 4 + TypeScript job-search CRM with a Nuxt server BFF and a
+Google Sheets integration boundary.
 
 ## Roles
 
@@ -19,6 +20,7 @@ The active MVP team is Variant B:
 
 - Product / Domain Agent
 - Solution Architect Agent
+- Backend / BFF Agent
 - Data & State Agent
 - Google Sheets Platform Agent
 - Frontend UI Agent
@@ -40,8 +42,9 @@ See `docs/agents/registry.md` for the complete registry.
 - Prefer simple, typed, testable Nuxt 4 + Vue 3 + TypeScript code.
 - Use proven libraries where they reduce risk, especially Pinia, VueUse,
   date-fns, Nuxt UI or shadcn-vue, Vitest, Vue Test Utils, and Playwright.
-- Google Sheets is the MVP data source; do not introduce a custom backend unless
-  the Product Owner explicitly changes the constraint.
+- The Nuxt server BFF is the application entrypoint for reads and writes.
+- Google Sheets is an integration boundary for import, sync, or export flows;
+  keep it behind server-side gateways.
 - Never store private keys, service account secrets, refresh tokens, or client
   secrets in frontend code.
 - The UI must support English and Russian. Default locale must be detected from
@@ -91,13 +94,16 @@ See `docs/agents/registry.md` for the complete registry.
 
 - New feature: Product / Domain Agent, then Solution Architect Agent when needed,
   then implementation owner, then Testing Agent and Security & Review Agent.
+- BFF, Nitro routes, server validation, or persistence orchestration: Backend /
+  BFF Agent, Testing Agent, Security & Review Agent.
 - UI or UX work: Frontend UI Agent, Testing Agent, Security & Review Agent.
-- Data models, stores, composables, derived metrics: Data & State Agent, Testing
-  Agent, Security & Review Agent.
-- Google Sheets, OAuth, row mapping, CRUD, quotas, retries: Google Sheets
-  Platform Agent, Testing Agent, Security & Review Agent.
-- Logging, audit events, client errors: Observability Agent, Testing Agent,
-  Security & Review Agent.
+- Data models, shared contracts, stores, composables, derived metrics: Data &
+  State Agent, Testing Agent, Security & Review Agent.
+- Google Sheets, OAuth, row mapping, CRUD, quotas, retries, import, or sync:
+  Google Sheets Platform Agent, Backend / BFF Agent, Testing Agent, Security &
+  Review Agent.
+- Logging, audit events, request tracing, client errors, or server failures:
+  Observability Agent, Testing Agent, Security & Review Agent.
 - CI, deploy previews, production release: Release / DevOps Agent.
 - README, setup guide, ADR, onboarding docs: Documentation Agent.
 - Bundle size, slow UI, charts, Core Web Vitals: Performance Agent.
@@ -155,10 +161,12 @@ A feature is done only when:
 
 - Testing Agent confirms the focused and broad verification commands appropriate
   for the change.
+- Backend / BFF Agent is required when server routes, Nitro handlers, SSR data
+  loading, auth/session logic, or privileged integrations are touched.
 - Security & Review Agent reviews the diff for code quality, data leakage,
   secret handling, dependency risk, and MVP boundary violations.
-- Observability Agent is required when logging, audit events, errors, Google
-  Sheets flows, or important user actions are touched.
+- Observability Agent is required when logging, audit events, request tracing,
+  errors, Google Sheets flows, or important user actions are touched.
 - Documentation Agent is required when setup, commands, dependencies,
   environment variables, architecture, testing, CI, deployment, or release
   workflow change.
@@ -171,6 +179,8 @@ A feature is done only when:
 
 - Keep business logic out of presentational UI components.
 - Keep Google Sheets details behind repository/service boundaries.
+- Keep persistence orchestration and request validation in the server layer, not
+  in presentational components.
 - Prefer stable IDs over row numbers. Row numbers are implementation details.
 - Do not physically delete spreadsheet rows in MVP unless explicitly approved.
 - Keep localization at the presentation boundary. Filters, sorting, metrics, and

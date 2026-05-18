@@ -1,8 +1,8 @@
 # Jobflow Roadmap
 
-This roadmap is the working delivery plan for the MVP. It is intentionally
-organized as vertical slices so the product becomes usable early and stays
-covered by tests.
+This roadmap is the working delivery plan for the MVP. It is organized as
+vertical slices so the product becomes usable early while the BFF and
+persistence architecture harden underneath it.
 
 ## Current Baseline
 
@@ -13,164 +13,136 @@ covered by tests.
   are installed.
 - Remote font providers are disabled to keep local builds independent from
   external font metadata.
-- `pnpm test:ci` passes on Node.js 24.
+- The frontend now reads data through the Nuxt/Nitro BFF instead of loading mock
+  repository data directly inside the page.
+- The repository includes a server-side application layer, typed API
+  contracts, request logging, and a development in-memory persistence adapter.
+- `pnpm test:unit`, `pnpm test:nuxt`, and `pnpm typecheck` pass on the current
+  workspace.
 
-## Milestone 1: Foundation Hardening
+## Milestone 1: BFF Foundation On Nuxt Server
 
-Goal: make the scaffold a reliable base for feature work.
+Goal: make the Nuxt server the single application entrypoint.
 
 Owner agents:
 
 - Solution Architect Agent
-- Data & State Agent
+- Backend / BFF Agent
 - Testing Agent
+- Observability Agent
 - Security & Review Agent
 
 Checklist:
 
-- [x] Nuxt 4 scaffold committed.
-- [x] English/Russian locale files created.
-- [x] README documents stack, commands, and environment variables.
-- [x] Add `.nvmrc` with the active Node.js version.
-- [x] Add Nuxt component test example under `tests/nuxt`.
-- [x] Add basic app smoke e2e test to CI checklist.
-- [x] Add a lightweight logger and redaction utility.
-- [x] Add typed result/error utility.
-- [x] Confirm `pnpm test:ci` and `pnpm dev` with `nvm use`.
+- [x] Add server-side route structure under `server/api`.
+- [x] Add a server-side application layer for read/write orchestration.
+- [x] Add shared request validation using Zod-backed normalizers.
+- [x] Add a shared HTTP error mapping path for BFF responses.
+- [x] Add request logging with request IDs and sanitized error categories.
+- [x] Move the home page read path to `useFetch`.
+- [x] Move the vacancy save path to `$fetch`-style repository writes.
+- [x] Add focused automated coverage for server application behavior and API
+  utility error handling.
 
 Exit criteria:
 
-- `pnpm test:ci` passes.
-- Local dev startup is documented and verified.
-- No generated/cached files are tracked.
-- README and architecture docs match actual project structure.
+- The browser no longer depends on direct data-source access for application
+  reads and writes.
+- API failures surface as user-visible error states.
+- Logging and error mapping are consistent across BFF routes.
 
-## Milestone 2: Domain And Mock Data Layer
+## Milestone 2: Postgres Persistence
 
-Goal: model the job-search CRM domain without touching live Google Sheets yet.
+Goal: replace development memory persistence with the production-target primary
+store.
 
 Owner agents:
 
-- Product / Domain Agent
+- Backend / BFF Agent
 - Data & State Agent
 - Testing Agent
 - Security & Review Agent
 
 Checklist:
 
-- [x] Define stable enum IDs for vacancy statuses, priorities, formats, stages,
-  stage statuses, interview results, and offer decisions.
-- [x] Add Zod schemas for `Vacancy`, `PipelineEvent`, `Interview`, `Offer`, and
-  `SummaryMetric`.
-- [x] Add mappers for form payloads and normalized domain objects.
-- [x] Add mock repository with realistic fixture data.
-- [x] Add Pinia stores for vacancies, pipeline, interviews, offers, filters, and
-  sync state.
-- [x] Add unit tests for schemas, normalization, selectors, filters, sorting, and
-  dashboard metrics.
+- [ ] Finalize the relational schema for vacancies, pipeline events, interviews,
+  and offers.
+- [ ] Choose and wire the Postgres access layer.
+- [ ] Add migrations and seed/dev fixtures for the database path.
+- [ ] Implement the Postgres-backed repository adapter behind the existing BFF
+  contracts.
+- [ ] Add repository integration coverage against the real database adapter.
+- [ ] Document local database setup and production runtime expectations.
 
 Exit criteria:
 
-- UI can read from mock repositories.
-- Domain data uses stable IDs, never localized labels.
-- Unit coverage exists for core domain rules.
+- `JOBFLOW_PERSISTENCE_DRIVER=postgres` is supported end-to-end.
+- Database-backed CRUD works through the existing BFF routes.
+- Repository integration tests cover the production-target adapter.
 
-## Milestone 3: First Usable Prototype
+## Milestone 3: Frontend-To-BFF Migration
 
-Goal: deliver a local CRM experience backed by mock data.
+Goal: finish moving UI features to the server-backed contract model.
 
 Owner agents:
 
 - Frontend UI Agent
+- Backend / BFF Agent
 - Data & State Agent
 - Testing Agent
-- Observability Agent
 - Security & Review Agent
 
 Checklist:
 
-- [x] Dashboard shows total applications, active processes, interviews this week,
-  offers, reply rate, interview rate, offer rate, and next actions.
-- [x] Vacancies table supports filters by status, source, priority, format,
-  level, location, and tech stack.
-- [x] Vacancies table supports sorting by date applied, priority, match score,
-  and salary.
-- [x] Kanban groups vacancies by current status.
-- [x] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
-  and next step.
-- [x] Add/edit vacancy form validates required fields.
-- [ ] Loading, empty, error, and success states are present.
-- [ ] Component and e2e tests cover the main happy path.
+- [x] Home page bootstrap uses `useFetch`.
+- [x] Vacancy create/update uses BFF writes.
+- [ ] Add BFF-backed flows for pipeline event create/update.
+- [ ] Add BFF-backed flows for interview create/update.
+- [ ] Add BFF-backed flows for offer create/update.
+- [ ] Add route-backed detail and list flows to future screens beyond the home
+  page.
+- [ ] Keep loading, empty, error, and success states aligned with async BFF
+  operations.
 
 Exit criteria:
 
-- A user can manage the job-search workflow locally using mock data.
-- The first prototype is responsive and localized in English/Russian.
+- UI state is derived from typed BFF contracts rather than direct data-source
+  calls.
+- Future screens can be added without bypassing the Nuxt server.
 
-## Milestone 4: Google Sheets Read Integration
+## Milestone 4: Google Sheets Import And Sync
 
-Goal: load real data from Google Sheets safely.
+Goal: keep Google Sheets as an integration surface without making it the primary
+runtime source again.
 
 Owner agents:
 
 - Google Sheets Platform Agent
-- Data & State Agent
+- Backend / BFF Agent
 - Testing Agent
 - Observability Agent
 - Security & Review Agent
 
 Checklist:
 
-- [ ] Add Google Identity Services client-only integration.
-- [ ] Add Sheets REST client using access tokens kept in memory.
-- [ ] Add range definitions for all MVP tabs.
-- [ ] Add row DTOs and row-to-domain mappers.
-- [ ] Add read-only `batchGet` loading flow.
-- [ ] Add data quality warnings for missing headers, invalid dates, invalid
-  numbers, and unknown enum values.
-- [ ] Add MSW-backed integration tests for Sheets responses.
-- [ ] Document Google Cloud OAuth setup in README or dedicated setup guide.
+- [ ] Define the server-side Google Sheets gateway contract.
+- [ ] Add one-way import from Google Sheets into the primary store.
+- [ ] Add data quality warnings for invalid dates, numbers, headers, and enum
+  values.
+- [ ] Add explicit reconciliation rules and source-of-truth guidance.
+- [ ] Add safe logging around import and sync failures.
+- [ ] Add test fixtures and mocked coverage for malformed Sheets rows.
+- [ ] Document Google Sheets sync setup and operator workflow.
 
 Exit criteria:
 
-- The app can load the existing sheet in read-only mode.
-- Invalid sheet data does not crash the UI.
-- No secrets or tokens are logged.
+- Sheets data can be imported without exposing secrets to the browser.
+- Invalid external data does not corrupt the primary store.
+- Sync behavior is explicit and observable.
 
-## Milestone 5: Google Sheets Write Integration
+## Milestone 5: Hardening And Release Readiness
 
-Goal: support CRUD operations required for the MVP.
-
-Owner agents:
-
-- Google Sheets Platform Agent
-- Data & State Agent
-- Frontend UI Agent
-- Testing Agent
-- Observability Agent
-- Security & Review Agent
-
-Checklist:
-
-- [ ] Add create/update vacancy operations.
-- [ ] Add create/update pipeline event operations.
-- [ ] Add create/update interview operations.
-- [ ] Add create/update offer operations.
-- [ ] Use stable IDs for updates; do not expose row numbers to UI.
-- [ ] Avoid physical row deletion in MVP; use archive/status behavior instead.
-- [ ] Add retry/backoff handling for quota and transient failures.
-- [ ] Add audit logging for write actions without sensitive field values.
-- [ ] Add integration tests for create/update mapping.
-
-Exit criteria:
-
-- A user can use the app as the primary interface over Google Sheets.
-- Write failures are recoverable and visible.
-- Data corruption risks are minimized by validation and mapping tests.
-
-## Milestone 6: MVP Release Candidate
-
-Goal: prepare the personal MVP for daily use.
+Goal: prepare the BFF-backed MVP for daily use.
 
 Owner agents:
 
@@ -182,26 +154,25 @@ Owner agents:
 
 Checklist:
 
-- [ ] Full `pnpm test:ci` passes.
-- [ ] Playwright smoke tests cover dashboard, vacancies table, kanban, vacancy
-  details, and add/edit flow.
-- [ ] Manual smoke test with a copied Google Sheet passes.
-- [ ] README contains setup, Google Cloud OAuth, env variables, commands, and
-  troubleshooting.
-- [ ] Security review confirms no private secrets are exposed.
-- [ ] Release checklist and rollback notes are documented.
+- [ ] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
+- [ ] Playwright smoke coverage stays green for dashboard, filters, details, form
+  save, and locale switching.
+- [ ] README documents runtime modes, environment variables, and local setup.
+- [ ] Architecture docs and ADRs match the implemented BFF model.
+- [ ] Release notes capture the in-memory-to-Postgres gap until the adapter lands.
+- [ ] Production deploy expectations for the server runtime are documented.
 
 Exit criteria:
 
-- The app is usable as a personal job-search CRM.
-- Remaining risks are documented and accepted by the Product Owner.
+- The BFF-backed app is understandable, testable, and safe to evolve.
+- Remaining infrastructure gaps are documented and accepted by the Product Owner.
 
 ## V2 Candidates
 
-- Custom backend or BFF.
-- Multi-user accounts and permissions.
-- Database migration from Google Sheets.
-- Audit history and optimistic concurrency.
+- Multi-user auth and permissions.
+- Background sync jobs.
+- Conflict detection and optimistic concurrency.
+- Audit history.
 - Calendar reminders.
 - Email/import automation.
 - Attachments.

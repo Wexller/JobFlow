@@ -8,6 +8,7 @@ export interface LogContext {
   readonly action?: string
   readonly entityType?: string
   readonly entityId?: string
+  readonly requestId?: string
   readonly status?: LogStatus
   readonly durationMs?: number
   readonly httpStatus?: number

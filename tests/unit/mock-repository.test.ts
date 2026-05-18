@@ -55,4 +55,73 @@ describe('mock repository', () => {
 
     expect(secondResult.value[0].company).toBe('Northstar Labs')
   })
+
+  it('supports create and update operations through stable IDs', async () => {
+    const repository = createMockRepository()
+
+    const createResult = await repository.createVacancy({
+      id: 'vacancy-created',
+      company: 'Created Co',
+      role: 'Backend Engineer',
+      status: 'wishlist',
+      priority: 'medium',
+      format: 'remote',
+      techStack: ['Nuxt', 'PostgreSQL'],
+      createdAt: '2026-05-18T10:00:00Z',
+      updatedAt: '2026-05-18T10:00:00Z',
+    })
+
+    expect(createResult.ok).toBe(true)
+
+    if (!createResult.ok) {
+      return
+    }
+
+    const updateResult = await repository.updateVacancy(createResult.value.id, {
+      ...createResult.value,
+      priority: 'urgent',
+      updatedAt: '2026-05-18T11:00:00Z',
+    })
+
+    expect(updateResult).toMatchObject({
+      ok: true,
+      value: {
+        id: 'vacancy-created',
+        priority: 'urgent',
+      },
+    })
+
+    const detailsResult = await repository.getVacancyDetails('vacancy-created')
+
+    expect(detailsResult).toMatchObject({
+      ok: true,
+      value: {
+        vacancy: {
+          id: 'vacancy-created',
+        },
+      },
+    })
+  })
+
+  it('rejects interviews whose pipeline event belongs to another vacancy', async () => {
+    const repository = createMockRepository()
+
+    const result = await repository.createInterview({
+      id: 'interview-invalid-link',
+      vacancyId: 'vacancy-design-systems',
+      pipelineEventId: 'pipeline-crm-screen',
+      stage: 'recruiter_screen',
+      scheduledAt: '2026-05-21T10:00:00Z',
+      result: 'pending',
+      interviewerNames: [],
+    })
+
+    expect(result).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+        message: 'Interview pipelineEventId must belong to the same vacancy',
+      },
+    })
+  })
 })

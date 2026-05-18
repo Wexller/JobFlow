@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia'
-import { addDays, compareAsc, isBefore, parseISO, startOfDay } from 'date-fns'
+import { addDays, isBefore, parseISO, startOfDay } from 'date-fns'
 import { vacancyStatusIds, type VacancyPriorityId, type VacancyStatusId, type WorkFormatId } from '../domain/vacancies'
 import type { Interview } from '../schemas/interviews.schema'
 import type { Offer } from '../schemas/offers.schema'
 import type { PipelineEvent } from '../schemas/pipeline.schema'
+import type { JobflowSnapshot, VacancyDetails } from '../schemas/jobflow.schema'
 import type { SummaryMetric } from '../schemas/summary-metrics.schema'
 import type { Vacancy } from '../schemas/vacancies.schema'
 import { normalizeVacancyPayload } from '../mappers/formPayloads'
-import { createMockRepository, type JobflowRepository } from '../repositories/mockRepository'
+import { createJobflowApiRepository } from '../repositories/jobflowApiRepository'
+import type { JobflowReadRepository, JobflowWriteRepository } from '../repositories/jobflow'
+import { buildVacancyDetails, upsertById } from '../utils/jobflow'
 
 export type VacancySortKey = 'applied_at' | 'match_score' | 'priority' | 'salary'
 export type SortDirection = 'asc' | 'desc'
@@ -32,13 +35,7 @@ export interface SyncState {
   readonly status: 'idle' | 'loading' | 'success' | 'error'
   readonly lastLoadedAt?: string
   readonly errorMessage?: string
-}
-
-export interface VacancyDetails {
-  readonly vacancy: Vacancy
-  readonly pipelineEvents: PipelineEvent[]
-  readonly interviews: Interview[]
-  readonly offer?: Offer
+  readonly requestId?: string
 }
 
 const defaultFilters = {
@@ -159,19 +156,6 @@ function isWithinUpcomingWindow(value: string, referenceDateIso: string, days: n
   return !isBefore(date, start) && isBefore(date, end)
 }
 
-function sortEventsByDate<T extends { scheduledAt?: string, occurredAt?: string, completedAt?: string }>(items: readonly T[]): T[] {
-  return [...items].sort((first, second) => {
-    const firstDate = first.scheduledAt ?? first.occurredAt ?? first.completedAt ?? ''
-    const secondDate = second.scheduledAt ?? second.occurredAt ?? second.completedAt ?? ''
-
-    if (firstDate.length === 0 || secondDate.length === 0) {
-      return firstDate.localeCompare(secondDate)
-    }
-
-    return compareAsc(parseISO(firstDate), parseISO(secondDate))
-  })
-}
-
 export const useJobflowStore = defineStore('jobflow', {
   state: () => ({
     filters: { ...defaultFilters } as VacancyFilters,
@@ -251,10 +235,21 @@ export const useJobflowStore = defineStore('jobflow', {
     },
   },
   actions: {
-    async load(repository: JobflowRepository = createMockRepository()) {
+    applySnapshot(snapshot: JobflowSnapshot) {
+      this.vacancies = snapshot.vacancies
+      this.pipelineEvents = snapshot.pipelineEvents
+      this.interviews = snapshot.interviews
+      this.offers = snapshot.offers
+      this.sync = {
+        lastLoadedAt: new Date().toISOString(),
+        status: 'success',
+      }
+    },
+    async load(repository?: JobflowReadRepository) {
+      const activeRepository = repository ?? createJobflowApiRepository()
       this.sync = { status: 'loading' }
 
-      const result = await repository.getSnapshot()
+      const result = await activeRepository.getSnapshot()
 
       if (!result.ok) {
         this.sync = {
@@ -264,16 +259,18 @@ export const useJobflowStore = defineStore('jobflow', {
         return result
       }
 
-      this.vacancies = result.value.vacancies
-      this.pipelineEvents = result.value.pipelineEvents
-      this.interviews = result.value.interviews
-      this.offers = result.value.offers
-      this.sync = {
-        lastLoadedAt: new Date().toISOString(),
-        status: 'success',
-      }
-
+      this.applySnapshot(result.value)
       return result
+    },
+    setLoadError(errorMessage: string, requestId?: string) {
+      this.sync = {
+        errorMessage,
+        requestId,
+        status: 'error',
+      }
+    },
+    setLoading() {
+      this.sync = { status: 'loading' }
     },
     resetFilters() {
       this.filters = { ...defaultFilters }
@@ -290,37 +287,42 @@ export const useJobflowStore = defineStore('jobflow', {
     setSort(sort: VacancySort) {
       this.sort = sort
     },
-    saveVacancy(payload: unknown) {
-      const result = normalizeVacancyPayload(payload)
+    async saveVacancy(payload: unknown, repository?: JobflowWriteRepository) {
+      const normalized = normalizeVacancyPayload(payload)
+
+      if (!normalized.ok) {
+        return normalized
+      }
+
+      const activeRepository = repository ?? createJobflowApiRepository()
+      const exists = this.vacancies.some((vacancy) => vacancy.id === normalized.value.id)
+      const result = exists
+        ? await activeRepository.updateVacancy(normalized.value.id, normalized.value)
+        : await activeRepository.createVacancy(normalized.value)
 
       if (!result.ok) {
         return result
       }
 
-      const index = this.vacancies.findIndex((vacancy) => vacancy.id === result.value.id)
-
-      if (index === -1) {
-        this.vacancies = [...this.vacancies, result.value]
-      }
-      else {
-        this.vacancies = this.vacancies.map((vacancy) => vacancy.id === result.value.id ? result.value : vacancy)
-      }
-
+      this.vacancies = upsertById(this.vacancies, result.value)
       return result
     },
+    applyPipelineEvent(pipelineEvent: PipelineEvent) {
+      this.pipelineEvents = upsertById(this.pipelineEvents, pipelineEvent)
+    },
+    applyInterview(interview: Interview) {
+      this.interviews = upsertById(this.interviews, interview)
+    },
+    applyOffer(offer: Offer) {
+      this.offers = upsertById(this.offers, offer)
+    },
     vacancyDetails(vacancyId: string): VacancyDetails | undefined {
-      const vacancy = this.vacancies.find((item) => item.id === vacancyId)
-
-      if (vacancy === undefined) {
-        return undefined
-      }
-
-      return {
-        interviews: sortEventsByDate(this.interviews.filter((interview) => interview.vacancyId === vacancyId)),
-        offer: this.offers.find((offer) => offer.vacancyId === vacancyId),
-        pipelineEvents: sortEventsByDate(this.pipelineEvents.filter((event) => event.vacancyId === vacancyId)),
-        vacancy,
-      }
+      return buildVacancyDetails({
+        interviews: this.interviews,
+        offers: this.offers,
+        pipelineEvents: this.pipelineEvents,
+        vacancies: this.vacancies,
+      }, vacancyId)
     },
   },
 })

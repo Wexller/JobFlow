@@ -1,8 +1,27 @@
 // @vitest-environment @nuxt/test-utils/vitest-environment
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { ref } from 'vue'
+import { describe, expect, it, vi } from 'vitest'
+import type { JobflowSnapshot } from '../../app/schemas/jobflow.schema'
 import HomePage from '../../app/pages/index.vue'
+import { mockInterviews, mockOffers, mockPipelineEvents, mockVacancies } from '../../app/repositories/mockData'
+
+const snapshot: JobflowSnapshot = {
+  interviews: mockInterviews,
+  offers: mockOffers,
+  pipelineEvents: mockPipelineEvents,
+  vacancies: mockVacancies,
+}
+
+vi.mock('~/composables/useJobflowSnapshot', () => ({
+  useJobflowSnapshot: () => Promise.resolve({
+    data: ref(snapshot),
+    error: ref(null),
+    refresh: vi.fn(),
+    status: ref('success'),
+  }),
+}))
 
 describe('home page', () => {
   it('renders the localized dashboard from mock CRM data', async () => {

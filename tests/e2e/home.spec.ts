@@ -38,3 +38,15 @@ test('renders the localized home page', async ({ page }) => {
   await expect(page.getByRole('button', { exact: true, name: 'EN' })).toBeVisible()
   await expect(page.getByRole('button', { exact: true, name: 'RU' })).toBeVisible()
 })
+
+test('switches locale between english and russian', async ({ page }) => {
+  await page.goto('/')
+
+  await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+  await page.getByRole('button', { exact: true, name: 'RU' }).click()
+  await expect(page.getByRole('heading', { name: /CRM для поиска работы/i })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Сбросить фильтры' })).toBeVisible()
+
+  await page.getByRole('button', { exact: true, name: 'EN' }).click()
+  await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+})

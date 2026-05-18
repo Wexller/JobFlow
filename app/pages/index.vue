@@ -22,6 +22,9 @@
       <p v-if="store.sync.errorMessage" class="text-sm text-muted">
         {{ store.sync.errorMessage }}
       </p>
+      <p v-if="store.sync.requestId" class="text-xs text-muted">
+        Request ID: {{ store.sync.requestId }}
+      </p>
       <UButton color="neutral" variant="soft" @click="reload">
         {{ $t('home.state.retry') }}
       </UButton>
@@ -91,6 +94,8 @@
 
 <script setup lang="ts">
 import { compareAsc, parseISO } from 'date-fns'
+import type { FetchError } from 'ofetch'
+import { useJobflowSnapshot } from '~/composables/useJobflowSnapshot'
 import { useJobflowStore } from '~/stores/jobflow'
 import { vacancyStatusIds } from '../domain/vacancies'
 import type { SummaryMetric } from '../schemas/summary-metrics.schema'
@@ -98,10 +103,7 @@ import type { SortDirection, VacancySortKey } from '../stores/jobflow'
 import type { VacancyFilterModel } from '../components/home/VacanciesFilters.vue'
 
 const store = useJobflowStore()
-
-if (store.sync.status === 'idle') {
-  void store.load()
-}
+const snapshotRequest = await useJobflowSnapshot()
 
 const visibleMetricIds = [
   'total_applications',
@@ -132,9 +134,9 @@ const sortOption = ref(`${store.sort.key}:${store.sort.direction}`)
 
 const activeVacancies = computed(() => store.activeVacancies)
 const filteredVacancies = computed(() => store.filteredVacancies)
-const isLoading = computed(() => store.sync.status === 'loading' || store.sync.status === 'idle')
-const hasLoadError = computed(() => store.sync.status === 'error')
-const isEmptyResult = computed(() => store.sync.status === 'success' && filteredVacancies.value.length === 0)
+const isLoading = computed(() => snapshotRequest.status.value === 'pending' || snapshotRequest.status.value === 'idle')
+const hasLoadError = computed(() => snapshotRequest.status.value === 'error' || store.sync.status === 'error')
+const isEmptyResult = computed(() => snapshotRequest.status.value === 'success' && filteredVacancies.value.length === 0)
 const visibleMetrics = computed(() =>
   visibleMetricIds
     .map((id) => store.dashboardMetrics.find((metric) => metric.id === id))
@@ -174,6 +176,23 @@ watch(sortOption, (value) => {
   store.setSort({ direction, key })
 }, { immediate: true })
 
+watch(() => snapshotRequest.status.value, (status) => {
+  if (status === 'pending' || status === 'idle') {
+    store.setLoading()
+  }
+
+  if (status === 'error') {
+    const errorState = resolveFetchError(snapshotRequest.error.value)
+    store.setLoadError(errorState.message, errorState.requestId)
+  }
+}, { immediate: true })
+
+watch(() => snapshotRequest.data.value, (snapshot) => {
+  if (snapshot !== null && snapshot !== undefined) {
+    store.applySnapshot(snapshot)
+  }
+}, { immediate: true })
+
 onMounted(() => {
   isReady.value = true
 })
@@ -198,8 +217,8 @@ function resetVacancyFilters() {
   store.setSort({ direction: 'desc', key: 'applied_at' })
 }
 
-function saveVacancy(payload: unknown) {
-  const result = store.saveVacancy(payload)
+async function saveVacancy(payload: unknown) {
+  const result = await store.saveVacancy(payload)
 
   if (result.ok) {
     selectedVacancyId.value = result.value.id
@@ -211,6 +230,15 @@ function saveVacancy(payload: unknown) {
 }
 
 function reload() {
-  void store.load()
+  void snapshotRequest.refresh()
+}
+
+function resolveFetchError(error: FetchError | null | undefined) {
+  const errorData = error?.data as { message?: string, requestId?: string } | undefined
+
+  return {
+    message: errorData?.message ?? error?.statusMessage ?? error?.message ?? 'Request failed',
+    requestId: errorData?.requestId,
+  }
 }
 </script>

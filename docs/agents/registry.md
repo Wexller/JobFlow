@@ -10,12 +10,13 @@ documented now and activated only by their triggers.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Product / Domain Agent | active | Product behavior and job-search CRM domain | Entities, statuses, user flows, acceptance criteria | PO request, current product plan, sheet structure | Product spec, scenarios, edge cases, open questions | Acceptance criteria are clear, scoped, and testable | New product request, unclear domain logic, status/model changes |
 | Solution Architect Agent | active | Application architecture and dependency choices | Nuxt structure, module boundaries, libraries, ADR candidates | Product spec, constraints, existing code | Architecture proposal, dependency plan, implementation slices | Architecture is simple, scalable, and decision-complete | New feature area, scaffold, dependency choice, major refactor |
-| Data & State Agent | active | Typed domain models and frontend state | TypeScript types, validation schemas, Pinia, composables, derived metrics | Domain spec, sheet schema, UI needs | Types, store/composable design, mapping contract | State is typed, testable, and isolated from UI details | Stores, metrics, filters, forms, typed API responses |
-| Google Sheets Platform Agent | active | Google Sheets integration and data safety | OAuth, Sheets API, ranges, CRUD, retries, row mapping | Sheet schema, env config, data contract | Integration design or implementation handoff | CRUD is quota-aware, typed, and protected from schema drift | Sheets API, OAuth, mapping, CRUD, sync, data integrity |
-| Frontend UI Agent | active | Nuxt/Vue user experience | Pages, components, layouts, Tailwind, Nuxt UI/shadcn-vue, VueUse | Product spec, architecture, data contract | UI implementation plan or handoff | UI has loading/empty/error states, responsive behavior, accessibility basics | Screens, forms, dashboard, kanban, timeline |
-| Testing Agent | active | Test strategy and proof of correctness | Vitest, Vue Test Utils, Playwright, fixtures, mocks | Diff, feature spec, risk notes | Test plan, tests, coverage gaps, verification report | Critical behavior is covered and commands are documented | Every feature, bug fix, integration, release gate |
-| Observability Agent | active | Logging, auditability, and diagnostics | Structured logs, audit events, client errors, redaction rules | Feature flows, error cases, privacy constraints | Logging plan or implementation handoff | Logs are useful and do not leak secrets or sensitive personal data | CRUD flows, auth, sync, production errors, release readiness |
-| Security & Review Agent | active | Final quality and security review | OAuth safety, secrets, XSS, dependency risk, architecture review | Diff, test output, implementation notes | Findings report, blockers, release recommendation | No blocking correctness, security, or maintainability issues remain | Before merge/release, auth/data changes, risky dependencies |
+| Backend / BFF Agent | active | Nuxt/Nitro server application layer | `server/api`, handlers, request validation, server-side orchestration, persistence boundary, error mapping | Product spec, data contract, runtime constraints | BFF design or implementation handoff | Browser-to-server boundaries are typed, testable, and maintainable | Server routes, BFF endpoints, privileged integrations, persistence orchestration |
+| Data & State Agent | active | Typed domain models and shared data contracts | TypeScript types, validation schemas, Pinia, composables, shared DTOs, derived metrics | Domain spec, persistence schema, UI needs | Types, store/composable design, mapping contract | State and contracts are typed, testable, and isolated from UI details | Stores, metrics, filters, forms, typed API responses |
+| Google Sheets Platform Agent | active | Google Sheets integration and data safety | Server-side Sheets access, ranges, row mapping, retries, sync semantics | Sheet schema, env config, data contract | Integration design or implementation handoff | Sync behavior is typed, quota-aware, and protected from schema drift | Sheets API, mapping, import, sync, data integrity |
+| Frontend UI Agent | active | Nuxt/Vue user experience | Pages, components, layouts, Nuxt UI, project-aligned styling, VueUse | Product spec, architecture, data contract | UI implementation plan or handoff | UI has loading/empty/error states, responsive behavior, accessibility basics | Screens, forms, dashboard, kanban, timeline |
+| Testing Agent | active | Test strategy and proof of correctness | Vitest, Vue Test Utils, Playwright, fixtures, mocks, route and service coverage | Diff, feature spec, risk notes | Test plan, tests, coverage gaps, verification report | Critical behavior is covered and commands are documented | Every feature, bug fix, integration, release gate |
+| Observability Agent | active | Logging, auditability, and diagnostics | Structured logs, audit events, request IDs, client/server errors, redaction rules | Feature flows, error cases, privacy constraints | Logging plan or implementation handoff | Logs are useful and do not leak secrets or sensitive personal data | CRUD flows, auth, sync, production errors, release readiness |
+| Security & Review Agent | active | Final quality and security review | Secrets, XSS, unsafe serialization, request validation, auth/session risk, architecture review | Diff, test output, implementation notes | Findings report, blockers, release recommendation | No blocking correctness, security, or maintainability issues remain | Before merge/release, auth/data changes, server routes, risky dependencies |
 
 ## Reserve Agents
 
@@ -30,8 +31,11 @@ documented now and activated only by their triggers.
 - Start with one owner agent per task.
 - Add reviewer agents based on risk, not habit.
 - Activate reserve agents only when their trigger is present.
-- For any Google Sheets, OAuth, CRUD, or data integrity work, include Google
-  Sheets Platform Agent, Testing Agent, and Security & Review Agent.
+- For any BFF, server route, or persistence-boundary work, include Backend /
+  BFF Agent, Testing Agent, and Security & Review Agent.
+- For any Google Sheets, import/sync, or data integrity work, include Google
+  Sheets Platform Agent, Backend / BFF Agent, Testing Agent, and Security &
+  Review Agent.
 - For every release candidate, include Testing Agent and Security & Review Agent.
 - For production deploy or CI work, include Release / DevOps Agent.
 

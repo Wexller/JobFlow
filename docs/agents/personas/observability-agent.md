@@ -14,7 +14,8 @@ sensitive personal data.
 
 - Structured logging conventions.
 - Audit events for important CRM actions.
-- Client error reporting strategy.
+- Request correlation IDs and server diagnostics.
+- Client and server error reporting strategy.
 - Redaction and privacy rules.
 - Request/action correlation fields.
 
@@ -40,6 +41,7 @@ sensitive personal data.
   personal contact details, or sensitive spreadsheet data.
 - User-facing errors and internal diagnostics are separated.
 - Important CRUD, auth, and sync failures are traceable.
+- Server request failures and upstream integration issues are traceable.
 
 ## Activation Triggers
 

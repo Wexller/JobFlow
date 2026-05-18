@@ -24,6 +24,8 @@ together from request intake to release.
      criteria are not yet clear.
    - Solution Architect Agent is used when module boundaries, dependencies, or
      long-term maintainability are affected.
+   - Backend / BFF Agent is used when the Nuxt server boundary, request
+     contracts, or persistence orchestration are affected.
 
 4. Implementation
    - Work is split into small vertical slices.
@@ -82,8 +84,11 @@ Release readiness:
   Review Agent
 
 - Feature touching Google Sheets or OAuth:
-  Google Sheets Platform Agent -> Testing Agent -> Observability Agent ->
-  Security & Review Agent
+  Google Sheets Platform Agent -> Backend / BFF Agent -> Testing Agent ->
+  Observability Agent -> Security & Review Agent
+
+- Feature touching BFF routes or server persistence:
+  Backend / BFF Agent -> Testing Agent -> Security & Review Agent
 
 - Feature touching architecture or dependencies:
   Solution Architect Agent -> Testing Agent -> Security & Review Agent
@@ -106,7 +111,8 @@ Codex must run this gate automatically before creating any commit:
 - Security & Review Agent reviews the diff for correctness, security, privacy,
   secret handling, dependency risk, and project-rule violations.
 - Observability Agent joins when logging, audit events, errors, Google Sheets
-  flows, sync state, or important user actions are touched.
+  flows, sync state, server request tracing, or important user actions are
+  touched.
 - Documentation Agent joins when README, setup, commands, dependencies,
   environment variables, architecture, testing, CI, deployment, or release
   workflow changes.

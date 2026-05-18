@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for MVP.
+Superseded by ADR 0004.
 
 ## Context
 
@@ -12,11 +12,9 @@ must not expose private keys or service account secrets in frontend code.
 
 ## Decision
 
-Build the MVP as a Nuxt 4 frontend-only application. Use Google Identity
-Services token model in the browser and call the Google Sheets REST API directly
-with short-lived access tokens.
-
-Do not use a service account or Node `googleapis` package in the browser.
+At the start of the project, the MVP was planned as a frontend-only application
+that would call Google Sheets directly from the browser with short-lived access
+tokens.
 
 ## Consequences
 
@@ -27,19 +25,13 @@ Benefits:
 - No custom backend or server secrets are required.
 - The user's Google account remains the access boundary.
 
-Tradeoffs:
+Why it changed:
 
-- OAuth access tokens exist in browser memory.
-- The `spreadsheets` scope is broad and sensitive.
-- Product-level validation is enforced client-side.
-- This is not the final architecture for a multi-user SaaS product.
+- The product now needs a single BFF entrypoint for reads and writes.
+- Server-side validation and persistence orchestration reduce browser coupling.
+- The project chose a DB-first direction with Google Sheets as an integration
+  boundary rather than the primary runtime source.
 
-## Guardrails
+## Replacement
 
-- Keep access tokens in memory only.
-- Do not log OAuth data or spreadsheet values.
-- Use typed repositories for all Sheets reads and writes.
-- Use stable IDs for updates.
-- Prefer archive/soft-delete behavior over physical row deletion in MVP.
-- Add a backend/BFF or managed backend in a future product phase if multi-user
-  access, audit history, or stronger authorization becomes necessary.
+Use ADR 0004 as the current source of truth for runtime architecture.

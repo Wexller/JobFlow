@@ -13,8 +13,7 @@ CRM.
 ## Owns
 
 - Pages, layouts, and UI components.
-- Nuxt UI or shadcn-vue usage.
-- Tailwind styling.
+- Nuxt UI usage and project-aligned styling patterns.
 - VueUse-powered interactions where helpful.
 - Loading, empty, error, success, and disabled states.
 - Accessibility basics for forms, tables, kanban, and timeline UI.

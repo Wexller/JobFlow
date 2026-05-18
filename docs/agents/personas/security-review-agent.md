@@ -15,6 +15,7 @@ to merge or release.
 - Code review for correctness, readability, maintainability, architecture,
   security, and performance risks.
 - OAuth and secret handling review.
+- Request validation, SSR serialization, and server error disclosure review.
 - Dependency and configuration risk review.
 - XSS and unsafe rendering checks.
 - Release readiness recommendation.
@@ -39,12 +40,13 @@ to merge or release.
 - Secrets are not exposed in frontend code, logs, tests, or docs.
 - Auth scopes and env usage are appropriate for the MVP.
 - Data validation and error handling are reviewed at risky boundaries.
+- Privileged server boundaries do not leak secrets to the browser.
 - The Lead receives a clear approve/block recommendation.
 
 ## Activation Triggers
 
 - Before merge or release.
-- OAuth, Google Sheets, logging, dependency, or environment changes.
+- OAuth, Google Sheets, logging, dependency, environment, or server route changes.
 - Any change touching sensitive data or user-controlled input.
 
 ## Out of Scope

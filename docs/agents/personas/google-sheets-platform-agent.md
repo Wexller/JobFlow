@@ -7,12 +7,12 @@ status: active
 
 ## Mission
 
-Make Google Sheets safe and predictable as the MVP data source.
+Make Google Sheets safe and predictable as a server-side integration boundary.
 
 ## Owns
 
-- Google Sheets API access strategy.
-- OAuth constraints and environment variables.
+- Server-side Google Sheets access strategy.
+- Service account or OAuth constraints and environment variables.
 - Sheet ranges, headers, row mapping, and CRUD operations.
 - Retry, backoff, quota-aware behavior, and data integrity guardrails.
 - Apps Script fallback analysis when needed.
@@ -43,8 +43,8 @@ Make Google Sheets safe and predictable as the MVP data source.
 
 ## Activation Triggers
 
-- OAuth or Google Cloud setup.
-- Sheets API reads or writes.
+- Google Cloud setup.
+- Sheets import, sync, or server-side reads and writes.
 - Row mapping, header schema, or CRUD behavior.
 - Data integrity, quota, sync, or conflict concerns.
 

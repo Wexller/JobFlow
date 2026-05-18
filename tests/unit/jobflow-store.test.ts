@@ -1,6 +1,32 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { createMockRepository } from '../../app/repositories/mockRepository'
+import type { JobflowRepository } from '../../app/repositories/jobflow'
+import type { JobflowSnapshot } from '../../app/schemas/jobflow.schema'
 import { useJobflowStore } from '../../app/stores/jobflow'
+import { createAppError, err, ok } from '../../app/utils/result'
+
+function createRepositoryStub(overrides: Partial<JobflowRepository> = {}): JobflowRepository {
+  return {
+    createInterview: async (interview) => ok(interview),
+    createOffer: async (offer) => ok(offer),
+    createPipelineEvent: async (pipelineEvent) => ok(pipelineEvent),
+    createVacancy: async (vacancy) => ok(vacancy),
+    getSnapshot: async () => ok({
+      interviews: [],
+      offers: [],
+      pipelineEvents: [],
+      vacancies: [],
+    }),
+    getVacancyDetails: async () => err(createAppError('not_found', 'Vacancy not found')),
+    listVacancies: async () => ok([]),
+    updateInterview: async (_interviewId, interview) => ok(interview),
+    updateOffer: async (_offerId, offer) => ok(offer),
+    updatePipelineEvent: async (_pipelineEventId, pipelineEvent) => ok(pipelineEvent),
+    updateVacancy: async (_vacancyId, vacancy) => ok(vacancy),
+    ...overrides,
+  }
+}
 
 describe('jobflow store', () => {
   beforeEach(() => {
@@ -9,7 +35,7 @@ describe('jobflow store', () => {
 
   it('loads a mock snapshot and exposes sync state', async () => {
     const store = useJobflowStore()
-    const result = await store.load()
+    const result = await store.load(createMockRepository())
 
     expect(result.ok).toBe(true)
     expect(store.sync.status).toBe('success')
@@ -20,9 +46,47 @@ describe('jobflow store', () => {
     expect(store.offers).toHaveLength(1)
   })
 
+  it('sets sync status to loading while snapshot is in-flight', async () => {
+    const store = useJobflowStore()
+
+    let resolveSnapshot: ((value: ReturnType<typeof ok<JobflowSnapshot>>) => void) | undefined
+    const repository = createRepositoryStub({
+      getSnapshot: () => new Promise((resolve) => {
+        resolveSnapshot = resolve
+      }),
+    })
+
+    const loadingPromise = store.load(repository)
+    expect(store.sync.status).toBe('loading')
+
+    resolveSnapshot?.(ok({
+      interviews: [],
+      offers: [],
+      pipelineEvents: [],
+      vacancies: [],
+    }))
+
+    await loadingPromise
+    expect(store.sync.status).toBe('success')
+  })
+
+  it('sets sync error state when snapshot load fails', async () => {
+    const store = useJobflowStore()
+
+    const repository = createRepositoryStub({
+      getSnapshot: async () => err(createAppError('google_sheets', 'Snapshot unavailable')),
+    })
+
+    const result = await store.load(repository)
+
+    expect(result.ok).toBe(false)
+    expect(store.sync.status).toBe('error')
+    expect(store.sync.errorMessage).toBe('Snapshot unavailable')
+  })
+
   it('filters vacancies by stable enum IDs and text facets', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
 
     store.setFilters({
       formats: ['remote'],
@@ -45,7 +109,7 @@ describe('jobflow store', () => {
 
   it('sorts vacancies by priority, salary, match score, and applied date', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
 
     store.setSort({ direction: 'desc', key: 'priority' })
     expect(store.filteredVacancies[0].priority).toBe('urgent')
@@ -62,7 +126,7 @@ describe('jobflow store', () => {
 
   it('groups vacancies for kanban by status', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
 
     expect(store.kanbanGroups.interviewing.map((vacancy) => vacancy.id)).toEqual([
       'vacancy-frontend-platform',
@@ -75,7 +139,7 @@ describe('jobflow store', () => {
 
   it('derives dashboard metrics from normalized data', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
     store.setReferenceDate('2026-05-17T00:00:00Z')
 
     const metrics = Object.fromEntries(store.dashboardMetrics.map((metric) => [metric.id, metric]))
@@ -92,7 +156,7 @@ describe('jobflow store', () => {
 
   it('returns joined vacancy details in timeline order', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
 
     const details = store.vacancyDetails('vacancy-frontend-platform')
 
@@ -107,11 +171,12 @@ describe('jobflow store', () => {
     expect(details?.offer).toBeUndefined()
   })
 
-  it('creates and updates vacancies through the validated form boundary', async () => {
+  it('creates and updates vacancies through the validated API boundary', async () => {
     const store = useJobflowStore()
-    await store.load()
+    const repository = createMockRepository()
+    await store.load(repository)
 
-    const createResult = store.saveVacancy({
+    const createResult = await store.saveVacancy({
       id: 'vacancy-new',
       company: ' NewCo ',
       role: ' Staff Frontend Engineer ',
@@ -121,7 +186,7 @@ describe('jobflow store', () => {
       techStack: 'Vue, TypeScript',
       createdAt: '2026-05-17T10:00:00Z',
       updatedAt: '2026-05-17T10:00:00Z',
-    })
+    }, repository)
 
     expect(createResult).toMatchObject({
       ok: true,
@@ -133,12 +198,12 @@ describe('jobflow store', () => {
     })
     expect(store.vacancies.some((vacancy) => vacancy.id === 'vacancy-new')).toBe(true)
 
-    const updateResult = store.saveVacancy({
+    const updateResult = await store.saveVacancy({
       ...store.vacancies.find((vacancy) => vacancy.id === 'vacancy-new'),
       priority: 'urgent',
       role: 'Principal Frontend Engineer',
       updatedAt: '2026-05-18T10:00:00Z',
-    })
+    }, repository)
 
     expect(updateResult).toMatchObject({
       ok: true,
@@ -152,10 +217,10 @@ describe('jobflow store', () => {
 
   it('rejects invalid vacancy form payloads without mutating state', async () => {
     const store = useJobflowStore()
-    await store.load()
+    await store.load(createMockRepository())
     const initialCount = store.vacancies.length
 
-    const result = store.saveVacancy({
+    const result = await store.saveVacancy({
       id: 'vacancy-invalid',
       company: '',
       role: 'Frontend Engineer',

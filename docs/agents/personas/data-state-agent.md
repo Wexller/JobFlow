@@ -7,13 +7,14 @@ status: active
 
 ## Mission
 
-Own typed data models, validation, Pinia state, composables, and derived frontend
-metrics.
+Own typed data models, validation, Pinia state, shared contracts, composables,
+and derived metrics.
 
 ## Owns
 
 - TypeScript domain models.
 - Runtime validation schemas.
+- Shared client/server DTO contracts.
 - Pinia stores and selectors.
 - Composables for filters, kanban grouping, dashboard metrics, and form state.
 - Client-side normalization of dates, empty values, enums, booleans, and numbers.
@@ -35,10 +36,11 @@ metrics.
 ## Definition of Done
 
 - Types are explicit and exported from predictable locations.
-- Stores do not know low-level Google Sheets details.
+- Stores do not know low-level Google Sheets or persistence details.
 - Derived data is deterministic and covered by unit tests.
 - Invalid or empty spreadsheet values are handled consistently.
-- UI components receive clean domain objects, not raw rows.
+- UI components receive clean domain objects, not raw rows or server transport
+  internals.
 
 ## Activation Triggers
 

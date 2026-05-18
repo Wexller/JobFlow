@@ -7,14 +7,14 @@ status: active
 
 ## Mission
 
-Design a simple, scalable Nuxt 3 + TypeScript architecture for the MVP without
+Design a simple, scalable Nuxt 4 + TypeScript architecture for the MVP without
 overengineering the first release.
 
 ## Owns
 
 - Project structure and module boundaries.
 - Dependency choices and architectural tradeoffs.
-- Public interfaces between UI, state, services, and integrations.
+- Public interfaces between UI, BFF, state, services, and integrations.
 - ADR candidates for decisions with long-term impact.
 
 ## Inputs
@@ -37,6 +37,7 @@ overengineering the first release.
 - Dependencies are justified and do not duplicate responsibilities.
 - Interfaces are typed and testable.
 - Google Sheets concerns are isolated behind service/repository boundaries.
+- Client/server boundaries are explicit and maintainable.
 - The plan avoids premature backend complexity.
 
 ## Activation Triggers
@@ -45,6 +46,7 @@ overengineering the first release.
 - New feature area.
 - New dependency.
 - Cross-module refactor.
+- New server route or BFF boundary.
 - Changes affecting long-term maintainability.
 
 ## Out of Scope

@@ -2,11 +2,15 @@
 
 ## Summary
 
-Jobflow starts as a Nuxt 4 + TypeScript frontend-only MVP for one user. Google
-Sheets remains the data source, accessed from the browser through Google
-Identity Services and the Google Sheets REST API. The application must support
-English and Russian from the first scaffold, with browser locale detection and
-English fallback.
+Jobflow is now a Nuxt 4 + TypeScript application with an integrated Nitro BFF.
+The browser talks to server routes for application data, while the server owns
+validation, orchestration, and persistence boundaries.
+
+The target persistence model is DB-first with managed Postgres as the primary
+store. Google Sheets remains important, but as an import/sync/export
+integration boundary rather than the main online datastore. The current
+workspace ships with an in-memory development adapter behind the same repository
+contracts so delivery can continue before the Postgres adapter is wired.
 
 ## Recommended Stack
 
@@ -15,7 +19,7 @@ Runtime:
 - Node.js 22 or newer
 - pnpm 9.14.4 or newer
 
-Runtime dependencies:
+Core dependencies:
 
 - Nuxt 4
 - Vue 3
@@ -24,17 +28,12 @@ Runtime dependencies:
 - `@pinia/nuxt` and Pinia
 - `@vueuse/nuxt` and VueUse
 - Nuxt UI v4
-- Tailwind CSS
 - date-fns
 - Zod
 - ECharts and vue-echarts
 
-Nuxt Fonts remote providers are disabled in project configuration. The MVP uses
-system font fallbacks until a deliberate local/self-hosted font decision is made.
-
 Development and testing dependencies:
 
-- vue-tsc
 - `@nuxt/eslint` and ESLint
 - `@nuxt/test-utils`
 - Vitest
@@ -47,125 +46,91 @@ Development and testing dependencies:
 ## Application Boundaries
 
 ```text
-Pages
-  -> UI components
+Pages / components
   -> Pinia stores and composables
-  -> Domain services and repositories
-  -> Google Sheets REST client
-  -> Google Sheets
+  -> useFetch / $fetch repository helpers
+  -> Nitro BFF routes (`server/api`)
+  -> application services (`server/application`)
+  -> repository / gateway layer
+  -> primary persistence (target: Postgres)
+  -> integration gateways (Google Sheets import / sync)
 ```
 
 Rules:
 
-- UI components receive domain objects, not raw spreadsheet rows.
-- Pinia stores do not call Google APIs directly.
-- Repositories hide row ranges, headers, row numbers, and Google API response
-  shapes.
+- UI components receive domain objects, not transport DTOs or raw integration
+  payloads.
+- Pinia stores do not know Google Sheets details or persistence internals.
+- The browser does not talk to Google Sheets directly.
+- Request/response DTOs are validated at the BFF boundary.
 - Domain data stores stable enum IDs. Translated labels are presentation-only.
-- Forms and imported sheet rows are validated with Zod.
+- Google Sheets and Postgres adapters must remain replaceable behind repository
+  contracts.
 
 ## Planned Project Structure
 
 ```text
 app/
-  assets/css/main.css
-  components/
-    dashboard/
-    vacancies/
-    pipeline/
-    interviews/
-    offers/
-    shared/
   composables/
-    useDashboardMetrics.ts
-    useKanbanGroups.ts
-    useVacancyFilters.ts
-    useVacancyForm.ts
-    useVacancySorting.ts
+    useJobflowSnapshot.ts
+  components/
   domain/
-    interviews.ts
-    offers.ts
-    pipeline.ts
-    vacancies.ts
   mappers/
-    formPayloads.ts
   pages/
-    index.vue
-    vacancies/index.vue
-    vacancies/[id].vue
-    vacancies/new.vue
-    vacancies/[id]/edit.vue
-    interviews/index.vue
-    offers/index.vue
-    settings.vue
   repositories/
-    googleSheetsRepository.ts
+    jobflow.ts
+    jobflowApiRepository.ts
+    inMemoryJobflowRepository.ts
     mockRepository.ts
   schemas/
-    common.schema.ts
-    interviews.schema.ts
-    offers.schema.ts
-    pipeline.schema.ts
-    summary-metrics.schema.ts
-    vacancies.schema.ts
-  services/google/
-    googleIdentity.client.ts
-    sheetsClient.ts
-    sheetsRanges.ts
-    sheetsRowMappers.ts
+    jobflow.schema.ts
+    ...
   stores/
-    auth.ts
-    filters.ts
-    sync.ts
-    vacancies.ts
   utils/
-    dates.ts
-    logger.ts
-    redaction.ts
-    result.ts
+server/
+  api/
+    jobflow/
+    vacancies/
+    pipeline-events/
+    interviews/
+    offers/
+  application/
+    jobflowService.ts
+  repositories/
+    jobflowRepository.ts
+    postgresJobflowRepository.ts
+  utils/
+    api.ts
 tests/
-  fixtures/
   unit/
   nuxt/
   e2e/
-i18n/
-  locales/
-    en.json
-    ru.json
 ```
-
-Nuxt may generate or prefer small variations in folder names. Keep the same
-boundaries even if the final scaffold differs slightly.
-
-## i18n Approach
-
-Use `@nuxtjs/i18n` with:
-
-- locales: `en`, `ru`;
-- `defaultLocale: 'en'`;
-- `strategy: 'prefix_except_default'`;
-- lazy locale files in `i18n/locales`;
-- browser locale detection enabled;
-- locale cookie key: `jobflow_locale`;
-- fallback locale: `en`.
-
-The first visit should use browser language or `Accept-Language` detection.
-Manual locale switching should persist the chosen locale in the locale cookie.
 
 ## Data And State Strategy
 
-- Zod schemas are the runtime source of truth for validation.
-- TypeScript types are inferred from schemas when practical.
-- Domain models are separate from Google Sheets row DTOs.
-- Dashboard metrics are derived from normalized domain objects.
-- Filters, sorting, kanban grouping, and dashboard metrics operate on enum IDs,
-  not translated labels.
-- Unknown enum values map to a safe `unknown` state and are surfaced as data
-  quality warnings.
+- Zod schemas remain the runtime source of truth for validation.
+- Domain models are separate from transport payloads and external row formats.
+- The BFF validates all write payloads before they reach persistence.
+- Stores own view state, filters, and derived metrics; they do not own
+  persistence orchestration.
+- Dashboard metrics, filters, sorting, and kanban grouping continue to operate on
+  stable enum IDs.
+- The server-side application layer is the place for write orchestration and
+  cross-entity validation.
+
+## Persistence Strategy
+
+- Target primary store: managed Postgres.
+- Current development adapter: in-memory repository with seeded CRM data.
+- Google Sheets is planned as a server-side integration gateway for import and
+  reconciliation.
+- Source-of-truth policy is DB-first. Dual-write is intentionally deferred.
 
 ## Logging Strategy
 
-Start with a typed logger wrapper:
+Start with a typed logger wrapper and keep the first useful version centered on
+server-side request handling:
 
 - `info`
 - `warn`
@@ -177,17 +142,26 @@ Allowed fields:
 - action type;
 - entity type;
 - entity ID;
+- request ID;
 - status;
 - duration;
 - HTTP status;
 - retry count;
 - sanitized error kind.
 
+Current implementation note:
+
+- server API requests emit structured logs with request IDs;
+- BFF error responses return the request ID for correlation;
+- client-side logging is not yet standardized across fetch/write flows.
+
 Never log:
 
 - OAuth tokens;
 - refresh tokens;
 - service account secrets;
+- raw request bodies;
+- raw query parameters containing sensitive data;
 - spreadsheet values;
 - private notes;
 - personal contacts;
@@ -195,29 +169,22 @@ Never log:
 - salary values;
 - raw row data.
 
-Sentry can be added later with explicit redaction and only a public DSN.
-
 ## Testing Strategy
 
-- Unit tests: schemas, mappers, date normalization, enum normalization, filters,
-  sorting, kanban grouping, dashboard metrics, logger redaction.
-- Nuxt/component tests: forms, loading/empty/error/success states, locale
-  switcher, store/composable integration.
-- Integration tests: repository contracts with mocked Google Sheets responses.
-- E2E smoke: browser locale detection, vacancy list, filter, kanban, create/edit
-  flow, auth denied, Sheets API error state.
+- Unit tests: schemas, mappers, result handling, logger redaction, in-memory
+  repository behavior, store selectors, and server application services.
+- Nuxt tests: the main home page flow with mocked `useFetch` data.
+- E2E smoke: dashboard, filters, kanban, details, vacancy save, locale switch.
+- Future integration tests: Postgres adapter and Google Sheets gateway behavior.
 
-CI must not use live Google credentials. Use MSW and fixtures for automated
-tests. Live Google Sheets checks stay manual until release automation exists.
+CI must not use live credentials. Database and Sheets integrations should be
+tested with fixtures or mocks unless a dedicated protected environment is added.
 
 ## Sources
 
-- Nuxt i18n module: https://nuxt.com/modules/i18n
-- Nuxt i18n browser locale: https://i18n.nuxtjs.org/docs/composables/use-browser-locale
-- Pinia with Nuxt: https://pinia.vuejs.org/ssr/nuxt.html
-- VueUse with Nuxt: https://vueuse.org/guide/
 - Nuxt testing: https://nuxt.com/docs/4.x/getting-started/testing
 - Nuxt UI module: https://nuxt.com/modules/ui/
-- Nuxt Fonts configuration: https://fonts.nuxt.com/get-started/configuration/
+- Pinia with Nuxt: https://pinia.vuejs.org/ssr/nuxt.html
+- VueUse with Nuxt: https://vueuse.org/guide/
 - Zod: https://zod.dev/
 - Playwright: https://playwright.dev/docs/intro

@@ -15,7 +15,7 @@ against regression.
 - Test strategy.
 - Unit tests for utilities, mappers, stores, and composables.
 - Component tests for complex UI.
-- Integration tests for repository and Sheets mapping behavior.
+- Route, service, and integration tests for BFF and repository behavior.
 - Playwright e2e smoke flows.
 - Test fixtures and mocks.
 
@@ -38,6 +38,7 @@ against regression.
 - Critical behavior has automated coverage.
 - Tests assert behavior, not implementation trivia.
 - Google Sheets and OAuth are mocked safely in non-e2e tests.
+- Server-side contracts and error paths are covered where risk justifies it.
 - Regression tests exist for fixed bugs.
 - Verification commands are documented with pass/fail status.
 
