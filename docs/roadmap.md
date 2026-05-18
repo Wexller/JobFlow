@@ -140,7 +140,7 @@ Checklist:
 - [x] Align BFF error mapping with Postgres error categories (409/422/404/500
   contract consistency).
 - [x] Add explicit backup/restore runbook for local and staging Postgres flows.
-- [ ] Add seed profiles (`dev`, `e2e`, `perf`) and document when each profile
+- [x] Add seed profiles (`dev`, `e2e`, `perf`) and document when each profile
   is used.
 
 Exit criteria:

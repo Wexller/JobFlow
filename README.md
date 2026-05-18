@@ -165,6 +165,7 @@ For local Postgres setup work, run schema migration and seed fixtures manually:
 ```bash
 JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate
 JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
+# optional: JOBFLOW_DB_SEED_PROFILE=e2e|perf
 ```
 
 Both commands use the repository's `pg` dependency and require a reachable
@@ -173,6 +174,12 @@ Postgres instance.
 `pnpm db:migrate` is idempotent: it records applied SQL files in
 `schema_migrations` and skips already applied migrations on subsequent runs.
 
+`pnpm db:seed` supports seed profiles via `JOBFLOW_DB_SEED_PROFILE`:
+
+- `dev` (default): developer-friendly baseline CRM dataset
+- `e2e`: stable deterministic dataset for end-to-end checks
+- `perf`: larger fixture profile for load/performance-oriented local checks
+
 For isolated integration work, an ephemeral local Postgres workflow is
 available (Docker required):
 
@@ -180,6 +187,7 @@ available (Docker required):
 pnpm db:test:up
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:migrate
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
+# optional: JOBFLOW_DB_SEED_PROFILE=e2e|perf
 pnpm db:test:down
 ```
 
@@ -189,6 +197,7 @@ If you prefer explicit Docker configuration, use the committed compose file:
 pnpm db:test:up:compose
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:migrate
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
+# optional: JOBFLOW_DB_SEED_PROFILE=e2e|perf
 pnpm db:test:down:compose
 ```
 
