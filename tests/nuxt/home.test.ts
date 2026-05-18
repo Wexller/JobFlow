@@ -21,5 +21,7 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Pipeline timeline')
     expect(wrapper.text()).toContain('Vue architecture interview')
     expect(wrapper.text()).toContain('Strong product engineering fit.')
+    expect(wrapper.text()).toContain('Add or edit vacancy')
+    expect(wrapper.text()).toContain('Save vacancy')
   })
 })

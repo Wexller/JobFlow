@@ -88,6 +88,20 @@
       "noOffer": "No offer recorded.",
       "notes": "Notes",
       "noNotes": "No notes yet."
+    },
+    "form": {
+      "title": "Add or edit vacancy",
+      "description": "Save local mock vacancies through the same validated data boundary.",
+      "id": "Stable ID",
+      "techStackPlaceholder": "Vue, TypeScript, Nuxt",
+      "salaryMin": "Salary min",
+      "salaryMax": "Salary max",
+      "currency": "Currency",
+      "appliedAt": "Applied date",
+      "save": "Save vacancy",
+      "new": "New vacancy",
+      "success": "Vacancy saved.",
+      "error": "Check required fields and stable enum values."
     }
   },
   "domain": {

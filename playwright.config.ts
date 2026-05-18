@@ -4,8 +4,8 @@ export default defineConfig({
   testDir: './tests/e2e',
   webServer: {
     command: 'pnpm dev --host 127.0.0.1 --port 3000',
-    port: 3000,
     reuseExistingServer: !process.env.CI,
+    url: 'http://127.0.0.1:3000',
   },
   use: {
     baseURL: 'http://127.0.0.1:3000',

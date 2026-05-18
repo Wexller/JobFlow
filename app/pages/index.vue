@@ -39,6 +39,13 @@
       />
     </section>
 
+    <HomeVacancyForm
+      :status="formStatus"
+      :vacancy="selectedVacancyDetails?.vacancy"
+      @reset-status="formStatus = 'idle'"
+      @save="saveVacancy"
+    />
+
     <HomeVacancyDetails :details="selectedVacancyDetails" />
 
     <HomeVacancyKanban
@@ -75,6 +82,7 @@ const visibleMetricIds = [
 const kanbanStatuses = vacancyStatusIds.filter((status) => status !== 'unknown')
 
 const isReady = ref(false)
+const formStatus = ref<'error' | 'idle' | 'success'>('idle')
 const selectedVacancyId = ref('vacancy-frontend-platform')
 const filters = ref<VacancyFilterModel>({
   format: 'all',
@@ -151,5 +159,17 @@ function resetVacancyFilters() {
   sortOption.value = 'applied_at:desc'
   store.resetFilters()
   store.setSort({ direction: 'desc', key: 'applied_at' })
+}
+
+function saveVacancy(payload: unknown) {
+  const result = store.saveVacancy(payload)
+
+  if (result.ok) {
+    selectedVacancyId.value = result.value.id
+    formStatus.value = 'success'
+  }
+  else {
+    formStatus.value = 'error'
+  }
 }
 </script>

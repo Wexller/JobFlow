@@ -98,7 +98,7 @@ Checklist:
 - [x] Kanban groups vacancies by current status.
 - [x] Vacancy details show main info, pipeline timeline, interviews, offer, notes,
   and next step.
-- [ ] Add/edit vacancy form validates required fields.
+- [x] Add/edit vacancy form validates required fields.
 - [ ] Loading, empty, error, and success states are present.
 - [ ] Component and e2e tests cover the main happy path.
 
