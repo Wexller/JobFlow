@@ -171,9 +171,9 @@ Checklist:
 - [x] Add `db:check` to the required local/CI verification lane.
 - [x] README documents runtime modes, environment variables, and local setup.
 - [x] Architecture docs and ADRs match the implemented BFF model.
-- [ ] Release notes capture the remaining verification and operational gap before
+- [x] Release notes capture the remaining verification and operational gap before
   Postgres becomes a required runtime path.
-- [ ] Production deploy expectations for the server runtime are documented.
+- [x] Production deploy expectations for the server runtime are documented.
 
 Exit criteria:
 

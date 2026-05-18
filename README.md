@@ -319,6 +319,16 @@ Production/runtime expectations:
 - If Postgres is unavailable at runtime, server routes return repository errors;
   monitor application logs and health checks before switching default driver.
 
+## Release Notes
+
+- `docs/release/mvp-readiness-notes.md` documents current MVP verification scope,
+  residual operational gaps, and manual release gate expectations.
+
+## Production Deploy Runbook
+
+- `docs/operations/postgres-production-deploy.md` defines PG-first runtime
+  prerequisites, deploy sequencing, rollback expectations, and monitoring checks.
+
 ## Agent Operating Model
 
 This repository uses an agent operating model to keep product, architecture,
