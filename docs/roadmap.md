@@ -69,7 +69,7 @@ Checklist:
   and offers.
 - [x] Choose and wire the Postgres access layer.
 - [x] Add migrations and seed/dev fixtures for the database path.
-- [ ] Implement the Postgres-backed repository adapter behind the existing BFF
+- [x] Implement the Postgres-backed repository adapter behind the existing BFF
   contracts.
 - [ ] Add repository integration coverage against the real database adapter.
 - [ ] Document local database setup and production runtime expectations.
