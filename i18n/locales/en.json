@@ -12,6 +12,12 @@
     "sync": {
       "loaded": "Loaded from mock data"
     },
+    "state": {
+      "loading": "Loading CRM snapshot...",
+      "error": "Failed to load data snapshot.",
+      "retry": "Retry",
+      "empty": "No vacancies match the current filters."
+    },
     "metrics": {
       "total_applications": "Total applications",
       "active_processes": "Active processes",

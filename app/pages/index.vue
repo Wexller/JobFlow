@@ -2,56 +2,90 @@
   <section class="space-y-8">
     <HomePageHero />
 
-    <HomeDashboardMetrics :metrics="visibleMetrics" />
-
-    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <HomeActivePipelineTable :vacancies="activeVacancies" />
-      <HomeNextActionsList :vacancies="nextActions" />
+    <div
+      v-if="isLoading"
+      class="rounded-xl border border-default bg-muted/20 p-8 text-sm text-muted"
+      role="status"
+      aria-live="polite"
+    >
+      {{ $t('home.state.loading') }}
     </div>
 
-    <section class="space-y-4">
-      <div>
-        <h2 class="text-xl font-semibold tracking-normal">
-          {{ $t('home.vacancies.title') }}
-        </h2>
-        <p class="text-sm text-muted">
-          {{ $t('home.vacancies.description') }}
-        </p>
+    <div
+      v-else-if="hasLoadError"
+      class="space-y-3 rounded-xl border border-error/30 bg-error/5 p-6"
+      role="alert"
+    >
+      <p class="font-medium text-error">
+        {{ $t('home.state.error') }}
+      </p>
+      <p v-if="store.sync.errorMessage" class="text-sm text-muted">
+        {{ store.sync.errorMessage }}
+      </p>
+      <UButton color="neutral" variant="soft" @click="reload">
+        {{ $t('home.state.retry') }}
+      </UButton>
+    </div>
+
+    <template v-else>
+      <HomeDashboardMetrics :metrics="visibleMetrics" />
+
+      <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <HomeActivePipelineTable :vacancies="activeVacancies" />
+        <HomeNextActionsList :vacancies="nextActions" />
       </div>
 
-      <HomeVacanciesFilters
-        v-model="filters"
-        v-model:sort="sortOption"
-        :format-options="formatOptions"
-        :is-ready="isReady"
-        :level-options="levelOptions"
-        :location-options="locationOptions"
-        :priority-options="priorityOptions"
-        :source-options="sourceOptions"
-        :status-options="statusOptions"
-        :tech-stack-options="techStackOptions"
-        @reset="resetVacancyFilters"
+      <section class="space-y-4">
+        <div>
+          <h2 class="text-xl font-semibold tracking-normal">
+            {{ $t('home.vacancies.title') }}
+          </h2>
+          <p class="text-sm text-muted">
+            {{ $t('home.vacancies.description') }}
+          </p>
+        </div>
+
+        <HomeVacanciesFilters
+          v-model="filters"
+          v-model:sort="sortOption"
+          :format-options="formatOptions"
+          :is-ready="isReady"
+          :level-options="levelOptions"
+          :location-options="locationOptions"
+          :priority-options="priorityOptions"
+          :source-options="sourceOptions"
+          :status-options="statusOptions"
+          :tech-stack-options="techStackOptions"
+          @reset="resetVacancyFilters"
+        />
+
+        <p
+          v-if="isEmptyResult"
+          class="rounded-lg border border-default bg-muted/20 p-4 text-sm text-muted"
+        >
+          {{ $t('home.state.empty') }}
+        </p>
+
+        <HomeVacanciesTable
+          :vacancies="filteredVacancies"
+          @select="selectedVacancyId = $event"
+        />
+      </section>
+
+      <HomeVacancyForm
+        :status="formStatus"
+        :vacancy="selectedVacancyDetails?.vacancy"
+        @reset-status="formStatus = 'idle'"
+        @save="saveVacancy"
       />
 
-      <HomeVacanciesTable
-        :vacancies="filteredVacancies"
-        @select="selectedVacancyId = $event"
+      <HomeVacancyDetails :details="selectedVacancyDetails" />
+
+      <HomeVacancyKanban
+        :groups="store.kanbanGroups"
+        :statuses="kanbanStatuses"
       />
-    </section>
-
-    <HomeVacancyForm
-      :status="formStatus"
-      :vacancy="selectedVacancyDetails?.vacancy"
-      @reset-status="formStatus = 'idle'"
-      @save="saveVacancy"
-    />
-
-    <HomeVacancyDetails :details="selectedVacancyDetails" />
-
-    <HomeVacancyKanban
-      :groups="store.kanbanGroups"
-      :statuses="kanbanStatuses"
-    />
+    </template>
   </section>
 </template>
 
@@ -66,7 +100,7 @@ import type { VacancyFilterModel } from '../components/home/VacanciesFilters.vue
 const store = useJobflowStore()
 
 if (store.sync.status === 'idle') {
-  await store.load()
+  void store.load()
 }
 
 const visibleMetricIds = [
@@ -98,6 +132,9 @@ const sortOption = ref(`${store.sort.key}:${store.sort.direction}`)
 
 const activeVacancies = computed(() => store.activeVacancies)
 const filteredVacancies = computed(() => store.filteredVacancies)
+const isLoading = computed(() => store.sync.status === 'loading' || store.sync.status === 'idle')
+const hasLoadError = computed(() => store.sync.status === 'error')
+const isEmptyResult = computed(() => store.sync.status === 'success' && filteredVacancies.value.length === 0)
 const visibleMetrics = computed(() =>
   visibleMetricIds
     .map((id) => store.dashboardMetrics.find((metric) => metric.id === id))
@@ -119,23 +156,23 @@ const levelOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) =
 const locationOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) => vacancy.location)))
 const techStackOptions = computed(() => uniqueValues(store.vacancies.flatMap((vacancy) => vacancy.techStack)))
 
-watchEffect(() => {
+watch(filters, (value) => {
   store.setFilters({
-    formats: filters.value.format === 'all' ? [] : [filters.value.format],
-    levels: filters.value.level === 'all' ? [] : [filters.value.level],
-    locations: filters.value.location === 'all' ? [] : [filters.value.location],
-    priorities: filters.value.priority === 'all' ? [] : [filters.value.priority],
-    query: filters.value.query,
-    sources: filters.value.source === 'all' ? [] : [filters.value.source],
-    statuses: filters.value.status === 'all' ? [] : [filters.value.status],
-    techStack: filters.value.techStack === 'all' ? [] : [filters.value.techStack],
+    formats: value.format === 'all' ? [] : [value.format],
+    levels: value.level === 'all' ? [] : [value.level],
+    locations: value.location === 'all' ? [] : [value.location],
+    priorities: value.priority === 'all' ? [] : [value.priority],
+    query: value.query,
+    sources: value.source === 'all' ? [] : [value.source],
+    statuses: value.status === 'all' ? [] : [value.status],
+    techStack: value.techStack === 'all' ? [] : [value.techStack],
   })
-})
+}, { deep: true, immediate: true })
 
-watchEffect(() => {
-  const [key, direction] = sortOption.value.split(':') as [VacancySortKey, SortDirection]
+watch(sortOption, (value) => {
+  const [key, direction] = value.split(':') as [VacancySortKey, SortDirection]
   store.setSort({ direction, key })
-})
+}, { immediate: true })
 
 onMounted(() => {
   isReady.value = true
@@ -171,5 +208,9 @@ function saveVacancy(payload: unknown) {
   else {
     formStatus.value = 'error'
   }
+}
+
+function reload() {
+  void store.load()
 }
 </script>
