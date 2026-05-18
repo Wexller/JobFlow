@@ -118,6 +118,8 @@ pnpm db:check:migrations-seed
 pnpm db:check:repository
 pnpm db:check:http
 pnpm db:check
+pnpm db:backup
+pnpm db:restore
 ```
 
 `pnpm test:ci` is the full local quality gate. It runs linting, TypeScript
@@ -215,6 +217,33 @@ JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:repository
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:http
 pnpm db:check
 ```
+
+## Backup And Restore Runbook (Local/Staging)
+
+For containerized local/staging Postgres workflows:
+
+1. Ensure the target container is running (`pnpm db:test:up:compose`).
+2. Create a backup dump:
+
+```bash
+pnpm db:backup
+# optional overrides:
+# JOBFLOW_DB_BACKUP_DIR=... JOBFLOW_DB_BACKUP_NAME=... pnpm db:backup
+```
+
+3. Restore from a backup dump:
+
+```bash
+JOBFLOW_DB_BACKUP_PATH=/absolute/path/to/backup.dump pnpm db:restore
+```
+
+Operational notes:
+
+- `db:backup` uses `pg_dump -Fc` inside the running Postgres container and
+  copies the dump to `db/backups/` by default.
+- `db:restore` copies the dump into the container and runs `pg_restore --clean`
+  against the target database.
+- Keep backups out of git history and handle staging dumps as sensitive data.
 
 ## Environment Variables
 

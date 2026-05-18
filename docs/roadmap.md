@@ -139,7 +139,7 @@ Checklist:
 - [x] Add `updated_at` trigger strategy for mutable entities.
 - [x] Align BFF error mapping with Postgres error categories (409/422/404/500
   contract consistency).
-- [ ] Add explicit backup/restore runbook for local and staging Postgres flows.
+- [x] Add explicit backup/restore runbook for local and staging Postgres flows.
 - [ ] Add seed profiles (`dev`, `e2e`, `perf`) and document when each profile
   is used.
 
