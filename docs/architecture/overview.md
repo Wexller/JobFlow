@@ -10,7 +10,8 @@ The target persistence model is DB-first with managed Postgres as the primary
 store. Google Sheets remains important, but as an import/sync/export
 integration boundary rather than the main online datastore. The current
 workspace ships with an in-memory development adapter behind the same repository
-contracts so delivery can continue before the Postgres adapter is wired.
+contracts so delivery can continue while real-database integration verification
+is still pending.
 
 ## Recommended Stack
 
@@ -122,6 +123,7 @@ tests/
 ## Persistence Strategy
 
 - Target primary store: managed Postgres.
+- Implemented Postgres path: server repository + SQL client + migrations + seed.
 - Current development adapter: in-memory repository with seeded CRM data.
 - Google Sheets is planned as a server-side integration gateway for import and
   reconciliation.
@@ -175,10 +177,13 @@ Never log:
   repository behavior, store selectors, and server application services.
 - Nuxt tests: the main home page flow with mocked `useFetch` data.
 - E2E smoke: dashboard, filters, kanban, details, vacancy save, locale switch.
-- Future integration tests: Postgres adapter and Google Sheets gateway behavior.
+- Planned integration tests: Postgres adapter, migrations, seed path, and Google
+  Sheets gateway behavior.
 
-CI must not use live credentials. Database and Sheets integrations should be
-tested with fixtures or mocks unless a dedicated protected environment is added.
+CI must not use live credentials. The intended next step is an isolated
+ephemeral Postgres database for repository integration tests, while Google
+Sheets integrations should continue to use fixtures or mocks unless a dedicated
+protected environment is added.
 
 ## Sources
 

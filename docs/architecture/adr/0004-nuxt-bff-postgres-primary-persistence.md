@@ -18,8 +18,8 @@ Google Sheets remains a server-side integration boundary for import, sync, and
 export flows.
 
 The repository now includes the BFF structure and contracts. The current
-workspace still uses an in-memory development adapter by default until the
-Postgres adapter is wired.
+workspace still uses an in-memory development adapter by default while
+real-database integration verification for the Postgres path is being added.
 
 ## Consequences
 
@@ -34,7 +34,8 @@ Tradeoffs:
 
 - The runtime now includes a stateful server layer.
 - Deployment and environment management become more important.
-- Postgres adapter work remains to be completed after the BFF foundation.
+- The Postgres adapter is implemented, but it still needs a dedicated
+  real-database verification lane before it becomes a required runtime path.
 
 ## Guardrails
 

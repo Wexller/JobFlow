@@ -53,8 +53,8 @@ Exit criteria:
 
 ## Milestone 2: Postgres Persistence
 
-Goal: replace development memory persistence with the production-target primary
-store.
+Goal: implement the Postgres persistence path and define how it is verified
+before it becomes a required runtime.
 
 Owner agents:
 
@@ -71,14 +71,19 @@ Checklist:
 - [x] Add migrations and seed/dev fixtures for the database path.
 - [x] Implement the Postgres-backed repository adapter behind the existing BFF
   contracts.
-- [ ] Add repository integration coverage against the real database adapter.
+- [ ] Define and automate an ephemeral Postgres test database workflow.
+- [ ] Add repository integration coverage against an isolated real Postgres
+  instance.
+- [ ] Add migration and seed smoke verification against that isolated database.
 - [ ] Document local database setup and production runtime expectations.
 
 Exit criteria:
 
-- `JOBFLOW_PERSISTENCE_DRIVER=postgres` is supported end-to-end.
-- Database-backed CRUD works through the existing BFF routes.
-- Repository integration tests cover the production-target adapter.
+- `JOBFLOW_PERSISTENCE_DRIVER=postgres` is implemented behind the existing BFF
+  routes.
+- Database-backed CRUD is verified either by automated real-DB integration
+  coverage or is explicitly documented as still pending.
+- The test DB strategy is decision-complete for local and CI usage.
 
 ## Milestone 3: Frontend-To-BFF Migration
 
@@ -159,7 +164,8 @@ Checklist:
   save, and locale switching.
 - [ ] README documents runtime modes, environment variables, and local setup.
 - [ ] Architecture docs and ADRs match the implemented BFF model.
-- [ ] Release notes capture the in-memory-to-Postgres gap until the adapter lands.
+- [ ] Release notes capture the remaining verification and operational gap before
+  Postgres becomes a required runtime path.
 - [ ] Production deploy expectations for the server runtime are documented.
 
 Exit criteria:

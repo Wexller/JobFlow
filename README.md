@@ -16,15 +16,17 @@ The repository currently includes:
 - a typed job-search CRM domain with Zod validation;
 - a Nuxt/Nitro BFF with read/write API routes;
 - a server-side application layer and repository contracts;
+- an implemented Postgres runtime path with migrations and seed scripts;
 - a development in-memory persistence adapter behind the BFF contracts;
 - a mock CRM dashboard, vacancy list, filters, kanban, details, and vacancy save
   flow using `useFetch` for reads and `$fetch`-compatible writes;
 - unit and Nuxt coverage for stores, mappers, logging, server application
   behavior, and the main home page flow.
 
-Managed Postgres is the documented production target, but this workspace still
-ships with the in-memory server adapter as the default runtime so development
-can continue without external infrastructure.
+Managed Postgres is the documented production target, and the repository already
+contains the Postgres adapter path. This workspace still ships with the
+in-memory server adapter as the default runtime, and automated verification
+against a real Postgres instance is still pending.
 
 ## Runtime Model
 
@@ -148,8 +150,9 @@ The documented target path for shared and production-like environments is:
 - `JOBFLOW_PERSISTENCE_DRIVER=postgres`
 - `JOBFLOW_DATABASE_URL=...`
 
-The Postgres adapter is not yet wired in this workspace, so `memory` remains the
-safe default for local development until the database implementation lands.
+The Postgres adapter is implemented in this workspace, but `memory` remains the
+safe default for local development until the real-database verification lane is
+in place.
 
 For local Postgres setup work, run schema migration and seed fixtures manually:
 
@@ -158,8 +161,8 @@ JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate
 JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
 ```
 
-Both commands require the `pg` package to be installed in the environment where
-you run them.
+Both commands use the repository's `pg` dependency and require a reachable
+Postgres instance.
 
 ## Environment Variables
 
@@ -182,7 +185,7 @@ JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL=
 JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY=
 ```
 
-`JOBFLOW_DATABASE_URL` is intended for the future managed Postgres adapter.
+`JOBFLOW_DATABASE_URL` is used by the implemented Postgres adapter path.
 Google Sheets credentials are reserved for the future sync/import gateway and
 must never be exposed to frontend code.
 
@@ -196,11 +199,24 @@ The current automated checks cover:
 - Playwright smoke coverage for the localized dashboard, filters, details, form
   save, and locale switching.
 
-Future BFF work should add:
+The current automated checks do not yet require a real Postgres test database.
+They validate the in-memory/runtime-agnostic layers, but they do not prove the
+SQL adapter, migrations, or seed path against a live database.
+
+The next verification lane should add:
 
 - route-level contract coverage for Nitro handlers;
-- repository integration coverage against the real Postgres adapter;
+- repository integration coverage against an isolated ephemeral Postgres
+  instance;
+- migration and seed smoke verification against that same isolated database;
 - sync/import coverage for Google Sheets gateways.
+
+Planned test database direction:
+
+- `unit`, `nuxt`, and `e2e smoke` remain database-free;
+- a separate integration suite should use a disposable Postgres database;
+- that suite should become mandatory before `postgres` becomes the default
+  staging or CI runtime path.
 
 ## Agent Operating Model
 
