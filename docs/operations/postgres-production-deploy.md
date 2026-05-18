@@ -31,6 +31,33 @@
    - `GET /api/vacancies`
    - one write-path smoke in controlled environment
 
+## Self-hosted Compose Sequence
+
+For self-hosted production-like runtime (`docker-compose.prod.yml`):
+
+0. Set explicit production DB credentials in environment:
+   - `export JOBFLOW_PROD_DB_USER=...`
+   - `export JOBFLOW_PROD_DB_PASSWORD=...`
+   - `export JOBFLOW_PROD_DB_NAME=...`
+1. Build application image:
+   - `docker compose -f docker-compose.prod.yml build`
+2. Start Postgres:
+   - `docker compose -f docker-compose.prod.yml up -d postgres`
+3. Apply migrations via one-off job:
+   - `docker compose -f docker-compose.prod.yml run --rm migrate`
+4. Start application service:
+   - `docker compose -f docker-compose.prod.yml up -d app`
+5. Run smoke checks:
+   - `curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/jobflow/snapshot`
+   - `curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/vacancies`
+
+Important:
+
+- Keep `JOBFLOW_PERSISTENCE_DRIVER=postgres`.
+- `docker-compose.prod.yml` keeps Postgres internal to the compose network
+  (no host port exposure by default).
+- `migrate` is intentionally separate from app startup to keep deploy control explicit.
+
 ## Rollback expectations
 
 - Application rollback is allowed if schema remains backward compatible.

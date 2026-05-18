@@ -123,7 +123,10 @@ tests/
 
 - Target primary store: managed Postgres.
 - Implemented Postgres path: server repository + SQL client + migrations + seed.
-- Default development adapter: Postgres repository with explicit migration/seed workflow.
+- Near-term modernization target: Prisma-backed Postgres adapter with temporary
+  fallback to legacy SQL repository during cutover.
+- Default development adapter: Postgres repository with explicit migration/seed
+  workflow.
 - Google Sheets is planned as a server-side integration gateway for import and
   reconciliation.
 - Source-of-truth policy is DB-first. Dual-write is intentionally deferred.
@@ -155,6 +158,8 @@ Current implementation note:
 - server API requests emit structured logs with request IDs;
 - BFF error responses return the request ID for correlation;
 - client-side logging is not yet standardized across fetch/write flows.
+- near-term modernization target is `pino` as server-side sink behind the
+  current typed logger API and redaction policy.
 
 Never log:
 

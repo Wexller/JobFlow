@@ -180,6 +180,39 @@ Exit criteria:
 - The BFF-backed app is understandable, testable, and safe to evolve.
 - Remaining infrastructure gaps are documented and accepted by the Product Owner.
 
+## Milestone 6: Backend Modernization And Container Runtime
+
+Goal: prepare the backend for a controlled move to Prisma + Pino and make
+containerized runtime paths explicit for local and production-like usage.
+
+Owner agents:
+
+- Backend / BFF Agent
+- Data & State Agent
+- Observability Agent
+- Testing Agent
+- Security & Review Agent
+- Documentation Agent
+- Release / DevOps Agent
+
+Checklist:
+
+- [x] Document the target migration strategy to `Prisma + Pino`.
+- [x] Add Docker runtime artifacts (`Dockerfile`, `docker-compose.local.yml`,
+  `docker-compose.prod.yml`) with one-off migration job.
+- [x] Document Docker verification flow (build, migrate, app up, API smoke).
+- [ ] Scaffold Prisma schema/client while keeping SQL repository as fallback.
+- [ ] Implement Prisma-backed repository parity with existing Postgres contracts.
+- [ ] Add adapter toggle and cutover plan (`sql` -> `prisma`) with rollback path.
+- [ ] Integrate Pino as server logger sink without breaking redaction policy.
+- [ ] Extend CI gates with `prisma validate` and `prisma generate` before build.
+
+Exit criteria:
+
+- Containerized local and production-like runbooks are executable and documented.
+- Prisma transition path is implementation-ready with explicit validation gates.
+- Observability baseline is ready for Pino adoption without security regressions.
+
 ## Deferred Milestone: Google Sheets Import And Sync
 
 Goal: keep Google Sheets as a future integration surface without making it the

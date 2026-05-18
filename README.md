@@ -58,6 +58,8 @@ application data.
 - VueUse
 - date-fns
 - Zod
+- Prisma (planned migration target for Postgres adapter)
+- Pino (planned server logging sink)
 - ECharts / vue-echarts
 - Vitest
 - Vue Test Utils
@@ -113,6 +115,9 @@ pnpm db:migrate
 pnpm db:seed
 pnpm db:test:up
 pnpm db:test:down
+pnpm db:test:reset
+pnpm db:test:up:compose
+pnpm db:test:down:compose
 pnpm db:test:url
 pnpm db:check:migrations-seed
 pnpm db:check:repository
@@ -142,34 +147,25 @@ pnpm exec playwright install --with-deps chromium
 
 ## Local Development
 
-Local development is now Postgres-first:
+Local development is Postgres-first:
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-The BFF defaults to:
-
-- `JOBFLOW_PERSISTENCE_DRIVER=memory`
-- `JOBFLOW_DATABASE_URL` must point to a reachable Postgres instance
-
-The same Postgres-first runtime applies to shared and production-like environments.
-
-If you need the legacy mock adapter for isolated troubleshooting, set:
+Default runtime expectations:
 
 - `JOBFLOW_PERSISTENCE_DRIVER=postgres`
+- `JOBFLOW_DATABASE_URL` points to a reachable Postgres instance
 
-For local Postgres setup work, run schema migration and seed fixtures manually:
+For local Postgres setup, run migrations and seed fixtures:
 
 ```bash
 JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate
 JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
 # optional: JOBFLOW_DB_SEED_PROFILE=e2e|perf
 ```
-
-Both commands use the repository's `pg` dependency and require a reachable
-Postgres instance.
 
 `pnpm db:migrate` is idempotent: it records applied SQL files in
 `schema_migrations` and skips already applied migrations on subsequent runs.
@@ -191,20 +187,10 @@ JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
 pnpm db:test:down
 ```
 
-If you prefer explicit Docker configuration, use the committed compose file:
-
-```bash
-pnpm db:test:up:compose
-JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:migrate
-JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
-# optional: JOBFLOW_DB_SEED_PROFILE=e2e|perf
-pnpm db:test:down:compose
-```
-
 `pnpm db:test:up` and `pnpm db:test:down` remain script-based wrappers around
 `docker run` and `docker rm` for environments where Compose may be unavailable.
 
-Optional environment overrides:
+Optional test DB overrides:
 
 - `JOBFLOW_TEST_DB_CONTAINER`
 - `JOBFLOW_TEST_DB_PORT`
@@ -218,7 +204,7 @@ For integration/smoke tests against an already running Postgres instance, set:
 
 This disables automatic `db:test:up`/`db:test:down` inside the tests.
 
-Run Postgres verification lane with Node-based wrappers:
+Run Postgres verification lane:
 
 ```bash
 JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:migrations-seed
@@ -227,14 +213,75 @@ JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:http
 pnpm db:check
 ```
 
+## Docker Deployment Profiles
+
+Two compose profiles are maintained:
+
+- `docker-compose.local.yml`: local development (`app` + `postgres` with bind mount).
+- `docker-compose.prod.yml`: self-hosted production-like runtime (`app` + `postgres`) plus one-off `migrate` job.
+
+Local compose flow:
+
+```bash
+docker compose -f docker-compose.local.yml up -d postgres
+JOBFLOW_DATABASE_URL=postgres://${JOBFLOW_LOCAL_DB_USER:-jobflow}:${JOBFLOW_LOCAL_DB_PASSWORD:-jobflow}@localhost:${JOBFLOW_LOCAL_DB_PORT:-55432}/${JOBFLOW_LOCAL_DB_NAME:-jobflow_local} pnpm db:migrate
+JOBFLOW_DATABASE_URL=postgres://${JOBFLOW_LOCAL_DB_USER:-jobflow}:${JOBFLOW_LOCAL_DB_PASSWORD:-jobflow}@localhost:${JOBFLOW_LOCAL_DB_PORT:-55432}/${JOBFLOW_LOCAL_DB_NAME:-jobflow_local} pnpm db:seed
+docker compose -f docker-compose.local.yml up app
+```
+
+Prod-like compose flow with explicit migration step:
+
+```bash
+export JOBFLOW_PROD_DB_USER=jobflow_prod
+export JOBFLOW_PROD_DB_PASSWORD='<strong-password>'
+export JOBFLOW_PROD_DB_NAME=jobflow
+docker compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml up -d postgres
+docker compose -f docker-compose.prod.yml run --rm migrate
+docker compose -f docker-compose.prod.yml up -d app
+```
+
+Stop profiles:
+
+```bash
+docker compose -f docker-compose.local.yml down
+docker compose -f docker-compose.prod.yml down
+```
+
+Smoke API checks for container runtime:
+
+```bash
+curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/jobflow/snapshot
+curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/vacancies
+```
+
+`JOBFLOW_PERSISTENCE_DRIVER=postgres` is required in both compose profiles.
+`docker-compose.prod.yml` does not publish Postgres to host and requires explicit
+production DB credentials via env vars.
+
+Compose config validation commands:
+
+```bash
+docker compose -f docker-compose.local.yml config
+docker compose -f docker-compose.prod.yml config
+```
+
 ## Backup And Restore Runbook (Local/Staging)
 
 For containerized local/staging Postgres workflows:
 
-1. Ensure the target container is running (`pnpm db:test:up:compose`).
+1. Ensure the target container is running.
 2. Create a backup dump:
 
 ```bash
+# Test DB workflow
+pnpm db:test:up:compose
+pnpm db:backup
+
+# Local compose DB workflow
+JOBFLOW_TEST_DB_CONTAINER="${JOBFLOW_LOCAL_DB_CONTAINER:-jobflow-local-postgres}" \
+JOBFLOW_TEST_DB_USER="${JOBFLOW_LOCAL_DB_USER:-jobflow}" \
+JOBFLOW_TEST_DB_NAME="${JOBFLOW_LOCAL_DB_NAME:-jobflow_local}" \
 pnpm db:backup
 # optional overrides:
 # JOBFLOW_DB_BACKUP_DIR=... JOBFLOW_DB_BACKUP_NAME=... pnpm db:backup
@@ -244,6 +291,13 @@ pnpm db:backup
 
 ```bash
 JOBFLOW_DB_BACKUP_PATH=/absolute/path/to/backup.dump JOBFLOW_DB_RESTORE_FORCE=true pnpm db:restore
+
+# Local compose DB workflow
+JOBFLOW_TEST_DB_CONTAINER="${JOBFLOW_LOCAL_DB_CONTAINER:-jobflow-local-postgres}" \
+JOBFLOW_TEST_DB_USER="${JOBFLOW_LOCAL_DB_USER:-jobflow}" \
+JOBFLOW_TEST_DB_NAME="${JOBFLOW_LOCAL_DB_NAME:-jobflow_local}" \
+JOBFLOW_DB_BACKUP_PATH=/absolute/path/to/backup.dump \
+JOBFLOW_DB_RESTORE_FORCE=true pnpm db:restore
 ```
 
 Operational notes:
@@ -278,6 +332,37 @@ JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY=
 `JOBFLOW_DATABASE_URL` is used by the implemented Postgres adapter path.
 Google Sheets credentials are reserved for the future sync/import gateway and
 must never be exposed to frontend code.
+
+Container-related variables:
+
+```env
+JOBFLOW_APP_PORT=3000
+JOBFLOW_LOCAL_DB_CONTAINER=jobflow-local-postgres
+JOBFLOW_LOCAL_DB_PORT=55432
+JOBFLOW_LOCAL_DB_USER=jobflow
+JOBFLOW_LOCAL_DB_PASSWORD=jobflow
+JOBFLOW_LOCAL_DB_NAME=jobflow_local
+JOBFLOW_PROD_DB_CONTAINER=jobflow-prod-postgres
+JOBFLOW_PROD_DB_USER=jobflow_prod
+JOBFLOW_PROD_DB_PASSWORD=change_me_strong_password
+JOBFLOW_PROD_DB_NAME=jobflow
+```
+
+Operational/test variables:
+
+```env
+JOBFLOW_TEST_DB_CONTAINER=jobflow-test-postgres
+JOBFLOW_TEST_DB_PORT=55432
+JOBFLOW_TEST_DB_USER=jobflow
+JOBFLOW_TEST_DB_PASSWORD=jobflow
+JOBFLOW_TEST_DB_NAME=jobflow_test
+JOBFLOW_TEST_MANAGE_DB=true
+JOBFLOW_HTTP_CHECK_PORT=4011
+JOBFLOW_DB_BACKUP_DIR=./db/backups
+JOBFLOW_DB_BACKUP_NAME=
+JOBFLOW_DB_BACKUP_PATH=
+JOBFLOW_DB_RESTORE_FORCE=false
+```
 
 ## Testing Strategy
 
