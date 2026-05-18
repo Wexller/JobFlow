@@ -65,7 +65,7 @@ Owner agents:
 
 Checklist:
 
-- [ ] Finalize the relational schema for vacancies, pipeline events, interviews,
+- [x] Finalize the relational schema for vacancies, pipeline events, interviews,
   and offers.
 - [ ] Choose and wire the Postgres access layer.
 - [ ] Add migrations and seed/dev fixtures for the database path.
