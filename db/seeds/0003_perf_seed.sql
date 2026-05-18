@@ -1,3 +1,4 @@
+-- PERF profile: extended fixture set for heavier local checks
 BEGIN;
 
 INSERT INTO vacancies (
@@ -75,3 +76,5 @@ ON CONFLICT (id) DO UPDATE SET
   notes = EXCLUDED.notes;
 
 COMMIT;
+
+INSERT INTO vacancies (id, company, role, status, priority, format, tech_stack, created_at, updated_at) VALUES ('vacancy-perf-extra-1','Perf Labs','Frontend Engineer','applied','medium','remote',ARRAY['Vue'],'2026-05-01T00:00:00Z','2026-05-01T00:00:00Z') ON CONFLICT (id) DO UPDATE SET updated_at=EXCLUDED.updated_at;

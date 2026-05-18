@@ -27,6 +27,8 @@ pnpm-debug.log*
 coverage
 playwright-report
 test-results
+db/backups/
+*.dump
 
 # OS / editors
 .DS_Store

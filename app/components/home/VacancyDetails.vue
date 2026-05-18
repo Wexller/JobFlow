@@ -166,7 +166,12 @@ const moneyFormatter = computed(() =>
 )
 
 function formatDate(value: string | undefined): string {
-  return value === undefined ? '—' : dateFormatter.value.format(parseISO(value))
+  if (value === undefined) {
+    return '—'
+  }
+
+  const parsed = parseISO(value)
+  return Number.isNaN(parsed.getTime()) ? '—' : dateFormatter.value.format(parsed)
 }
 
 function formatMoneyRange(rangeValue: Pick<Vacancy | Offer, 'currency' | 'salaryMax' | 'salaryMin'>): string {

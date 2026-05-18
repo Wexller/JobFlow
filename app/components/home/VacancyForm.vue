@@ -176,12 +176,21 @@ function createTimestamp(): string {
   return new Date().toISOString()
 }
 
+function createUniqueId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 function toDatetimeLocal(value: string | undefined): string {
   return value === undefined ? '' : value.replace(/Z$/, '').slice(0, 16)
 }
 
 function fromDatetimeLocal(value: string): string {
-  return value.trim().length === 0 ? '' : `${value}:00Z`
+  if (value.trim().length === 0) {
+    return ''
+  }
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString()
 }
 
 function createFormModel(vacancy: Vacancy | undefined): VacancyFormModel {
@@ -193,7 +202,7 @@ function createFormModel(vacancy: Vacancy | undefined): VacancyFormModel {
     createdAt: vacancy?.createdAt ?? timestamp,
     currency: vacancy?.currency ?? '',
     format: vacancy?.format ?? 'remote',
-    id: vacancy?.id ?? `vacancy-${timestamp.slice(0, 10)}`,
+    id: vacancy?.id ?? createUniqueId('vacancy'),
     level: vacancy?.level ?? '',
     location: vacancy?.location ?? '',
     matchScore: vacancy?.matchScore?.toString() ?? '',

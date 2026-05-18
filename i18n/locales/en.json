@@ -17,7 +17,8 @@
       "emptyList": "No vacancies available.",
       "loadingDetails": "Loading vacancy details...",
       "errorDetails": "Failed to load vacancy details.",
-      "retry": "Retry"
+      "retry": "Retry",
+      "requestFailed": "Request failed"
     },
     "list": {
       "aria": "Vacancy list"
@@ -37,7 +38,8 @@
       "loading": "Loading CRM snapshot...",
       "error": "Failed to load data snapshot.",
       "retry": "Retry",
-      "empty": "No vacancies match the current filters."
+      "empty": "No vacancies match the current filters.",
+      "requestId": "Request ID"
     },
     "metrics": {
       "total_applications": "Total applications",
@@ -145,7 +147,8 @@
       "new": "New event",
       "loading": "Saving pipeline event...",
       "success": "Pipeline event saved.",
-      "error": "Check required fields and enum values."
+      "error": "Check required fields and enum values.",
+      "selectVacancyFirst": "Select a vacancy first"
     },
     "interviewForm": {
       "title": "Interview",
@@ -160,7 +163,8 @@
       "new": "New interview",
       "loading": "Saving interview...",
       "success": "Interview saved.",
-      "error": "Check required fields and enum values."
+      "error": "Check required fields and enum values.",
+      "selectVacancyFirst": "Select a vacancy first"
     },
     "offerForm": {
       "title": "Offer",
@@ -173,7 +177,8 @@
       "new": "New offer",
       "loading": "Saving offer...",
       "success": "Offer saved.",
-      "error": "Check required fields and enum values."
+      "error": "Check required fields and enum values.",
+      "selectVacancyFirst": "Select a vacancy first"
     }
   },
   "domain": {

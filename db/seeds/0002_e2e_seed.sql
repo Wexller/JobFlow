@@ -1,3 +1,4 @@
+-- E2E profile: deterministic minimal fixture set
 BEGIN;
 
 INSERT INTO vacancies (
@@ -7,7 +8,7 @@ INSERT INTO vacancies (
   ('vacancy-frontend-platform', 'Northstar Labs', 'Senior Frontend Engineer', 'interviewing', 'high', 'remote', 'referral', 'Berlin', 'senior', ARRAY['Vue', 'TypeScript', 'Nuxt'], 115000, 140000, 'EUR', 91, '2026-05-02', '2026-05-21T10:00:00Z', '2026-05-01T09:00:00Z', '2026-05-14T15:30:00Z', 'Strong product engineering fit.'),
   ('vacancy-product-crm', 'SignalWorks', 'Product Engineer', 'screening', 'medium', 'hybrid', 'linkedin', 'Amsterdam', 'middle', ARRAY['Vue', 'Node.js', 'PostgreSQL'], 90000, 115000, 'EUR', 78, '2026-05-08', '2026-05-18T13:00:00Z', '2026-05-07T11:20:00Z', '2026-05-11T08:00:00Z', NULL),
   ('vacancy-design-systems', 'Atlas Cloud', 'Design Systems Engineer', 'offer', 'urgent', 'remote', 'company_site', 'London', 'senior', ARRAY['Vue', 'Accessibility', 'Storybook'], 125000, 150000, 'GBP', 88, '2026-04-22', '2026-05-19T09:00:00Z', '2026-04-20T10:00:00Z', '2026-05-15T17:00:00Z', NULL),
-  ('vacancy-legacy-modernization', 'BrightBank', 'Frontend Modernization Lead', 'rejected', 'low', 'onsite', 'recruiter', 'Prague', 'lead', ARRAY['Vue', 'Migration', 'Testing'], 100000, 120000, 'EUR', 64, '2026-04-10', NULL, '2026-04-09T07:30:00Z', '2026-04-30T16:00:00Z', NULL)
+  ('vacancy-e2e-legacy-modernization', 'BrightBank', 'Frontend Modernization Lead', 'rejected', 'low', 'onsite', 'recruiter', 'Prague', 'lead', ARRAY['Vue', 'Migration', 'Testing'], 100000, 120000, 'EUR', 64, '2026-04-10', NULL, '2026-04-09T07:30:00Z', '2026-04-30T16:00:00Z', NULL)
 ON CONFLICT (id) DO UPDATE SET
   company = EXCLUDED.company,
   role = EXCLUDED.role,

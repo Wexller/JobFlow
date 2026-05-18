@@ -4,7 +4,7 @@ import type { Offer } from '../../app/schemas/offers.schema'
 import { offerSchema } from '../../app/schemas/offers.schema'
 import type { PipelineEvent } from '../../app/schemas/pipeline.schema'
 import { pipelineEventSchema } from '../../app/schemas/pipeline.schema'
-import type { JobflowSnapshot, VacancyDetails } from '../../app/schemas/jobflow.schema'
+import type { JobflowSnapshot } from '../../app/schemas/jobflow.schema'
 import { jobflowSnapshotSchema, vacancyDetailsSchema } from '../../app/schemas/jobflow.schema'
 import type { Vacancy } from '../../app/schemas/vacancies.schema'
 import { vacancySchema } from '../../app/schemas/vacancies.schema'
@@ -512,10 +512,9 @@ export function createPostgresJobflowRepository(clientFactory: () => Promise<Sql
             match_score = $14,
             applied_at = $15,
             next_action_at = $16,
-            created_at = $17,
-            updated_at = $18,
-            archived_at = $19,
-            notes = $20
+            updated_at = $17,
+            archived_at = $18,
+            notes = $19
           WHERE id = $1
           RETURNING *`,
           [
@@ -535,7 +534,6 @@ export function createPostgresJobflowRepository(clientFactory: () => Promise<Sql
             vacancy.matchScore ?? null,
             vacancy.appliedAt ?? null,
             vacancy.nextActionAt ?? null,
-            vacancy.createdAt,
             vacancy.updatedAt,
             vacancy.archivedAt ?? null,
             vacancy.notes ?? null,

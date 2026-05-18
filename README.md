@@ -151,7 +151,7 @@ pnpm dev
 
 The BFF defaults to:
 
-- `JOBFLOW_PERSISTENCE_DRIVER=postgres`
+- `JOBFLOW_PERSISTENCE_DRIVER=memory`
 - `JOBFLOW_DATABASE_URL` must point to a reachable Postgres instance
 
 The same Postgres-first runtime applies to shared and production-like environments.
@@ -243,7 +243,7 @@ pnpm db:backup
 3. Restore from a backup dump:
 
 ```bash
-JOBFLOW_DB_BACKUP_PATH=/absolute/path/to/backup.dump pnpm db:restore
+JOBFLOW_DB_BACKUP_PATH=/absolute/path/to/backup.dump JOBFLOW_DB_RESTORE_FORCE=true pnpm db:restore
 ```
 
 Operational notes:
@@ -251,7 +251,7 @@ Operational notes:
 - `db:backup` uses `pg_dump -Fc` inside the running Postgres container and
   copies the dump to `db/backups/` by default.
 - `db:restore` copies the dump into the container and runs `pg_restore --clean`
-  against the target database.
+  against the target database (requires `JOBFLOW_DB_RESTORE_FORCE=true`).
 - Keep backups out of git history and handle staging dumps as sensitive data.
 
 ## Environment Variables

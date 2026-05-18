@@ -49,11 +49,12 @@
       </label>
 
       <div class="flex flex-wrap items-center gap-3 md:col-span-2 xl:col-span-4">
-        <UButton :loading="status === 'loading'" :disabled="status === 'loading'" type="submit">{{ $t('home.offerForm.save') }}</UButton>
-        <UButton :disabled="status === 'loading'" color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.offerForm.new') }}</UButton>
+        <UButton :loading="status === 'loading'" :disabled="status === 'loading' || !vacancyId" type="submit">{{ $t('home.offerForm.save') }}</UButton>
+        <UButton :disabled="status === 'loading' || !vacancyId" color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.offerForm.new') }}</UButton>
         <p v-if="status === 'loading'" class="text-sm text-muted">{{ $t('home.offerForm.loading') }}</p>
         <p v-if="status === 'success'" class="text-sm text-success">{{ $t('home.offerForm.success') }}</p>
         <p v-if="status === 'error'" class="text-sm text-error">{{ $t('home.offerForm.error') }}</p>
+        <p v-if="!vacancyId" class="text-sm text-muted">{{ $t('home.offerForm.selectVacancyFirst') }}</p>
       </div>
     </form>
   </section>
@@ -98,8 +99,8 @@ watch(() => props.vacancyId, (vacancyId) => {
   form.value = createFormModel(vacancyId, undefined)
 })
 
-function createTimestamp(): string {
-  return new Date().toISOString()
+function createUniqueId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 function toDatetimeLocal(value: string | undefined): string {
@@ -107,17 +108,20 @@ function toDatetimeLocal(value: string | undefined): string {
 }
 
 function fromDatetimeLocal(value: string): string {
-  return value.trim().length === 0 ? '' : `${value}:00Z`
+  if (value.trim().length === 0) {
+    return ''
+  }
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString()
 }
 
 function createFormModel(vacancyId: string | undefined, offer: Offer | undefined): OfferFormModel {
-  const timestamp = createTimestamp()
-
   return {
     currency: offer?.currency ?? '',
     decision: offer?.decision ?? 'pending',
     decisionDueAt: offer?.decisionDueAt?.slice(0, 10) ?? '',
-    id: offer?.id ?? `offer-${timestamp.slice(0, 10)}`,
+    id: offer?.id ?? createUniqueId('offer'),
     notes: offer?.notes ?? '',
     offeredAt: toDatetimeLocal(offer?.offeredAt),
     salaryMax: offer?.salaryMax?.toString() ?? '',

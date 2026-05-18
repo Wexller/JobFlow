@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -11,11 +11,12 @@ const outputPath = join(backupDir, backupName)
 
 mkdirSync(backupDir, { recursive: true })
 
-execSync(
-  `docker exec ${container} pg_dump -U ${user} -d ${dbName} -Fc -f /tmp/${backupName}`,
-  { stdio: 'inherit' },
-)
-execSync(`docker cp ${container}:/tmp/${backupName} ${outputPath}`, { stdio: 'inherit' })
-execSync(`docker exec ${container} rm -f /tmp/${backupName}`, { stdio: 'inherit' })
+const dump = spawnSync('docker', ['exec', container, 'pg_dump', '-U', user, '-d', dbName, '-Fc', '-f', `/tmp/${backupName}`], { stdio: 'inherit' })
+if (dump.status !== 0) process.exit(dump.status ?? 1)
+
+const copy = spawnSync('docker', ['cp', `${container}:/tmp/${backupName}`, outputPath], { stdio: 'inherit' })
+if (copy.status !== 0) process.exit(copy.status ?? 1)
+
+spawnSync('docker', ['exec', container, 'rm', '-f', `/tmp/${backupName}`], { stdio: 'inherit' })
 
 console.log(`backup saved: ${outputPath}`)

@@ -59,10 +59,10 @@
       </label>
 
       <div class="flex flex-wrap items-center gap-3 md:col-span-2 xl:col-span-4">
-        <UButton :loading="status === 'loading'" :disabled="status === 'loading'" type="submit">
+        <UButton :loading="status === 'loading'" :disabled="status === 'loading' || !vacancyId" type="submit">
           {{ $t('home.pipelineForm.save') }}
         </UButton>
-        <UButton :disabled="status === 'loading'" color="neutral" type="button" variant="soft" @click="resetToBlank">
+        <UButton :disabled="status === 'loading' || !vacancyId" color="neutral" type="button" variant="soft" @click="resetToBlank">
           {{ $t('home.pipelineForm.new') }}
         </UButton>
         <p v-if="status === 'loading'" class="text-sm text-muted">
@@ -73,6 +73,9 @@
         </p>
         <p v-if="status === 'error'" class="text-sm text-error">
           {{ $t('home.pipelineForm.error') }}
+        </p>
+        <p v-if="!vacancyId" class="text-sm text-muted">
+          {{ $t('home.pipelineForm.selectVacancyFirst') }}
         </p>
       </div>
     </form>
@@ -118,8 +121,8 @@ watch(() => props.vacancyId, (vacancyId) => {
   form.value = createFormModel(vacancyId, undefined)
 })
 
-function createTimestamp(): string {
-  return new Date().toISOString()
+function createUniqueId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
 function toDatetimeLocal(value: string | undefined): string {
@@ -127,15 +130,18 @@ function toDatetimeLocal(value: string | undefined): string {
 }
 
 function fromDatetimeLocal(value: string): string {
-  return value.trim().length === 0 ? '' : `${value}:00Z`
+  if (value.trim().length === 0) {
+    return ''
+  }
+
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString()
 }
 
 function createFormModel(vacancyId: string | undefined, pipelineEvent: PipelineEvent | undefined): PipelineEventFormModel {
-  const timestamp = createTimestamp()
-
   return {
     completedAt: toDatetimeLocal(pipelineEvent?.completedAt),
-    id: pipelineEvent?.id ?? `pipeline-${timestamp.slice(0, 10)}`,
+    id: pipelineEvent?.id ?? createUniqueId('pipeline'),
     notes: pipelineEvent?.notes ?? '',
     occurredAt: toDatetimeLocal(pipelineEvent?.occurredAt),
     scheduledAt: toDatetimeLocal(pipelineEvent?.scheduledAt),

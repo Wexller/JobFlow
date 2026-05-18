@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import type { Vacancy } from '../schemas/vacancies.schema'
 import type { VacancyDetails } from '../schemas/jobflow.schema'
+const { t } = useI18n()
 
 const selectedVacancyId = ref<string | undefined>()
 
@@ -99,7 +100,7 @@ const listErrorMessage = computed(() => {
 
   const error = listRequest.error.value
   const errorData = error?.data as { message?: string } | undefined
-  return errorData?.message ?? error?.statusMessage ?? error?.message ?? 'Request failed'
+  return errorData?.message ?? error?.statusMessage ?? error?.message ?? t('vacanciesPage.state.requestFailed')
 })
 
 const detailsErrorMessage = computed(() => {
@@ -109,7 +110,7 @@ const detailsErrorMessage = computed(() => {
 
   const error = detailsRequest.error.value
   const errorData = error?.data as { message?: string } | undefined
-  return errorData?.message ?? error?.statusMessage ?? error?.message ?? 'Request failed'
+  return errorData?.message ?? error?.statusMessage ?? error?.message ?? t('vacanciesPage.state.requestFailed')
 })
 
 function refreshList() {

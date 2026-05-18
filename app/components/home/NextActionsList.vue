@@ -51,6 +51,11 @@ const dateFormatter = computed(() =>
 )
 
 function formatDate(value: string | undefined): string {
-  return value === undefined ? '—' : dateFormatter.value.format(parseISO(value))
+  if (value === undefined) {
+    return '—'
+  }
+
+  const parsed = parseISO(value)
+  return Number.isNaN(parsed.getTime()) ? '—' : dateFormatter.value.format(parsed)
 }
 </script>

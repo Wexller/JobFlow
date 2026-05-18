@@ -23,7 +23,7 @@
         {{ store.sync.errorMessage }}
       </p>
       <p v-if="store.sync.requestId" class="text-xs text-muted">
-        Request ID: {{ store.sync.requestId }}
+        {{ $t('home.state.requestId') }}: {{ store.sync.requestId }}
       </p>
       <UButton color="neutral" variant="soft" @click="reload">
         {{ $t('home.state.retry') }}
@@ -146,7 +146,7 @@ const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
 const pipelineFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
 const interviewFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
 const offerFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
-const selectedVacancyId = ref('vacancy-frontend-platform')
+const selectedVacancyId = ref<string | undefined>(undefined)
 const filters = ref<VacancyFilterModel>({
   format: 'all',
   level: 'all',
@@ -175,7 +175,9 @@ const nextActions = computed(() =>
     .toSorted((first, second) => compareAsc(parseISO(first.nextActionAt ?? ''), parseISO(second.nextActionAt ?? '')))
     .slice(0, 4),
 )
-const selectedVacancyDetails = computed(() => store.vacancyDetails(selectedVacancyId.value))
+const selectedVacancyDetails = computed(() =>
+  selectedVacancyId.value === undefined ? undefined : store.vacancyDetails(selectedVacancyId.value),
+)
 const selectedPipelineEvent = computed(() => selectedVacancyDetails.value?.pipelineEvents.at(-1))
 const selectedInterview = computed(() => selectedVacancyDetails.value?.interviews.at(-1))
 
@@ -219,6 +221,9 @@ watch(() => snapshotRequest.status.value, (status) => {
 watch(() => snapshotRequest.data.value, (snapshot) => {
   if (snapshot !== null && snapshot !== undefined) {
     store.applySnapshot(snapshot)
+    if (selectedVacancyId.value === undefined && snapshot.vacancies.length > 0) {
+      selectedVacancyId.value = snapshot.vacancies[0]?.id
+    }
   }
 }, { immediate: true })
 
