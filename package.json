@@ -22,7 +22,11 @@
     "test:e2e": "pnpm build && playwright test",
     "test:ci": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:nuxt && pnpm test:e2e && pnpm build",
     "db:migrate": "node scripts/db/migrate.mjs",
-    "db:seed": "node scripts/db/seed.mjs"
+    "db:seed": "node scripts/db/seed.mjs",
+    "db:test:up": "node scripts/db/test-db-up.mjs",
+    "db:test:down": "node scripts/db/test-db-down.mjs",
+    "db:test:url": "node scripts/db/test-db-url.mjs",
+    "db:test:reset": "pnpm db:test:down && pnpm db:test:up"
   },
   "dependencies": {
     "@nuxt/ui": "latest",
@@ -32,6 +36,7 @@
     "@vueuse/nuxt": "latest",
     "date-fns": "latest",
     "echarts": "latest",
+    "pg": "^8.20.0",
     "pinia": "latest",
     "vue-echarts": "latest",
     "zod": "latest"

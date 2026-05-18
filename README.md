@@ -111,6 +111,9 @@ pnpm test:e2e
 pnpm test:ci
 pnpm db:migrate
 pnpm db:seed
+pnpm db:test:up
+pnpm db:test:down
+pnpm db:test:url
 ```
 
 `pnpm test:ci` is the full local quality gate. It runs linting, TypeScript
@@ -163,6 +166,24 @@ JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
 
 Both commands use the repository's `pg` dependency and require a reachable
 Postgres instance.
+
+For isolated integration work, an ephemeral local Postgres workflow is
+available (Docker required):
+
+```bash
+pnpm db:test:up
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:migrate
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
+pnpm db:test:down
+```
+
+Optional environment overrides:
+
+- `JOBFLOW_TEST_DB_CONTAINER`
+- `JOBFLOW_TEST_DB_PORT`
+- `JOBFLOW_TEST_DB_USER`
+- `JOBFLOW_TEST_DB_PASSWORD`
+- `JOBFLOW_TEST_DB_NAME`
 
 ## Environment Variables
 

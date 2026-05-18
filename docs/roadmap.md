@@ -71,7 +71,7 @@ Checklist:
 - [x] Add migrations and seed/dev fixtures for the database path.
 - [x] Implement the Postgres-backed repository adapter behind the existing BFF
   contracts.
-- [ ] Define and automate an ephemeral Postgres test database workflow.
+- [x] Define and automate an ephemeral Postgres test database workflow.
 - [ ] Add repository integration coverage against an isolated real Postgres
   instance.
 - [ ] Add migration and seed smoke verification against that isolated database.
