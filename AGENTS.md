@@ -192,6 +192,9 @@ A feature is done only when:
 - Keep project documentation close to the code. Update the English README in the
   same change that modifies developer setup, commands, dependencies, environment
   variables, architecture, or release process.
+- Keep roadmap status current. Whenever a commit implements a roadmap checklist
+  item, update `docs/roadmap.md` in that same commit by marking the completed
+  checkbox(es) and, if needed, adjusting related milestone wording.
 
 ## Reference Model
 

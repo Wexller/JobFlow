@@ -130,14 +130,14 @@ Owner agents:
 
 Checklist:
 
-- [ ] Make `postgres` the default persistence driver for local and staging
+- [x] Make `postgres` the default persistence driver for local and staging
   runtime profiles.
-- [ ] Add a `schema_migrations` tracking table and idempotent migration runner
+- [x] Add a `schema_migrations` tracking table and idempotent migration runner
   behavior.
-- [ ] Extend database constraints and indexes for common read/write paths
+- [x] Extend database constraints and indexes for common read/write paths
   (`status`, `priority`, `next_action_at`, timeline queries).
-- [ ] Add `updated_at` trigger strategy for mutable entities.
-- [ ] Align BFF error mapping with Postgres error categories (409/422/404/500
+- [x] Add `updated_at` trigger strategy for mutable entities.
+- [x] Align BFF error mapping with Postgres error categories (409/422/404/500
   contract consistency).
 - [ ] Add explicit backup/restore runbook for local and staging Postgres flows.
 - [ ] Add seed profiles (`dev`, `e2e`, `perf`) and document when each profile
@@ -166,9 +166,9 @@ Checklist:
 - [ ] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
 - [ ] Playwright smoke coverage stays green for dashboard, filters, details, form
   save, and locale switching.
-- [ ] Add HTTP-level integration coverage for core BFF CRUD routes against a
+- [x] Add HTTP-level integration coverage for core BFF CRUD routes against a
   real Postgres instance.
-- [ ] Add `db:check` to the required local/CI verification lane.
+- [x] Add `db:check` to the required local/CI verification lane.
 - [ ] README documents runtime modes, environment variables, and local setup.
 - [ ] Architecture docs and ADRs match the implemented BFF model.
 - [ ] Release notes capture the remaining verification and operational gap before
