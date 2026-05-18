@@ -27,7 +27,7 @@
     "db:test:down": "node scripts/db/test-db-down.mjs",
     "db:test:url": "node scripts/db/test-db-url.mjs",
     "db:test:reset": "pnpm db:test:down && pnpm db:test:up",
-    "db:test:up:compose": "docker compose -f docker-compose.test-db.yml up -d",
+    "db:test:up:compose": "docker compose -f docker-compose.test-db.yml up -d && node scripts/db/wait-db-ready.mjs",
     "db:test:down:compose": "docker compose -f docker-compose.test-db.yml down -v",
     "db:check:repository": "pnpm db:seed && node scripts/db/check-repository.mjs",
     "db:check:migrations-seed": "pnpm db:migrate && pnpm db:seed && node scripts/db/check-migrations-seed.mjs",

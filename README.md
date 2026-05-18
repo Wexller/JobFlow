@@ -168,6 +168,9 @@ JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
 Both commands use the repository's `pg` dependency and require a reachable
 Postgres instance.
 
+`pnpm db:migrate` is idempotent: it records applied SQL files in
+`schema_migrations` and skips already applied migrations on subsequent runs.
+
 For isolated integration work, an ephemeral local Postgres workflow is
 available (Docker required):
 

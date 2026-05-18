@@ -21,12 +21,43 @@ catch {
 const { Pool } = pgModule
 const pool = new Pool({ connectionString: databaseUrl })
 
+const bootstrapSql = `
+CREATE TABLE IF NOT EXISTS schema_migrations (
+  name TEXT PRIMARY KEY,
+  applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+`
+
 try {
+  await pool.query(bootstrapSql)
   const files = (await readdir(migrationsDir)).filter((file) => file.endsWith('.sql')).sort()
 
   for (const file of files) {
+    const alreadyApplied = await pool.query(
+      'SELECT 1 FROM schema_migrations WHERE name = $1 LIMIT 1',
+      [file],
+    )
+
+    if (alreadyApplied.rowCount && alreadyApplied.rowCount > 0) {
+      console.log(`skipped migration: ${file}`)
+      continue
+    }
+
     const sql = await readFile(join(migrationsDir, file), 'utf8')
-    await pool.query(sql)
+    await pool.query('BEGIN')
+    try {
+      await pool.query(sql)
+      await pool.query(
+        'INSERT INTO schema_migrations (name) VALUES ($1)',
+        [file],
+      )
+      await pool.query('COMMIT')
+    }
+    catch (error) {
+      await pool.query('ROLLBACK')
+      throw error
+    }
+
     console.log(`applied migration: ${file}`)
   }
 }
