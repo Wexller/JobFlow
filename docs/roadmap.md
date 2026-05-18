@@ -163,8 +163,8 @@ Owner agents:
 
 Checklist:
 
-- [ ] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
-- [ ] Playwright smoke coverage stays green for dashboard, filters, details, form
+- [x] `pnpm lint`, `pnpm typecheck`, and the focused automated test suites pass.
+- [x] Playwright smoke coverage stays green for dashboard, filters, details, form
   save, and locale switching.
 - [x] Add HTTP-level integration coverage for core BFF CRUD routes against a
   real Postgres instance.
