@@ -239,6 +239,26 @@ Planned test database direction:
 - that suite should become mandatory before `postgres` becomes the default
   staging or CI runtime path.
 
+## Postgres Runtime Expectations
+
+Local development:
+
+- Default mode remains `JOBFLOW_PERSISTENCE_DRIVER=memory`.
+- To run the Postgres path locally, set:
+  - `JOBFLOW_PERSISTENCE_DRIVER=postgres`
+  - `JOBFLOW_DATABASE_URL=postgres://...`
+- Initialize schema and seed before running the app against Postgres:
+  - `JOBFLOW_DATABASE_URL=... pnpm db:migrate`
+  - `JOBFLOW_DATABASE_URL=... pnpm db:seed`
+
+Production/runtime expectations:
+
+- `JOBFLOW_DATABASE_URL` must point to a reachable managed Postgres instance.
+- Migrations are expected to be applied before rollout of a new runtime version.
+- Seed is for local/dev/test workflows only and should not be used in production.
+- If Postgres is unavailable at runtime, server routes return repository errors;
+  monitor application logs and health checks before switching default driver.
+
 ## Agent Operating Model
 
 This repository uses an agent operating model to keep product, architecture,

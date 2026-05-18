@@ -75,7 +75,7 @@ Checklist:
 - [x] Add repository integration coverage against an isolated real Postgres
   instance.
 - [x] Add migration and seed smoke verification against that isolated database.
-- [ ] Document local database setup and production runtime expectations.
+- [x] Document local database setup and production runtime expectations.
 
 Exit criteria:
 
