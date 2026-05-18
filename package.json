@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "pnpm prepare && vitest",
-    "test:unit": "pnpm prepare && vitest run tests/unit",
+    "test:unit": "pnpm prepare && vitest run tests/unit --exclude tests/unit/postgres-repository.integration.test.ts --exclude tests/unit/postgres-migrations-seed.smoke.test.ts",
     "test:nuxt": "pnpm prepare && vitest run tests/nuxt --passWithNoTests",
     "test:e2e": "pnpm build && playwright test",
     "test:ci": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:nuxt && pnpm test:e2e && pnpm build",
@@ -28,7 +28,10 @@
     "db:test:url": "node scripts/db/test-db-url.mjs",
     "db:test:reset": "pnpm db:test:down && pnpm db:test:up",
     "db:test:up:compose": "docker compose -f docker-compose.test-db.yml up -d",
-    "db:test:down:compose": "docker compose -f docker-compose.test-db.yml down -v"
+    "db:test:down:compose": "docker compose -f docker-compose.test-db.yml down -v",
+    "db:check:repository": "pnpm db:seed && node scripts/db/check-repository.mjs",
+    "db:check:migrations-seed": "pnpm db:migrate && pnpm db:seed && node scripts/db/check-migrations-seed.mjs",
+    "db:check": "pnpm db:check:migrations-seed && pnpm db:check:repository"
   },
   "dependencies": {
     "@nuxt/ui": "latest",

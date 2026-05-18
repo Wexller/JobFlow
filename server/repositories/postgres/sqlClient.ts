@@ -1,4 +1,5 @@
 import { createAppError } from '../../../app/utils/result'
+import { createRequire } from 'node:module'
 
 export interface SqlQueryResult<Row = Record<string, unknown>> {
   readonly rows: Row[]
@@ -45,8 +46,8 @@ export async function createPostgresSqlClient(): Promise<SqlClient> {
     let pgModule: { Pool: new (options: { connectionString: string }) => { query: SqlClient['query'], end: SqlClient['end'] } }
 
     try {
-      const dynamicImport = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<unknown>
-      pgModule = await dynamicImport('pg') as typeof pgModule
+      const require = createRequire(import.meta.url)
+      pgModule = require('pg') as typeof pgModule
     }
     catch {
       throw createAppError(

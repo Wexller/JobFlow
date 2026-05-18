@@ -114,6 +114,9 @@ pnpm db:seed
 pnpm db:test:up
 pnpm db:test:down
 pnpm db:test:url
+pnpm db:check:migrations-seed
+pnpm db:check:repository
+pnpm db:check
 ```
 
 `pnpm test:ci` is the full local quality gate. It runs linting, TypeScript
@@ -196,6 +199,20 @@ Optional environment overrides:
 - `JOBFLOW_TEST_DB_USER`
 - `JOBFLOW_TEST_DB_PASSWORD`
 - `JOBFLOW_TEST_DB_NAME`
+
+For integration/smoke tests against an already running Postgres instance, set:
+
+- `JOBFLOW_TEST_MANAGE_DB=false`
+
+This disables automatic `db:test:up`/`db:test:down` inside the tests.
+
+Run Postgres verification lane with Node-based wrappers:
+
+```bash
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:migrations-seed
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check:repository
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check
+```
 
 ## Environment Variables
 

@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment node
+ */
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { execSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 
 const testDatabaseUrl = process.env.JOBFLOW_DATABASE_URL?.trim()
 const dockerAvailable = (() => {
@@ -27,19 +31,31 @@ function run(command: string) {
 }
 
 maybeDescribe('postgres migrations and seed smoke', () => {
+  const managesDbLifecycle = process.env.JOBFLOW_TEST_MANAGE_DB !== 'false'
+
   beforeAll(() => {
-    run('pnpm -s db:test:up')
+    if (managesDbLifecycle) {
+      run('pnpm -s db:test:up')
+    }
   })
 
   afterAll(() => {
-    run('pnpm -s db:test:down')
+    if (managesDbLifecycle) {
+      run('pnpm -s db:test:down')
+    }
   })
 
   it('applies migrations and seed on isolated postgres instance', async () => {
     run('pnpm -s db:migrate')
     run('pnpm -s db:seed')
 
-    const { Pool } = await import('pg')
+    const require = createRequire(import.meta.url)
+    const { Pool } = require('pg') as {
+      Pool: new (options: { connectionString: string | undefined }) => {
+        query: (text: string) => Promise<{ rows: Array<{ count: number }> }>
+        end: () => Promise<void>
+      }
+    }
     const pool = new Pool({ connectionString: testDatabaseUrl })
 
     try {

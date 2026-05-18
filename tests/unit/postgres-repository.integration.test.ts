@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment node
+ */
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { execSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { createPostgresJobflowRepository } from '../../server/repositories/postgresJobflowRepository'
 import type { SqlClient } from '../../server/repositories/postgres/sqlClient'
 
@@ -13,7 +17,8 @@ const dockerAvailable = (() => {
     return false
   }
 })()
-const runIntegration = testDatabaseUrl !== undefined && testDatabaseUrl.length > 0 && dockerAvailable
+const hasDatabaseUrl = testDatabaseUrl !== undefined && testDatabaseUrl.length > 0
+const runIntegration = hasDatabaseUrl && dockerAvailable
 
 const maybeDescribe = runIntegration ? describe : describe.skip
 
@@ -30,7 +35,13 @@ function run(command: string) {
 
 function createClientFactory(): () => Promise<SqlClient> {
   return async () => {
-    const { Pool } = await import('pg')
+    const require = createRequire(import.meta.url)
+    const { Pool } = require('pg') as {
+      Pool: new (options: { connectionString: string | undefined }) => {
+        query: SqlClient['query']
+        end: SqlClient['end']
+      }
+    }
     const pool = new Pool({ connectionString: testDatabaseUrl })
 
     return {
@@ -44,9 +55,12 @@ function createClientFactory(): () => Promise<SqlClient> {
 
 maybeDescribe('postgres repository integration', () => {
   const repository = createPostgresJobflowRepository(createClientFactory())
+  const managesDbLifecycle = process.env.JOBFLOW_TEST_MANAGE_DB !== 'false'
 
   beforeAll(() => {
-    run('pnpm -s db:test:up')
+    if (managesDbLifecycle) {
+      run('pnpm -s db:test:up')
+    }
     run('pnpm -s db:migrate')
   })
 
@@ -55,7 +69,9 @@ maybeDescribe('postgres repository integration', () => {
   })
 
   afterAll(() => {
-    run('pnpm -s db:test:down')
+    if (managesDbLifecycle) {
+      run('pnpm -s db:test:down')
+    }
   })
 
   it('loads snapshot from postgres with expected relations', async () => {
