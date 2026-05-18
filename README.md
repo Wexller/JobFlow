@@ -226,7 +226,7 @@ Local compose flow:
 
 ```bash
 docker compose -f docker-compose.local.yml up -d postgres
-JOBFLOW_DATABASE_URL=postgres://${JOBFLOW_LOCAL_DB_USER:-jobflow}:${JOBFLOW_LOCAL_DB_PASSWORD:-jobflow}@localhost:${JOBFLOW_LOCAL_DB_PORT:-55432}/${JOBFLOW_LOCAL_DB_NAME:-jobflow_local} pnpm db:migrate
+docker compose -f docker-compose.local.yml run --rm migrate
 JOBFLOW_DATABASE_URL=postgres://${JOBFLOW_LOCAL_DB_USER:-jobflow}:${JOBFLOW_LOCAL_DB_PASSWORD:-jobflow}@localhost:${JOBFLOW_LOCAL_DB_PORT:-55432}/${JOBFLOW_LOCAL_DB_NAME:-jobflow_local} pnpm db:seed
 docker compose -f docker-compose.local.yml up app
 ```

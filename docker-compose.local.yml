@@ -40,6 +40,25 @@ services:
       - .:/workspace
       - jobflow_local_node_modules:/workspace/node_modules
 
+  migrate:
+    image: node:22-alpine
+    working_dir: /workspace
+    command: >
+      sh -lc "corepack enable &&
+      corepack prepare pnpm@9.14.4 --activate &&
+      pnpm install &&
+      pnpm db:migrate"
+    environment:
+      JOBFLOW_PERSISTENCE_DRIVER: postgres
+      JOBFLOW_DATABASE_URL: postgres://${JOBFLOW_LOCAL_DB_USER:-jobflow}:${JOBFLOW_LOCAL_DB_PASSWORD:-jobflow}@postgres:5432/${JOBFLOW_LOCAL_DB_NAME:-jobflow_local}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/workspace
+      - jobflow_local_node_modules:/workspace/node_modules
+    restart: "no"
+
 volumes:
   jobflow_local_postgres_data:
   jobflow_local_node_modules:
