@@ -20,7 +20,9 @@
     "test:unit": "pnpm prepare && vitest run tests/unit",
     "test:nuxt": "pnpm prepare && vitest run tests/nuxt --passWithNoTests",
     "test:e2e": "pnpm build && playwright test",
-    "test:ci": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:nuxt && pnpm test:e2e && pnpm build"
+    "test:ci": "pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:nuxt && pnpm test:e2e && pnpm build",
+    "db:migrate": "node scripts/db/migrate.mjs",
+    "db:seed": "node scripts/db/seed.mjs"
   },
   "dependencies": {
     "@nuxt/ui": "latest",

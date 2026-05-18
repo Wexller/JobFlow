@@ -107,6 +107,8 @@ pnpm test:unit
 pnpm test:nuxt
 pnpm test:e2e
 pnpm test:ci
+pnpm db:migrate
+pnpm db:seed
 ```
 
 `pnpm test:ci` is the full local quality gate. It runs linting, TypeScript
@@ -148,6 +150,16 @@ The documented target path for shared and production-like environments is:
 
 The Postgres adapter is not yet wired in this workspace, so `memory` remains the
 safe default for local development until the database implementation lands.
+
+For local Postgres setup work, run schema migration and seed fixtures manually:
+
+```bash
+JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate
+JOBFLOW_DATABASE_URL=postgres://... pnpm db:seed
+```
+
+Both commands require the `pg` package to be installed in the environment where
+you run them.
 
 ## Environment Variables
 
