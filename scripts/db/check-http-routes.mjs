@@ -131,6 +131,18 @@ try {
     throw new Error('POST /api/pipeline-events failed in HTTP db check')
   }
 
+  const pipelineUpdated = await requestJson('/api/pipeline-events/pipeline-http-check', {
+    method: 'PUT',
+    body: JSON.stringify({
+      ...pipelineCreated.body,
+      title: 'HTTP pipeline updated',
+      status: 'scheduled',
+    }),
+  })
+  if (!pipelineUpdated.response.ok || pipelineUpdated.body.title !== 'HTTP pipeline updated') {
+    throw new Error('PUT /api/pipeline-events/:id failed in HTTP db check')
+  }
+
   const interviewCreated = await requestJson('/api/interviews', {
     method: 'POST',
     body: JSON.stringify({
@@ -147,6 +159,17 @@ try {
     throw new Error('POST /api/interviews failed in HTTP db check')
   }
 
+  const interviewUpdated = await requestJson('/api/interviews/interview-http-check', {
+    method: 'PUT',
+    body: JSON.stringify({
+      ...interviewCreated.body,
+      result: 'passed',
+    }),
+  })
+  if (!interviewUpdated.response.ok || interviewUpdated.body.result !== 'passed') {
+    throw new Error('PUT /api/interviews/:id failed in HTTP db check')
+  }
+
   const offerCreated = await requestJson('/api/offers', {
     method: 'POST',
     body: JSON.stringify({
@@ -158,6 +181,17 @@ try {
   })
   if (!offerCreated.response.ok || offerCreated.body.id !== 'offer-http-check') {
     throw new Error('POST /api/offers failed in HTTP db check')
+  }
+
+  const offerUpdated = await requestJson('/api/offers/offer-http-check', {
+    method: 'PUT',
+    body: JSON.stringify({
+      ...offerCreated.body,
+      decision: 'accepted',
+    }),
+  })
+  if (!offerUpdated.response.ok || offerUpdated.body.decision !== 'accepted') {
+    throw new Error('PUT /api/offers/:id failed in HTTP db check')
   }
 
   const duplicateVacancy = await requestJson('/api/vacancies', {

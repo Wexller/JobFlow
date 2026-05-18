@@ -169,8 +169,8 @@ Checklist:
 - [x] Add HTTP-level integration coverage for core BFF CRUD routes against a
   real Postgres instance.
 - [x] Add `db:check` to the required local/CI verification lane.
-- [ ] README documents runtime modes, environment variables, and local setup.
-- [ ] Architecture docs and ADRs match the implemented BFF model.
+- [x] README documents runtime modes, environment variables, and local setup.
+- [x] Architecture docs and ADRs match the implemented BFF model.
 - [ ] Release notes capture the remaining verification and operational gap before
   Postgres becomes a required runtime path.
 - [ ] Production deploy expectations for the server runtime are documented.

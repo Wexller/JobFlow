@@ -175,13 +175,13 @@ Never log:
 - Unit tests: schemas, mappers, result handling, logger redaction, repository behavior, store selectors, and server application services.
 - Nuxt tests: the main home page flow with mocked `useFetch` data.
 - E2E smoke: dashboard, filters, kanban, details, vacancy save, locale switch.
-- Planned integration tests: Postgres adapter, migrations, seed path, and Google
-  Sheets gateway behavior.
+- Integration checks: Postgres adapter behavior, migrations/seed, and HTTP CRUD
+  contract checks through `pnpm db:check`.
 
-CI must not use live credentials. The intended next step is an isolated
-ephemeral Postgres database for repository integration tests, while Google
-Sheets integrations should continue to use fixtures or mocks unless a dedicated
-protected environment is added.
+CI must not use live credentials. The current Postgres verification lane uses an
+isolated ephemeral Postgres database (`db:test:up:compose` + `db:check`).
+Google Sheets integrations should continue to use fixtures or mocks unless a
+dedicated protected environment is added.
 
 ## Sources
 
