@@ -108,6 +108,21 @@
       "new": "New vacancy",
       "success": "Vacancy saved.",
       "error": "Check required fields and stable enum values."
+    },
+    "pipelineForm": {
+      "title": "Pipeline event",
+      "description": "Create or update a pipeline timeline event through the BFF.",
+      "id": "Event ID",
+      "stage": "Stage",
+      "status": "Stage status",
+      "titleField": "Title",
+      "scheduledAt": "Scheduled at",
+      "occurredAt": "Occurred at",
+      "completedAt": "Completed at",
+      "save": "Save pipeline event",
+      "new": "New event",
+      "success": "Pipeline event saved.",
+      "error": "Check required fields and enum values."
     }
   },
   "domain": {

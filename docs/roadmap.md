@@ -96,7 +96,7 @@ Checklist:
 
 - [x] Home page bootstrap uses `useFetch`.
 - [x] Vacancy create/update uses BFF writes.
-- [ ] Add BFF-backed flows for pipeline event create/update.
+- [x] Add BFF-backed flows for pipeline event create/update.
 - [ ] Add BFF-backed flows for interview create/update.
 - [ ] Add BFF-backed flows for offer create/update.
 - [ ] Add route-backed detail and list flows to future screens beyond the home

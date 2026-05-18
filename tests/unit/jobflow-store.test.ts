@@ -239,4 +239,66 @@ describe('jobflow store', () => {
     })
     expect(store.vacancies).toHaveLength(initialCount)
   })
+
+  it('creates and updates pipeline events through the validated API boundary', async () => {
+    const store = useJobflowStore()
+    const repository = createMockRepository()
+    await store.load(repository)
+
+    const createResult = await store.savePipelineEvent({
+      id: 'pipeline-new-event',
+      vacancyId: 'vacancy-frontend-platform',
+      stage: 'technical_screen',
+      status: 'planned',
+      title: 'Architecture deep dive',
+      scheduledAt: '2026-05-22T10:00:00Z',
+    }, repository)
+
+    expect(createResult).toMatchObject({
+      ok: true,
+      value: {
+        id: 'pipeline-new-event',
+        title: 'Architecture deep dive',
+      },
+    })
+
+    const updateResult = await store.savePipelineEvent({
+      id: 'pipeline-new-event',
+      vacancyId: 'vacancy-frontend-platform',
+      stage: 'technical_screen',
+      status: 'completed',
+      title: 'Architecture deep dive complete',
+      completedAt: '2026-05-22T12:00:00Z',
+    }, repository)
+
+    expect(updateResult).toMatchObject({
+      ok: true,
+      value: {
+        id: 'pipeline-new-event',
+        status: 'completed',
+      },
+    })
+    expect(store.pipelineEvents.filter((event) => event.id === 'pipeline-new-event')).toHaveLength(1)
+  })
+
+  it('rejects invalid pipeline event payloads without mutating state', async () => {
+    const store = useJobflowStore()
+    await store.load(createMockRepository())
+    const initialCount = store.pipelineEvents.length
+
+    const result = await store.savePipelineEvent({
+      id: 'pipeline-invalid',
+      vacancyId: 'vacancy-frontend-platform',
+      stage: 'Технический этап',
+      status: 'scheduled',
+    })
+
+    expect(result).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation',
+      },
+    })
+    expect(store.pipelineEvents).toHaveLength(initialCount)
+  })
 })

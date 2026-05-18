@@ -82,6 +82,14 @@
         @save="saveVacancy"
       />
 
+      <HomePipelineEventForm
+        :status="pipelineFormStatus"
+        :pipeline-event="selectedPipelineEvent"
+        :vacancy-id="selectedVacancyDetails?.vacancy.id"
+        @reset-status="pipelineFormStatus = 'idle'"
+        @save="savePipelineEvent"
+      />
+
       <HomeVacancyDetails :details="selectedVacancyDetails" />
 
       <HomeVacancyKanban
@@ -119,6 +127,7 @@ const kanbanStatuses = vacancyStatusIds.filter((status) => status !== 'unknown')
 
 const isReady = ref(false)
 const formStatus = ref<'error' | 'idle' | 'success'>('idle')
+const pipelineFormStatus = ref<'error' | 'idle' | 'success'>('idle')
 const selectedVacancyId = ref('vacancy-frontend-platform')
 const filters = ref<VacancyFilterModel>({
   format: 'all',
@@ -149,6 +158,7 @@ const nextActions = computed(() =>
     .slice(0, 4),
 )
 const selectedVacancyDetails = computed(() => store.vacancyDetails(selectedVacancyId.value))
+const selectedPipelineEvent = computed(() => selectedVacancyDetails.value?.pipelineEvents.at(-1))
 
 const statusOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) => vacancy.status)))
 const priorityOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) => vacancy.priority)))
@@ -226,6 +236,17 @@ async function saveVacancy(payload: unknown) {
   }
   else {
     formStatus.value = 'error'
+  }
+}
+
+async function savePipelineEvent(payload: unknown) {
+  const result = await store.savePipelineEvent(payload)
+
+  if (result.ok) {
+    pipelineFormStatus.value = 'success'
+  }
+  else {
+    pipelineFormStatus.value = 'error'
   }
 }
 

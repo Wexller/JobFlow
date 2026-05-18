@@ -7,7 +7,7 @@ import type { PipelineEvent } from '../schemas/pipeline.schema'
 import type { JobflowSnapshot, VacancyDetails } from '../schemas/jobflow.schema'
 import type { SummaryMetric } from '../schemas/summary-metrics.schema'
 import type { Vacancy } from '../schemas/vacancies.schema'
-import { normalizeVacancyPayload } from '../mappers/formPayloads'
+import { normalizePipelineEventPayload, normalizeVacancyPayload } from '../mappers/formPayloads'
 import { createJobflowApiRepository } from '../repositories/jobflowApiRepository'
 import type { JobflowReadRepository, JobflowWriteRepository } from '../repositories/jobflow'
 import { buildVacancyDetails, upsertById } from '../utils/jobflow'
@@ -305,6 +305,26 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       this.vacancies = upsertById(this.vacancies, result.value)
+      return result
+    },
+    async savePipelineEvent(payload: unknown, repository?: JobflowWriteRepository) {
+      const normalized = normalizePipelineEventPayload(payload)
+
+      if (!normalized.ok) {
+        return normalized
+      }
+
+      const activeRepository = repository ?? createJobflowApiRepository()
+      const exists = this.pipelineEvents.some((pipelineEvent) => pipelineEvent.id === normalized.value.id)
+      const result = exists
+        ? await activeRepository.updatePipelineEvent(normalized.value.id, normalized.value)
+        : await activeRepository.createPipelineEvent(normalized.value)
+
+      if (!result.ok) {
+        return result
+      }
+
+      this.pipelineEvents = upsertById(this.pipelineEvents, result.value)
       return result
     },
     applyPipelineEvent(pipelineEvent: PipelineEvent) {
