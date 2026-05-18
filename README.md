@@ -177,6 +177,18 @@ JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
 pnpm db:test:down
 ```
 
+If you prefer explicit Docker configuration, use the committed compose file:
+
+```bash
+pnpm db:test:up:compose
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:migrate
+JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:seed
+pnpm db:test:down:compose
+```
+
+`pnpm db:test:up` and `pnpm db:test:down` remain script-based wrappers around
+`docker run` and `docker rm` for environments where Compose may be unavailable.
+
 Optional environment overrides:
 
 - `JOBFLOW_TEST_DB_CONTAINER`

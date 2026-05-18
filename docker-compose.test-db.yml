@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ${JOBFLOW_TEST_DB_CONTAINER:-jobflow-test-postgres}
+    ports:
+      - "${JOBFLOW_TEST_DB_PORT:-55432}:5432"
+    environment:
+      POSTGRES_USER: ${JOBFLOW_TEST_DB_USER:-jobflow}
+      POSTGRES_PASSWORD: ${JOBFLOW_TEST_DB_PASSWORD:-jobflow}
+      POSTGRES_DB: ${JOBFLOW_TEST_DB_NAME:-jobflow_test}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${JOBFLOW_TEST_DB_USER:-jobflow} -d ${JOBFLOW_TEST_DB_NAME:-jobflow_test}"]
+      interval: 2s
+      timeout: 5s
+      retries: 30

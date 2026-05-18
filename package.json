@@ -26,7 +26,9 @@
     "db:test:up": "node scripts/db/test-db-up.mjs",
     "db:test:down": "node scripts/db/test-db-down.mjs",
     "db:test:url": "node scripts/db/test-db-url.mjs",
-    "db:test:reset": "pnpm db:test:down && pnpm db:test:up"
+    "db:test:reset": "pnpm db:test:down && pnpm db:test:up",
+    "db:test:up:compose": "docker compose -f docker-compose.test-db.yml up -d",
+    "db:test:down:compose": "docker compose -f docker-compose.test-db.yml down -v"
   },
   "dependencies": {
     "@nuxt/ui": "latest",
