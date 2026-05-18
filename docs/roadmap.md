@@ -72,7 +72,7 @@ Checklist:
 - [x] Implement the Postgres-backed repository adapter behind the existing BFF
   contracts.
 - [x] Define and automate an ephemeral Postgres test database workflow.
-- [ ] Add repository integration coverage against an isolated real Postgres
+- [x] Add repository integration coverage against an isolated real Postgres
   instance.
 - [ ] Add migration and seed smoke verification against that isolated database.
 - [ ] Document local database setup and production runtime expectations.
