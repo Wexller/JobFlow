@@ -7,7 +7,12 @@ import type { PipelineEvent } from '../schemas/pipeline.schema'
 import type { JobflowSnapshot, VacancyDetails } from '../schemas/jobflow.schema'
 import type { SummaryMetric } from '../schemas/summary-metrics.schema'
 import type { Vacancy } from '../schemas/vacancies.schema'
-import { normalizePipelineEventPayload, normalizeVacancyPayload } from '../mappers/formPayloads'
+import {
+  normalizeInterviewPayload,
+  normalizeOfferPayload,
+  normalizePipelineEventPayload,
+  normalizeVacancyPayload,
+} from '../mappers/formPayloads'
 import { createJobflowApiRepository } from '../repositories/jobflowApiRepository'
 import type { JobflowReadRepository, JobflowWriteRepository } from '../repositories/jobflow'
 import { buildVacancyDetails, upsertById } from '../utils/jobflow'
@@ -325,6 +330,46 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       this.pipelineEvents = upsertById(this.pipelineEvents, result.value)
+      return result
+    },
+    async saveInterview(payload: unknown, repository?: JobflowWriteRepository) {
+      const normalized = normalizeInterviewPayload(payload)
+
+      if (!normalized.ok) {
+        return normalized
+      }
+
+      const activeRepository = repository ?? createJobflowApiRepository()
+      const exists = this.interviews.some((interview) => interview.id === normalized.value.id)
+      const result = exists
+        ? await activeRepository.updateInterview(normalized.value.id, normalized.value)
+        : await activeRepository.createInterview(normalized.value)
+
+      if (!result.ok) {
+        return result
+      }
+
+      this.interviews = upsertById(this.interviews, result.value)
+      return result
+    },
+    async saveOffer(payload: unknown, repository?: JobflowWriteRepository) {
+      const normalized = normalizeOfferPayload(payload)
+
+      if (!normalized.ok) {
+        return normalized
+      }
+
+      const activeRepository = repository ?? createJobflowApiRepository()
+      const existingOffer = this.offers.find((offer) => offer.id === normalized.value.id)
+      const result = existingOffer === undefined
+        ? await activeRepository.createOffer(normalized.value)
+        : await activeRepository.updateOffer(normalized.value.id, normalized.value)
+
+      if (!result.ok) {
+        return result
+      }
+
+      this.offers = upsertById(this.offers, result.value)
       return result
     },
     applyPipelineEvent(pipelineEvent: PipelineEvent) {

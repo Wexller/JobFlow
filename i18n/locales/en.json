@@ -123,6 +123,32 @@
       "new": "New event",
       "success": "Pipeline event saved.",
       "error": "Check required fields and enum values."
+    },
+    "interviewForm": {
+      "title": "Interview",
+      "description": "Create or update interview records through the BFF.",
+      "id": "Interview ID",
+      "stage": "Interview stage",
+      "result": "Result",
+      "scheduledAt": "Scheduled at",
+      "interviewers": "Interviewers",
+      "location": "Location",
+      "save": "Save interview",
+      "new": "New interview",
+      "success": "Interview saved.",
+      "error": "Check required fields and enum values."
+    },
+    "offerForm": {
+      "title": "Offer",
+      "description": "Create or update offer records through the BFF.",
+      "id": "Offer ID",
+      "decision": "Decision",
+      "offeredAt": "Offered at",
+      "decisionDueAt": "Decision due",
+      "save": "Save offer",
+      "new": "New offer",
+      "success": "Offer saved.",
+      "error": "Check required fields and enum values."
     }
   },
   "domain": {

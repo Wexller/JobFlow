@@ -90,6 +90,22 @@
         @save="savePipelineEvent"
       />
 
+      <HomeInterviewForm
+        :interview="selectedInterview"
+        :status="interviewFormStatus"
+        :vacancy-id="selectedVacancyDetails?.vacancy.id"
+        @reset-status="interviewFormStatus = 'idle'"
+        @save="saveInterview"
+      />
+
+      <HomeOfferForm
+        :offer="selectedVacancyDetails?.offer"
+        :status="offerFormStatus"
+        :vacancy-id="selectedVacancyDetails?.vacancy.id"
+        @reset-status="offerFormStatus = 'idle'"
+        @save="saveOffer"
+      />
+
       <HomeVacancyDetails :details="selectedVacancyDetails" />
 
       <HomeVacancyKanban
@@ -128,6 +144,8 @@ const kanbanStatuses = vacancyStatusIds.filter((status) => status !== 'unknown')
 const isReady = ref(false)
 const formStatus = ref<'error' | 'idle' | 'success'>('idle')
 const pipelineFormStatus = ref<'error' | 'idle' | 'success'>('idle')
+const interviewFormStatus = ref<'error' | 'idle' | 'success'>('idle')
+const offerFormStatus = ref<'error' | 'idle' | 'success'>('idle')
 const selectedVacancyId = ref('vacancy-frontend-platform')
 const filters = ref<VacancyFilterModel>({
   format: 'all',
@@ -159,6 +177,7 @@ const nextActions = computed(() =>
 )
 const selectedVacancyDetails = computed(() => store.vacancyDetails(selectedVacancyId.value))
 const selectedPipelineEvent = computed(() => selectedVacancyDetails.value?.pipelineEvents.at(-1))
+const selectedInterview = computed(() => selectedVacancyDetails.value?.interviews.at(-1))
 
 const statusOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) => vacancy.status)))
 const priorityOptions = computed(() => uniqueValues(store.vacancies.map((vacancy) => vacancy.priority)))
@@ -247,6 +266,28 @@ async function savePipelineEvent(payload: unknown) {
   }
   else {
     pipelineFormStatus.value = 'error'
+  }
+}
+
+async function saveInterview(payload: unknown) {
+  const result = await store.saveInterview(payload)
+
+  if (result.ok) {
+    interviewFormStatus.value = 'success'
+  }
+  else {
+    interviewFormStatus.value = 'error'
+  }
+}
+
+async function saveOffer(payload: unknown) {
+  const result = await store.saveOffer(payload)
+
+  if (result.ok) {
+    offerFormStatus.value = 'success'
+  }
+  else {
+    offerFormStatus.value = 'error'
   }
 }
 

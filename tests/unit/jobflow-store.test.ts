@@ -301,4 +301,60 @@ describe('jobflow store', () => {
     })
     expect(store.pipelineEvents).toHaveLength(initialCount)
   })
+
+  it('creates and updates interviews through the validated API boundary', async () => {
+    const store = useJobflowStore()
+    const repository = createMockRepository()
+    await store.load(repository)
+
+    const createResult = await store.saveInterview({
+      id: 'interview-new',
+      vacancyId: 'vacancy-frontend-platform',
+      stage: 'technical_screen',
+      result: 'pending',
+      scheduledAt: '2026-05-23T10:00:00Z',
+      interviewerNames: 'Maya, Oleg',
+    }, repository)
+
+    expect(createResult).toMatchObject({ ok: true, value: { id: 'interview-new' } })
+
+    const updateResult = await store.saveInterview({
+      id: 'interview-new',
+      vacancyId: 'vacancy-frontend-platform',
+      stage: 'technical_screen',
+      result: 'passed',
+      scheduledAt: '2026-05-23T10:00:00Z',
+      interviewerNames: 'Maya, Oleg',
+    }, repository)
+
+    expect(updateResult).toMatchObject({ ok: true, value: { result: 'passed' } })
+  })
+
+  it('creates and updates offers through the validated API boundary', async () => {
+    const store = useJobflowStore()
+    const repository = createMockRepository()
+    await store.load(repository)
+
+    const createResult = await store.saveOffer({
+      id: 'offer-new',
+      vacancyId: 'vacancy-frontend-platform',
+      decision: 'pending',
+      salaryMin: '100000',
+      salaryMax: '120000',
+      currency: 'EUR',
+    }, repository)
+
+    expect(createResult).toMatchObject({ ok: true, value: { id: 'offer-new' } })
+
+    const updateResult = await store.saveOffer({
+      id: 'offer-new',
+      vacancyId: 'vacancy-frontend-platform',
+      decision: 'accepted',
+      salaryMin: '110000',
+      salaryMax: '130000',
+      currency: 'EUR',
+    }, repository)
+
+    expect(updateResult).toMatchObject({ ok: true, value: { decision: 'accepted' } })
+  })
 })

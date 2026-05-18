@@ -97,8 +97,8 @@ Checklist:
 - [x] Home page bootstrap uses `useFetch`.
 - [x] Vacancy create/update uses BFF writes.
 - [x] Add BFF-backed flows for pipeline event create/update.
-- [ ] Add BFF-backed flows for interview create/update.
-- [ ] Add BFF-backed flows for offer create/update.
+- [x] Add BFF-backed flows for interview create/update.
+- [x] Add BFF-backed flows for offer create/update.
 - [ ] Add route-backed detail and list flows to future screens beyond the home
   page.
 - [ ] Keep loading, empty, error, and success states aligned with async BFF
