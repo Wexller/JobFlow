@@ -53,6 +53,11 @@ test('renders the localized home page', async ({ page }) => {
   await expect(page.getByText('Offer saved.')).toBeVisible()
   await expect(page.getByRole('button', { exact: true, name: 'EN' })).toBeVisible()
   await expect(page.getByRole('button', { exact: true, name: 'RU' })).toBeVisible()
+  await page.getByRole('link', { name: 'Vacancies' }).click()
+  await expect(page).toHaveURL(/\/vacancies$/)
+  await expect(page.getByRole('heading', { name: 'Vacancies' })).toBeVisible()
+  await expect(page.getByLabel('Vacancy list')).toContainText('Northstar Labs')
+  await expect(page.getByLabel('Vacancy details panel')).toContainText('Pipeline timeline')
 })
 
 test('switches locale between english and russian', async ({ page }) => {

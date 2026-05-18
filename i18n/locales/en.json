@@ -3,7 +3,28 @@
     "name": "Jobflow"
   },
   "layout": {
-    "languageNav": "Language selection"
+    "languageNav": "Language selection",
+    "primaryNav": "Primary navigation",
+    "homeLink": "Home",
+    "vacanciesLink": "Vacancies"
+  },
+  "vacanciesPage": {
+    "title": "Vacancies",
+    "description": "Route-backed vacancy list and detail flow from the BFF.",
+    "state": {
+      "loadingList": "Loading vacancies...",
+      "errorList": "Failed to load vacancy list.",
+      "emptyList": "No vacancies available.",
+      "loadingDetails": "Loading vacancy details...",
+      "errorDetails": "Failed to load vacancy details.",
+      "retry": "Retry"
+    },
+    "list": {
+      "aria": "Vacancy list"
+    },
+    "details": {
+      "aria": "Vacancy details panel"
+    }
   },
   "home": {
     "badge": "Mock CRM dashboard",
@@ -106,6 +127,7 @@
       "appliedAt": "Applied date",
       "save": "Save vacancy",
       "new": "New vacancy",
+      "loading": "Saving vacancy...",
       "success": "Vacancy saved.",
       "error": "Check required fields and stable enum values."
     },
@@ -121,6 +143,7 @@
       "completedAt": "Completed at",
       "save": "Save pipeline event",
       "new": "New event",
+      "loading": "Saving pipeline event...",
       "success": "Pipeline event saved.",
       "error": "Check required fields and enum values."
     },
@@ -135,6 +158,7 @@
       "location": "Location",
       "save": "Save interview",
       "new": "New interview",
+      "loading": "Saving interview...",
       "success": "Interview saved.",
       "error": "Check required fields and enum values."
     },
@@ -147,6 +171,7 @@
       "decisionDueAt": "Decision due",
       "save": "Save offer",
       "new": "New offer",
+      "loading": "Saving offer...",
       "success": "Offer saved.",
       "error": "Check required fields and enum values."
     }

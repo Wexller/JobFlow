@@ -49,8 +49,9 @@
       </label>
 
       <div class="flex flex-wrap items-center gap-3 md:col-span-2 xl:col-span-4">
-        <UButton type="submit">{{ $t('home.offerForm.save') }}</UButton>
-        <UButton color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.offerForm.new') }}</UButton>
+        <UButton :loading="status === 'loading'" :disabled="status === 'loading'" type="submit">{{ $t('home.offerForm.save') }}</UButton>
+        <UButton :disabled="status === 'loading'" color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.offerForm.new') }}</UButton>
+        <p v-if="status === 'loading'" class="text-sm text-muted">{{ $t('home.offerForm.loading') }}</p>
         <p v-if="status === 'success'" class="text-sm text-success">{{ $t('home.offerForm.success') }}</p>
         <p v-if="status === 'error'" class="text-sm text-error">{{ $t('home.offerForm.error') }}</p>
       </div>
@@ -62,7 +63,7 @@
 import { offerDecisionIds } from '../../domain/offers'
 import type { Offer } from '../../schemas/offers.schema'
 
-type FormStatus = 'idle' | 'success' | 'error'
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface OfferFormModel {
   currency: string

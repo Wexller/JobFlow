@@ -99,9 +99,9 @@ Checklist:
 - [x] Add BFF-backed flows for pipeline event create/update.
 - [x] Add BFF-backed flows for interview create/update.
 - [x] Add BFF-backed flows for offer create/update.
-- [ ] Add route-backed detail and list flows to future screens beyond the home
+- [x] Add route-backed detail and list flows to future screens beyond the home
   page.
-- [ ] Keep loading, empty, error, and success states aligned with async BFF
+- [x] Keep loading, empty, error, and success states aligned with async BFF
   operations.
 
 Exit criteria:

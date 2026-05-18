@@ -59,12 +59,15 @@
       </label>
 
       <div class="flex flex-wrap items-center gap-3 md:col-span-2 xl:col-span-4">
-        <UButton type="submit">
+        <UButton :loading="status === 'loading'" :disabled="status === 'loading'" type="submit">
           {{ $t('home.pipelineForm.save') }}
         </UButton>
-        <UButton color="neutral" type="button" variant="soft" @click="resetToBlank">
+        <UButton :disabled="status === 'loading'" color="neutral" type="button" variant="soft" @click="resetToBlank">
           {{ $t('home.pipelineForm.new') }}
         </UButton>
+        <p v-if="status === 'loading'" class="text-sm text-muted">
+          {{ $t('home.pipelineForm.loading') }}
+        </p>
         <p v-if="status === 'success'" class="text-sm text-success">
           {{ $t('home.pipelineForm.success') }}
         </p>
@@ -80,7 +83,7 @@
 import { pipelineStageIds, pipelineStageStatusIds } from '../../domain/pipeline'
 import type { PipelineEvent } from '../../schemas/pipeline.schema'
 
-type FormStatus = 'idle' | 'success' | 'error'
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface PipelineEventFormModel {
   completedAt: string

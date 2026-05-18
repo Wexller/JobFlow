@@ -46,8 +46,9 @@
       </label>
 
       <div class="flex flex-wrap items-center gap-3 md:col-span-2 xl:col-span-4">
-        <UButton type="submit">{{ $t('home.interviewForm.save') }}</UButton>
-        <UButton color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.interviewForm.new') }}</UButton>
+        <UButton :loading="status === 'loading'" :disabled="status === 'loading'" type="submit">{{ $t('home.interviewForm.save') }}</UButton>
+        <UButton :disabled="status === 'loading'" color="neutral" type="button" variant="soft" @click="resetToBlank">{{ $t('home.interviewForm.new') }}</UButton>
+        <p v-if="status === 'loading'" class="text-sm text-muted">{{ $t('home.interviewForm.loading') }}</p>
         <p v-if="status === 'success'" class="text-sm text-success">{{ $t('home.interviewForm.success') }}</p>
         <p v-if="status === 'error'" class="text-sm text-error">{{ $t('home.interviewForm.error') }}</p>
       </div>
@@ -59,7 +60,7 @@
 import { interviewResultIds, interviewStageIds } from '../../domain/interviews'
 import type { Interview } from '../../schemas/interviews.schema'
 
-type FormStatus = 'idle' | 'success' | 'error'
+type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface InterviewFormModel {
   id: string

@@ -6,7 +6,16 @@
           <NuxtLinkLocale class="text-lg font-semibold" to="/">
             {{ $t('app.name') }}
           </NuxtLinkLocale>
-          <nav class="flex items-center gap-2" :aria-label="$t('layout.languageNav')">
+          <div class="flex items-center gap-4">
+            <nav class="flex items-center gap-2" :aria-label="$t('layout.primaryNav')">
+              <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/">
+                {{ $t('layout.homeLink') }}
+              </NuxtLinkLocale>
+              <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/vacancies">
+                {{ $t('layout.vacanciesLink') }}
+              </NuxtLinkLocale>
+            </nav>
+            <nav class="flex items-center gap-2" :aria-label="$t('layout.languageNav')">
             <UButton
               v-for="localeItem in availableLocales"
               :key="localeItem.code"
@@ -18,7 +27,8 @@
             >
               {{ localeItem.code.toUpperCase() }}
             </UButton>
-          </nav>
+            </nav>
+          </div>
         </div>
       </header>
 

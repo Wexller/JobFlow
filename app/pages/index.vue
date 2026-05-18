@@ -142,10 +142,10 @@ const visibleMetricIds = [
 const kanbanStatuses = vacancyStatusIds.filter((status) => status !== 'unknown')
 
 const isReady = ref(false)
-const formStatus = ref<'error' | 'idle' | 'success'>('idle')
-const pipelineFormStatus = ref<'error' | 'idle' | 'success'>('idle')
-const interviewFormStatus = ref<'error' | 'idle' | 'success'>('idle')
-const offerFormStatus = ref<'error' | 'idle' | 'success'>('idle')
+const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+const pipelineFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+const interviewFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+const offerFormStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
 const selectedVacancyId = ref('vacancy-frontend-platform')
 const filters = ref<VacancyFilterModel>({
   format: 'all',
@@ -247,6 +247,7 @@ function resetVacancyFilters() {
 }
 
 async function saveVacancy(payload: unknown) {
+  formStatus.value = 'loading'
   const result = await store.saveVacancy(payload)
 
   if (result.ok) {
@@ -259,6 +260,7 @@ async function saveVacancy(payload: unknown) {
 }
 
 async function savePipelineEvent(payload: unknown) {
+  pipelineFormStatus.value = 'loading'
   const result = await store.savePipelineEvent(payload)
 
   if (result.ok) {
@@ -270,6 +272,7 @@ async function savePipelineEvent(payload: unknown) {
 }
 
 async function saveInterview(payload: unknown) {
+  interviewFormStatus.value = 'loading'
   const result = await store.saveInterview(payload)
 
   if (result.ok) {
@@ -281,6 +284,7 @@ async function saveInterview(payload: unknown) {
 }
 
 async function saveOffer(payload: unknown) {
+  offerFormStatus.value = 'loading'
   const result = await store.saveOffer(payload)
 
   if (result.ok) {
