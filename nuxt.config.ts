@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     databaseUrl: process.env.JOBFLOW_DATABASE_URL ?? '',
+    postgresAdapter: process.env.JOBFLOW_POSTGRES_ADAPTER ?? 'sql',
     googleSheetsServiceAccountEmail: process.env.JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL ?? '',
     googleSheetsSpreadsheetId: process.env.JOBFLOW_GOOGLE_SHEETS_SPREADSHEET_ID ?? '',
     googleSheetsPrivateKey: process.env.JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY ?? '',

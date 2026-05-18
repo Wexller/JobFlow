@@ -326,12 +326,18 @@ Private server runtime variables:
 ```env
 JOBFLOW_PERSISTENCE_DRIVER=postgres
 JOBFLOW_DATABASE_URL=
+JOBFLOW_POSTGRES_ADAPTER=sql
 JOBFLOW_GOOGLE_SHEETS_SPREADSHEET_ID=
 JOBFLOW_GOOGLE_SHEETS_SERVICE_ACCOUNT_EMAIL=
 JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY=
 ```
 
 `JOBFLOW_DATABASE_URL` is used by the implemented Postgres adapter path.
+`JOBFLOW_POSTGRES_ADAPTER` controls Postgres repository implementation:
+
+- `sql` (default): current SQL repository.
+- `prisma`: Prisma-scaffolded adapter path (currently delegates to SQL for parity).
+
 Google Sheets credentials are reserved for the future sync/import gateway and
 must never be exposed to frontend code.
 

@@ -126,6 +126,8 @@ tests/
 - Near-term modernization target: Prisma-backed Postgres adapter with temporary
   fallback to legacy SQL repository during cutover.
 - Prisma schema/client scaffold is now present under `prisma/schema.prisma`.
+- Runtime adapter toggle is available through `JOBFLOW_POSTGRES_ADAPTER=sql|prisma`
+  with `sql` as the default and rollback path.
 - Default development adapter: Postgres repository with explicit migration/seed
   workflow.
 - Google Sheets is planned as a server-side integration gateway for import and
