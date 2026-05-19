@@ -1,6 +1,10 @@
 <template>
-  <div class="overflow-hidden rounded-lg border border-default">
-    <table class="w-full min-w-[920px] text-left text-sm" :aria-label="$t('home.vacancies.tableLabel')">
+  <div class="rounded-lg border border-default">
+    <p class="border-b border-default px-3 py-2 text-xs text-muted md:hidden">
+      {{ $t('home.mobile.tableHint') }}
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[920px] text-left text-sm" :aria-label="$t('home.vacancies.tableLabel')">
       <thead class="bg-muted/40 text-xs uppercase text-muted">
         <tr>
           <th class="px-4 py-3 font-medium">
@@ -58,7 +62,8 @@
           </td>
         </tr>
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 </template>
 
