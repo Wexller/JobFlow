@@ -264,7 +264,9 @@
       "empty": "События воронки отсутствуют.",
       "retry": "Повторить",
       "requestFailed": "Ошибка запроса"
-    }
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
   },
   "interviewsPage": {
     "title": "Интервью",
@@ -275,7 +277,9 @@
       "empty": "Интервью отсутствуют.",
       "retry": "Повторить",
       "requestFailed": "Ошибка запроса"
-    }
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
   },
   "offersPage": {
     "title": "Оферы",
@@ -286,6 +290,8 @@
       "empty": "Оферы отсутствуют.",
       "retry": "Повторить",
       "requestFailed": "Ошибка запроса"
-    }
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
   }
 }

@@ -264,7 +264,9 @@
       "empty": "No pipeline events available.",
       "retry": "Retry",
       "requestFailed": "Request failed"
-    }
+    },
+    "selectVacancy": "Vacancy",
+    "noVacancy": "All vacancies"
   },
   "interviewsPage": {
     "title": "Interviews",
@@ -275,7 +277,9 @@
       "empty": "No interviews available.",
       "retry": "Retry",
       "requestFailed": "Request failed"
-    }
+    },
+    "selectVacancy": "Vacancy",
+    "noVacancy": "All vacancies"
   },
   "offersPage": {
     "title": "Offers",
@@ -286,6 +290,8 @@
       "empty": "No offers available.",
       "retry": "Retry",
       "requestFailed": "Request failed"
-    }
+    },
+    "selectVacancy": "Vacancy",
+    "noVacancy": "All vacancies"
   }
 }

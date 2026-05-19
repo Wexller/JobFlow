@@ -12,42 +12,90 @@
     <div v-else-if="errorMessage" class="space-y-2 rounded-lg border border-error/30 bg-error/5 p-4" role="alert">
       <p class="font-medium text-error">{{ $t('interviewsPage.state.error') }}</p>
       <p class="text-sm text-muted">{{ errorMessage }}</p>
-      <UButton color="neutral" variant="soft" @click="refresh">{{ $t('interviewsPage.state.retry') }}</UButton>
+      <UButton color="neutral" variant="soft" @click="reload">{{ $t('interviewsPage.state.retry') }}</UButton>
     </div>
 
-    <div v-else-if="interviews.length === 0" class="rounded-lg border border-default bg-muted/20 p-4 text-sm text-muted">
-      {{ $t('interviewsPage.state.empty') }}
-    </div>
+    <template v-else>
+      <label class="space-y-1 text-sm">
+        <span class="font-medium">{{ $t('interviewsPage.selectVacancy') }}</span>
+        <select v-model="selectedVacancyId" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary">
+          <option value="">{{ $t('interviewsPage.noVacancy') }}</option>
+          <option v-for="vacancy in store.vacancies" :key="vacancy.id" :value="vacancy.id">
+            {{ vacancy.company }} · {{ vacancy.role }}
+          </option>
+        </select>
+      </label>
 
-    <ul v-else class="space-y-3">
-      <li v-for="interview in interviews" :key="interview.id" class="rounded-lg border border-default p-4">
-        <p class="font-medium">{{ $t(`domain.stage.${interview.stage}`) }}</p>
-        <p class="text-sm text-muted">{{ $t(`domain.interviewResult.${interview.result}`) }}</p>
-      </li>
-    </ul>
+      <HomeInterviewForm
+        :interview="selectedInterview"
+        :status="formStatus"
+        :vacancy-id="selectedVacancyId || undefined"
+        @reset-status="formStatus = 'idle'"
+        @save="saveInterview"
+      />
+
+      <ul v-if="filteredInterviews.length > 0" class="space-y-3">
+        <li v-for="interview in filteredInterviews" :key="interview.id" class="rounded-lg border border-default p-4">
+          <p class="font-medium">{{ $t(`domain.stage.${interview.stage}`) }}</p>
+          <p class="text-sm text-muted">{{ $t(`domain.interviewResult.${interview.result}`) }}</p>
+        </li>
+      </ul>
+
+      <div v-else class="rounded-lg border border-default bg-muted/20 p-4 text-sm text-muted">
+        {{ $t('interviewsPage.state.empty') }}
+      </div>
+    </template>
   </section>
 </template>
 
 <script setup lang="ts">
-import type { Interview } from '~/schemas/interviews.schema'
+import type { FetchError } from 'ofetch'
 import { useJobflowSnapshot } from '~/composables/useJobflowSnapshot'
+import { useJobflowStore } from '~/stores/jobflow'
 
-const request = await useJobflowSnapshot()
+const store = useJobflowStore()
+const snapshotRequest = await useJobflowSnapshot()
 const { t } = useI18n()
 
-const interviews = computed<Interview[]>(() => request.data.value?.interviews ?? [])
-const isLoading = computed(() => request.status.value === 'pending' || request.status.value === 'idle')
+const selectedVacancyId = ref('')
+const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+
+const isLoading = computed(() => snapshotRequest.status.value === 'pending' || snapshotRequest.status.value === 'idle')
 const errorMessage = computed(() => {
-  if (request.status.value !== 'error') {
+  if (!(snapshotRequest.status.value === 'error' || store.sync.status === 'error')) {
     return undefined
   }
 
-  const error = request.error.value
-  const errorData = error?.data as { message?: string } | undefined
-  return errorData?.message ?? error?.statusMessage ?? error?.message ?? t('interviewsPage.state.requestFailed')
+  const errorData = (snapshotRequest.error.value as FetchError | null)?.data as { message?: string } | undefined
+  return store.sync.errorMessage ?? errorData?.message ?? t('interviewsPage.state.requestFailed')
 })
+const filteredInterviews = computed(() =>
+  store.interviews.filter((interview) => !selectedVacancyId.value || interview.vacancyId === selectedVacancyId.value),
+)
+const selectedInterview = computed(() => filteredInterviews.value.at(-1))
 
-function refresh() {
-  void request.refresh()
+watch(() => snapshotRequest.status.value, (status) => {
+  if (status === 'pending' || status === 'idle') {
+    store.setLoading()
+  }
+}, { immediate: true })
+
+watch(() => snapshotRequest.data.value, (snapshot) => {
+  if (snapshot) {
+    store.applySnapshot(snapshot)
+    if (!selectedVacancyId.value && snapshot.vacancies.length > 0) {
+      selectedVacancyId.value = snapshot.vacancies[0]?.id ?? ''
+    }
+  }
+}, { immediate: true })
+
+async function saveInterview(payload: unknown) {
+  formStatus.value = 'loading'
+  const result = await store.saveInterview(payload)
+  formStatus.value = result.ok ? 'success' : 'error'
+}
+
+async function reload() {
+  await snapshotRequest.refresh()
 }
 </script>
