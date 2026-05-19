@@ -23,6 +23,9 @@ Optional terminal status: `cancelled`.
 | IDEA-001 | Google Sheets import gateway | Need safe one-way import from Sheets into DB-first runtime | Enables planned Sheets integration without exposing secrets | Medium | planned | `IDEA-001` | - | - | 2026-05-19 |
 | IDEA-002 | Multi-user auth and permissions | MVP is single-user oriented | Enables team usage with access control | Medium | triage | - | - | - | 2026-05-19 |
 | IDEA-003 | Background sync jobs | No async sync orchestration yet | Improves reliability of integrations and reconciliation | Low | new | - | - | - | 2026-05-19 |
+| IDEA-004 | Simplify home page and add entity pages | Home page is overloaded and mixes summary with detailed workflows | Improves clarity, focus, and navigation by moving details to dedicated entity pages | High | triage | - | - | - | 2026-05-19 |
+| IDEA-005 | UI import/export for data | No user-facing way to move data between environments or sessions | Enables portability, manual migration, and safer operational workflows | High | triage | - | - | - | 2026-05-19 |
+| IDEA-006 | Backup management workflow | Backup capability exists operationally but not as a productized feature flow | Improves resilience and recovery confidence for operators | High | triage | - | - | - | 2026-05-19 |
 
 ## Operational Notes
 
