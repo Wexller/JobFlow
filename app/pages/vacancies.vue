@@ -43,6 +43,13 @@
       />
 
       <HomeVacancyDetails :details="selectedVacancyDetails" />
+
+      <HomeVacancyForm
+        :status="formStatus"
+        :vacancy="selectedVacancyDetails?.vacancy"
+        @reset-status="formStatus = 'idle'"
+        @save="saveVacancy"
+      />
     </template>
   </section>
 </template>
@@ -58,6 +65,7 @@ const store = useJobflowStore()
 const snapshotRequest = await useJobflowSnapshot()
 const { t } = useI18n()
 
+const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
 const isReady = ref(false)
 const selectedVacancyId = ref<string | undefined>(undefined)
 const filters = ref<VacancyFilterModel>({
@@ -159,5 +167,18 @@ function resetFilters() {
 
 async function reload() {
   await snapshotRequest.refresh()
+}
+
+async function saveVacancy(payload: unknown) {
+  formStatus.value = 'loading'
+  const result = await store.saveVacancy(payload)
+
+  if (result.ok) {
+    selectedVacancyId.value = result.value.id
+    formStatus.value = 'success'
+    return
+  }
+
+  formStatus.value = 'error'
 }
 </script>
