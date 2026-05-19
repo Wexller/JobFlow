@@ -4,7 +4,7 @@
       {{ $t('home.mobile.tableHint') }}
     </p>
     <div class="overflow-x-auto">
-      <table class="w-full min-w-[920px] text-left text-sm" :aria-label="$t('home.vacancies.tableLabel')">
+      <table class="w-full min-w-[840px] text-left text-sm" :aria-label="$t('home.vacancies.tableLabel')">
       <thead class="bg-muted/40 text-xs uppercase text-muted">
         <tr>
           <th class="px-4 py-3 font-medium">

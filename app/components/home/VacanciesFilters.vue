@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-3 rounded-lg border border-default p-4 md:grid-cols-2 xl:grid-cols-4">
+  <div class="grid gap-3 rounded-lg border border-default p-3 sm:p-4 md:grid-cols-2 xl:grid-cols-4">
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.search') }}</span>
       <input
