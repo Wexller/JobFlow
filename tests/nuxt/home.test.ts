@@ -24,11 +24,11 @@ vi.mock('~/composables/useJobflowSnapshot', () => ({
 }))
 
 describe('home page', () => {
-  it('renders the localized dashboard from mock CRM data', async () => {
+  it('renders the localized dashboard from CRM data', async () => {
     const wrapper = await mountSuspended(HomePage)
     await flushPromises()
 
-    expect(wrapper.text()).toContain('A job-search CRM on top of Google Sheets')
+    expect(wrapper.text()).toContain('A job-search CRM with a server-backed workflow')
     expect(wrapper.text()).toContain('Total applications')
     expect(wrapper.text()).toContain('Active pipeline')
     expect(wrapper.text()).toContain('Northstar Labs')

@@ -31,11 +31,11 @@
     }
   },
   "home": {
-    "badge": "Mock CRM dashboard",
-    "title": "A job-search CRM on top of Google Sheets",
+    "badge": "Jobflow dashboard",
+    "title": "A job-search CRM with a server-backed workflow",
     "description": "Track vacancies, applications, pipeline stages, interviews, offers, and dashboard metrics from one focused Nuxt application.",
     "sync": {
-      "loaded": "Loaded from mock data"
+      "loaded": "Data synced successfully"
     },
     "state": {
       "loading": "Loading CRM snapshot...",
@@ -72,12 +72,12 @@
     },
     "nextActions": {
       "title": "Next actions",
-      "description": "Upcoming follow-ups from the mock vacancy tracker.",
+      "description": "Upcoming follow-ups from your vacancy pipeline.",
       "empty": "No upcoming actions."
     },
     "vacancies": {
       "title": "Vacancies",
-      "description": "Filter and sort the full mock vacancy list by stable CRM fields.",
+      "description": "Filter and sort the vacancy list by stable CRM fields.",
       "tableLabel": "Vacancies table"
     },
     "filters": {
@@ -123,7 +123,7 @@
     },
     "form": {
       "title": "Add or edit vacancy",
-      "description": "Save local mock vacancies through the same validated data boundary.",
+      "description": "Save vacancies through the same validated data boundary.",
       "id": "Stable ID",
       "techStackPlaceholder": "Vue, TypeScript, Nuxt",
       "salaryMin": "Salary min",
