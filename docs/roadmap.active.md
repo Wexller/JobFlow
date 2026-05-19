@@ -43,7 +43,7 @@ Exit criteria:
 - [ ] IDEA-006 Backup management workflow (`triage`)
 - [ ] IDEA-007 Service usage guide page (`new`)
 - [ ] IDEA-008 Mobile-first UI baseline (`in_review`)
-- [ ] IDEA-009 Text audit and copy cleanup (`new`)
+- [ ] IDEA-009 Text audit and copy cleanup (`in_review`)
 - [ ] IDEA-010 Presentable home page with product value (`new`)
 
 ## Backlog Candidates
