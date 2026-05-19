@@ -19,7 +19,7 @@ The repository currently includes:
 - an implemented Postgres runtime path with migrations and seed scripts;
 - an optional in-memory persistence adapter behind the same BFF contracts for
   troubleshooting;
-- a mock CRM dashboard, vacancy list, filters, kanban, details, and vacancy save
+- a CRM dashboard, vacancy list, filters, kanban, details, and vacancy save
   flow using `useFetch` for reads and `$fetch`-compatible writes;
 - unit and Nuxt coverage for stores, mappers, logging, server application
   behavior, and the main home page flow.
