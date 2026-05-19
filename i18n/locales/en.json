@@ -35,7 +35,7 @@
     "title": "A job-search CRM with a server-backed workflow",
     "description": "Track vacancies, applications, pipeline stages, interviews, offers, and dashboard metrics from one focused Nuxt application.",
     "sync": {
-      "loaded": "Data synced successfully"
+      "loaded": "Data loaded successfully"
     },
     "state": {
       "loading": "Loading CRM snapshot...",

@@ -42,6 +42,21 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Offers')
   })
 
+
+
+  it('renders core russian copy after locale switch', async () => {
+    const wrapper = await mountSuspended(HomePage, {
+      route: '/',
+    })
+    await flushPromises()
+
+    await wrapper.vm.$i18n.setLocale('ru')
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('CRM для поиска работы с серверной обработкой процессов')
+    expect(wrapper.text()).toContain('Данные успешно загружены')
+  })
+
   it('does not render heavy management forms on home page', async () => {
     const wrapper = await mountSuspended(HomePage)
     await flushPromises()
