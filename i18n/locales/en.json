@@ -6,7 +6,10 @@
     "languageNav": "Language selection",
     "primaryNav": "Primary navigation",
     "homeLink": "Home",
-    "vacanciesLink": "Vacancies"
+    "vacanciesLink": "Vacancies",
+    "pipelineEventsLink": "Pipeline events",
+    "interviewsLink": "Interviews",
+    "offersLink": "Offers"
   },
   "vacanciesPage": {
     "title": "Vacancies",
@@ -179,6 +182,16 @@
       "success": "Offer saved.",
       "error": "Check required fields and enum values.",
       "selectVacancyFirst": "Select a vacancy first"
+    },
+    "entities": {
+      "vacancies": "Vacancies",
+      "vacanciesDescription": "Open vacancy list and details page.",
+      "pipeline": "Pipeline events",
+      "pipelineDescription": "Track pipeline timeline entries by stage and status.",
+      "interviews": "Interviews",
+      "interviewsDescription": "Review interview records and outcomes.",
+      "offers": "Offers",
+      "offersDescription": "Review offer decisions and amounts."
     }
   },
   "domain": {
@@ -240,6 +253,39 @@
       "expired": "Expired",
       "withdrawn": "Withdrawn",
       "unknown": "Unknown"
+    }
+  },
+  "pipelineEventsPage": {
+    "title": "Pipeline events",
+    "description": "Dedicated page for pipeline timeline entities.",
+    "state": {
+      "loading": "Loading pipeline events...",
+      "error": "Failed to load pipeline events.",
+      "empty": "No pipeline events available.",
+      "retry": "Retry",
+      "requestFailed": "Request failed"
+    }
+  },
+  "interviewsPage": {
+    "title": "Interviews",
+    "description": "Dedicated page for interview entities.",
+    "state": {
+      "loading": "Loading interviews...",
+      "error": "Failed to load interviews.",
+      "empty": "No interviews available.",
+      "retry": "Retry",
+      "requestFailed": "Request failed"
+    }
+  },
+  "offersPage": {
+    "title": "Offers",
+    "description": "Dedicated page for offer entities.",
+    "state": {
+      "loading": "Loading offers...",
+      "error": "Failed to load offers.",
+      "empty": "No offers available.",
+      "retry": "Retry",
+      "requestFailed": "Request failed"
     }
   }
 }

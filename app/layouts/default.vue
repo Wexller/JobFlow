@@ -14,6 +14,15 @@
               <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/vacancies">
                 {{ $t('layout.vacanciesLink') }}
               </NuxtLinkLocale>
+              <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/pipeline-events">
+                {{ $t('layout.pipelineEventsLink') }}
+              </NuxtLinkLocale>
+              <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/interviews">
+                {{ $t('layout.interviewsLink') }}
+              </NuxtLinkLocale>
+              <NuxtLinkLocale class="text-sm text-muted transition hover:text-default" to="/offers">
+                {{ $t('layout.offersLink') }}
+              </NuxtLinkLocale>
             </nav>
             <nav class="flex items-center gap-2" :aria-label="$t('layout.languageNav')">
             <UButton
