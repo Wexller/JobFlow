@@ -81,7 +81,9 @@ nvm use
 The current architecture direction is documented in:
 
 - `docs/architecture/overview.md`
-- `docs/roadmap.md`
+- `docs/roadmap.active.md` (active planning)
+- `docs/roadmap.md` (legacy reference, read-only by default)
+- `docs/idea-bank.md` (feature idea intake and lifecycle registry)
 - `docs/architecture/adr/0001-frontend-only-google-sheets.md`
 - `docs/architecture/adr/0002-i18n-browser-locale.md`
 - `docs/architecture/adr/0003-data-state-boundaries.md`
@@ -417,6 +419,33 @@ Production/runtime expectations:
 
 - `docs/release/mvp-readiness-notes.md` documents current MVP verification scope,
   residual operational gaps, and manual release gate expectations.
+
+## Feature Delivery Workflow
+
+The repository uses an idea-driven delivery flow:
+
+```text
+idea intake -> IDEA-xxx -> feature branch IDEA-xxx -> PR -> release -> done
+```
+
+Rules:
+
+- Every accepted feature idea must be tracked in `docs/idea-bank.md`.
+- Feature IDs use `IDEA-xxx` format and are unique.
+- One feature ID maps to one dedicated branch with the exact same name.
+- Feature branches are created from `main`.
+- Merge policy to `main` is squash merge.
+- A merged PR does not automatically mark a feature as done.
+- A feature is marked `done` only after confirmed production/market deployment.
+- After production release, update idea status in `docs/idea-bank.md` and
+  reflect roadmap impact in `docs/roadmap.active.md`.
+
+PO command conventions:
+
+- Intake: `new idea: ...` / `новая идея: ...`
+- Implementation: `implement IDEA-xxx` / `реализуй IDEA-xxx`
+- Text-only implementation requests require explicit confirmation of the target
+  `IDEA-xxx` before work starts.
 
 ## Production Deploy Runbook
 

@@ -8,6 +8,8 @@ together from request intake to release.
 1. Intake
    - Product Owner describes the outcome, priority, constraints, and success
      criteria.
+   - Accepted features are registered in `docs/idea-bank.md` with unique IDs
+     (`IDEA-xxx`).
    - Lead identifies the owner agent, required reviewers, and whether reserve
      agents are needed.
 
@@ -31,6 +33,9 @@ together from request intake to release.
    - Work is split into small vertical slices.
    - Each slice has one owner and a clear write scope.
    - Shared contracts are updated before dependent UI work begins.
+   - Feature implementation branch must be created from `main` and match the
+     feature ID exactly (`IDEA-xxx`).
+   - One feature branch must not include scope for multiple feature IDs.
 
 5. Verification
    - Testing Agent defines and verifies the test strategy.
@@ -43,6 +48,8 @@ together from request intake to release.
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
      release checklist, or rollback planning.
    - The Lead merges reports and gives a go/no-go recommendation.
+   - Merge policy to `main` is squash merge.
+   - Feature status moves to `done` only after confirmed production deployment.
 
 ## Assignment Template
 

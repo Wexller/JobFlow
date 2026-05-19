@@ -6,7 +6,10 @@
     "languageNav": "Выбор языка",
     "primaryNav": "Основная навигация",
     "homeLink": "Главная",
-    "vacanciesLink": "Вакансии"
+    "vacanciesLink": "Вакансии",
+    "pipelineEventsLink": "События воронки",
+    "interviewsLink": "Интервью",
+    "offersLink": "Оферы"
   },
   "vacanciesPage": {
     "title": "Вакансии",
@@ -179,6 +182,16 @@
       "success": "Офер сохранен.",
       "error": "Проверь обязательные поля и enum-значения.",
       "selectVacancyFirst": "Сначала выберите вакансию"
+    },
+    "entities": {
+      "vacancies": "Вакансии",
+      "vacanciesDescription": "Открыть список вакансий и страницу деталей.",
+      "pipeline": "События воронки",
+      "pipelineDescription": "Просмотр событий таймлайна по этапам и статусам.",
+      "interviews": "Интервью",
+      "interviewsDescription": "Просмотр записей интервью и результатов.",
+      "offers": "Оферы",
+      "offersDescription": "Просмотр решений по оферам и сумм."
     }
   },
   "domain": {
@@ -241,5 +254,44 @@
       "withdrawn": "Отозван",
       "unknown": "Неизвестно"
     }
+  },
+  "pipelineEventsPage": {
+    "title": "События воронки",
+    "description": "Отдельная страница для сущностей таймлайна воронки.",
+    "state": {
+      "loading": "Загрузка событий воронки...",
+      "error": "Не удалось загрузить события воронки.",
+      "empty": "События воронки отсутствуют.",
+      "retry": "Повторить",
+      "requestFailed": "Ошибка запроса"
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
+  },
+  "interviewsPage": {
+    "title": "Интервью",
+    "description": "Отдельная страница для сущностей интервью.",
+    "state": {
+      "loading": "Загрузка интервью...",
+      "error": "Не удалось загрузить интервью.",
+      "empty": "Интервью отсутствуют.",
+      "retry": "Повторить",
+      "requestFailed": "Ошибка запроса"
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
+  },
+  "offersPage": {
+    "title": "Оферы",
+    "description": "Отдельная страница для сущностей оферов.",
+    "state": {
+      "loading": "Загрузка оферов...",
+      "error": "Не удалось загрузить оферы.",
+      "empty": "Оферы отсутствуют.",
+      "retry": "Повторить",
+      "requestFailed": "Ошибка запроса"
+    },
+    "selectVacancy": "Вакансия",
+    "noVacancy": "Все вакансии"
   }
 }

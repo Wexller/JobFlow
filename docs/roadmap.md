@@ -1,5 +1,10 @@
 # Jobflow Roadmap
 
+Legacy status: this file is archived legacy context as of 2026-05-19.
+Active planning is tracked in `docs/roadmap.active.md`.
+Do not use or update this file for normal delivery work unless the Product
+Owner explicitly requests it.
+
 This roadmap is the working delivery plan for the MVP. It is organized as
 vertical slices so the product becomes usable early while the BFF and
 persistence architecture harden underneath it.
