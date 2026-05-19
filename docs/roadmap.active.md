@@ -38,7 +38,7 @@ Exit criteria:
 - [ ] IDEA-001 Google Sheets import gateway (`planned`)
 - [ ] IDEA-002 Multi-user auth and permissions (`triage`)
 - [ ] IDEA-003 Background sync jobs (`new`)
-- [ ] IDEA-004 Simplify home page and add entity pages (`triage`)
+- [ ] IDEA-004 Simplify home page and add entity pages (`in_review`)
 - [ ] IDEA-005 UI import/export for data (`triage`)
 - [ ] IDEA-006 Backup management workflow (`triage`)
 
