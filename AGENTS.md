@@ -53,6 +53,8 @@ See `docs/agents/registry.md` for the complete registry.
   IDs and enum keys, never localized labels.
 - Every non-trivial change needs tests and useful logging.
 - Verification evidence beats confidence. "Looks right" is not a release gate.
+- Feature delivery is ID-driven: one feature ID, one dedicated branch, one PR.
+- A feature is marked `done` only after confirmed production release.
 - `README.md` is required, must be written in English, and must be kept current
   whenever setup, architecture, dependencies, commands, environment variables, or
   release workflow change.
@@ -72,6 +74,36 @@ See `docs/agents/registry.md` for the complete registry.
 - Codex must not create a commit while the pre-commit agent review has blocking
   findings. The final handoff before commit must summarize agent findings,
   executed commands, and any accepted residual risk.
+- Default active roadmap is `docs/roadmap.active.md`. `docs/roadmap.md` is
+  legacy context and must not be used for active planning unless the Product
+  Owner explicitly requests it.
+
+## Idea Intake And Feature Lifecycle
+
+- Product Owner submits ideas using a natural-language intake request (for
+  example, "new idea: ...").
+- Every accepted idea is recorded in `docs/idea-bank.md` with a unique ID:
+  `IDEA-xxx`.
+- Feature lifecycle statuses are:
+  `new -> triage -> discovery -> planned -> in_progress -> in_review -> released -> done`
+  with optional terminal status `cancelled`.
+- Implementation starts with a direct command that targets the idea ID (for
+  example, `implement IDEA-007` or `реализуй IDEA-007`).
+- Text-only implementation requests without ID are allowed only after explicit
+  confirmation of the matched `IDEA-xxx`.
+
+## Branch And Release Policy
+
+- One feature equals one branch. Branch name must exactly match the feature ID
+  (`IDEA-xxx`).
+- Feature branches are created from `main`.
+- One feature branch must not include scope for multiple feature IDs.
+- Merge strategy to `main` is squash merge.
+- A merged feature is not automatically `done`.
+- Feature status changes to `done` only after confirmed production/market
+  deployment. Until then, it remains `in_review` or `released`.
+- After production release, update both `docs/idea-bank.md` (status/link fields)
+  and `docs/roadmap.active.md` in the same change.
 
 ## Token Budget And Small Task Mode
 
@@ -192,9 +224,10 @@ A feature is done only when:
 - Keep project documentation close to the code. Update the English README in the
   same change that modifies developer setup, commands, dependencies, environment
   variables, architecture, or release process.
-- Keep roadmap status current. Whenever a commit implements a roadmap checklist
-  item, update `docs/roadmap.md` in that same commit by marking the completed
-  checkbox(es) and, if needed, adjusting related milestone wording.
+- Keep roadmap status current in `docs/roadmap.active.md`. Update completed
+  checklist items in the same commit that implements them.
+- Treat `docs/roadmap.md` as legacy history. Do not modify it for normal
+  delivery tracking unless explicitly requested by the Product Owner.
 
 ## Reference Model
 
