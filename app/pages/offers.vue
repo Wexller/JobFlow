@@ -1,5 +1,5 @@
 <template>
-  <section class="space-y-6">
+  <section class="space-y-4 sm:space-y-6">
     <div class="space-y-2">
       <h1 class="text-2xl font-semibold tracking-normal">{{ $t('offersPage.title') }}</h1>
       <p class="text-sm text-muted">{{ $t('offersPage.description') }}</p>

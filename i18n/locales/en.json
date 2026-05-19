@@ -192,6 +192,9 @@
       "interviewsDescription": "Review interview records and outcomes.",
       "offers": "Offers",
       "offersDescription": "Review offer decisions and amounts."
+    },
+    "mobile": {
+      "tableHint": "Swipe horizontally to view all table columns."
     }
   },
   "domain": {
