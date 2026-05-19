@@ -23,19 +23,19 @@
           </div>
           <nav class="overflow-x-auto pb-1" :aria-label="$t('layout.primaryNav')">
             <div class="flex min-w-max items-center gap-2">
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default" to="/">
+              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/">
                 {{ $t('layout.homeLink') }}
               </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default" to="/vacancies">
+              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/vacancies">
                 {{ $t('layout.vacanciesLink') }}
               </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default" to="/pipeline-events">
+              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/pipeline-events">
                 {{ $t('layout.pipelineEventsLink') }}
               </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default" to="/interviews">
+              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/interviews">
                 {{ $t('layout.interviewsLink') }}
               </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default" to="/offers">
+              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/offers">
                 {{ $t('layout.offersLink') }}
               </NuxtLinkLocale>
             </div>

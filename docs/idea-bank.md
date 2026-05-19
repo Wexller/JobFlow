@@ -27,7 +27,7 @@ Optional terminal status: `cancelled`.
 | IDEA-005 | UI import/export for data | No user-facing way to move data between environments or sessions | Enables portability, manual migration, and safer operational workflows | High | triage | - | - | - | 2026-05-19 |
 | IDEA-006 | Backup management workflow | Backup capability exists operationally but not as a productized feature flow | Improves resilience and recovery confidence for operators | High | triage | - | - | - | 2026-05-19 |
 | IDEA-007 | Service usage guide page | No built-in end-user instruction page exists in the app | Reduces onboarding time and support load with a dedicated in-product guide | Medium | new | - | - | - | 2026-05-19 |
-| IDEA-008 | Mobile-first UI baseline | Current UI is not explicitly optimized from mobile-first constraints | Improves usability and conversion on phones and small screens | High | in_progress | `IDEA-008` | - | - | 2026-05-19 |
+| IDEA-008 | Mobile-first UI baseline | Current UI is not explicitly optimized from mobile-first constraints | Improves usability and conversion on phones and small screens | High | in_review | `IDEA-008` | - | - | 2026-05-19 |
 | IDEA-009 | Text audit and copy cleanup | Product copy still contains outdated terms (e.g., Google Sheets, mock wording) | Aligns UX language with actual runtime and improves trust | High | new | - | - | - | 2026-05-19 |
 | IDEA-010 | Presentable home page with product value | Home page needs a stronger presentation layer and value proposition | Improves first impression, clarity, and product positioning | High | new | - | - | - | 2026-05-19 |
 
