@@ -10,14 +10,20 @@ This file is the primary feature intake and feature lifecycle registry.
   `новая идея: ...` are recorded here.
 - Study or planning starts only from a targeted ID command (`plan FEAT-XXX`,
   `изучи FEAT-XXX`, or `спланируй FEAT-XXX`) and must create or update the
-  local spec at `docs/features/FEAT-XXX.md`.
+  local spec at `docs/workitems/FEAT-XXX.md`.
 - Implementation starts only from a targeted ID command (`implement FEAT-XXX`
   or `реализуй FEAT-XXX`).
 - Text-only study, planning, or implementation requests are allowed only after
   explicit confirmation of the matched feature ID.
-- `docs/features/FEAT-XXX.md` is a local working spec and must not be added to
+- `docs/workitems/FEAT-XXX.md` is a local working spec and must not be added to
   git.
 - A feature is marked `done` only after confirmed production/market release.
+
+## When To Use FEAT
+
+- New capability.
+- New user-facing outcome.
+- Noticeable product expansion.
 
 ## Status Lifecycle
 
@@ -45,8 +51,8 @@ Optional terminal status: `cancelled`.
 - `Branch` is populated when implementation starts and must exactly match the feature ID.
 - `PR` stores the merge candidate URL or identifier.
 - `Release` stores release evidence (deploy record/tag/build link).
-- The local spec path for each feature is `docs/features/FEAT-XXX.md`.
-- Specs under `docs/features/` are intentionally local-only and must not be
+- The local spec path for each feature is `docs/workitems/FEAT-XXX.md`.
+- Specs under `docs/workitems/` are intentionally local-only and must not be
   staged, committed, or linked as tracked artifacts.
 - Move status to `released` after merge and release preparation is complete.
 - Move status to `done` only after production deployment is verified.

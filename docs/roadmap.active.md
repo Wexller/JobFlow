@@ -8,6 +8,8 @@ This is the only active roadmap for regular planning and delivery tracking.
 
 - Unfinished roadmap items migrated from legacy roadmap.
 - Planned and in-progress items from `docs/feature-bank.md`.
+- `REF-XXX` and `FIX-XXX` stay in their own banks unless they need roadmap
+  visibility for milestone risk, release coordination, or delivery planning.
 
 ## Near Term
 
@@ -60,8 +62,7 @@ Exit criteria:
 
 - Any roadmap item that maps to a feature must have a corresponding `FEAT-XXX`
   entry in `docs/feature-bank.md`.
-- Planning and implementation expect a local spec at
-  `docs/features/FEAT-XXX.md`.
+- Planning and implementation expect a local spec at `docs/workitems/<ID>.md`.
 - Feature development branch must match feature ID exactly (`FEAT-XXX`).
 - Merge policy is squash merge to `main`.
 - Feature is marked done only after confirmed production release and

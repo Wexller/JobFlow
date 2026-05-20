@@ -30,9 +30,7 @@ playwright-report
 test-results
 db/backups/
 *.dump
-docs/features/FEAT-*.md
-!docs/features/README.md
-!docs/features/.gitkeep
+docs/workitems/
 
 # OS / editors
 .DS_Store

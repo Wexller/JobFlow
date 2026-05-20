@@ -84,7 +84,10 @@ The current architecture direction is documented in:
 - `docs/roadmap.active.md` (active planning)
 - `docs/roadmap.md` (legacy reference, read-only by default)
 - `docs/feature-bank.md` (feature intake and lifecycle registry)
-- `docs/features/` (local-only feature specs, intentionally excluded from git)
+- `docs/refactor-bank.md` (refactor intake and lifecycle registry)
+- `docs/fix-bank.md` (fix intake and lifecycle registry)
+- `docs/workitem-spec-template.md` (tracked template for local work item specs)
+- `docs/workitems/` (local-only work item specs, intentionally excluded from git)
 - `docs/architecture/adr/0001-frontend-only-google-sheets.md`
 - `docs/architecture/adr/0002-i18n-browser-locale.md`
 - `docs/architecture/adr/0003-data-state-boundaries.md`
@@ -421,41 +424,53 @@ Production/runtime expectations:
 - `docs/release/mvp-readiness-notes.md` documents current MVP verification scope,
   residual operational gaps, and manual release gate expectations.
 
-## Feature Delivery Workflow
+## Work Item Delivery Workflow
 
-The repository uses a feature-driven delivery flow:
+The repository uses an ID-driven delivery flow:
 
 ```text
-idea intake -> feature bank FEAT-XXX -> local spec docs/features/FEAT-XXX.md -> branch FEAT-XXX -> PR -> release -> done
+intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> PR -> release -> done
 ```
 
 Rules:
 
 - Every accepted feature must be tracked in `docs/feature-bank.md`.
-- Feature IDs use `FEAT-XXX` format and are unique.
-- Study or planning of a feature creates or updates a local-only spec at
-  `docs/features/FEAT-XXX.md`.
-- Local specs in `docs/features/` are intentionally not tracked in git and must
+- Every accepted refactor must be tracked in `docs/refactor-bank.md`.
+- Every accepted fix must be tracked in `docs/fix-bank.md`.
+- Work item IDs use `FEAT-XXX`, `REF-XXX`, or `FIX-XXX` format and are unique
+  within their own namespace.
+- Study or planning of any work item creates or updates a local-only spec at
+  `docs/workitems/<ID>.md`.
+- Local specs in `docs/workitems/` are intentionally not tracked in git and must
   not be staged, committed, or included in PR scope.
-- Implementation must follow the local feature spec.
+- Implementation must follow the local work item spec.
 - If the spec does not exist, Codex must stop and wait for explicit approval
   before implementing without a spec.
-- One feature ID maps to one dedicated branch with the exact same name.
-- Feature branches are created from `main`.
+- One work item ID maps to one dedicated branch with the exact same name.
+- Work item branches are created from `main`.
 - Merge policy to `main` is squash merge.
-- A merged PR does not automatically mark a feature as done.
-- A feature is marked `done` only after confirmed production/market deployment.
-- After production release, update feature status in `docs/feature-bank.md` and
-  reflect roadmap impact in `docs/roadmap.active.md`.
+- A merged PR does not automatically mark a work item as done.
+- A work item is marked `done` only after confirmed production/market deployment.
+- After production release, update the corresponding bank status. Update
+  `docs/roadmap.active.md` only when roadmap visibility changes.
 - After implementation work and PR handoff are complete, switch back to `main`.
+
+Classification:
+
+- `FEAT`: new capability or new user-facing outcome.
+- `REF`: structural improvement without changing intended behavior.
+- `FIX`: defect, regression, or incorrect behavior correction.
 
 PO command conventions:
 
 - Intake: `new idea: ...` / `новая идея: ...`
-- Study or planning: `plan FEAT-XXX` / `изучи FEAT-XXX` / `спланируй FEAT-XXX`
-- Implementation: `implement FEAT-XXX` / `реализуй FEAT-XXX`
+- Refactor intake: `new refactor: ...` / `запиши refactor: ...`
+- Fix intake: `new fix: ...` / `запиши fix: ...`
+- Study or planning: `plan FEAT-XXX|REF-XXX|FIX-XXX` / `изучи ...` /
+  `спланируй ...`
+- Implementation: `implement FEAT-XXX|REF-XXX|FIX-XXX` / `реализуй ...`
 - Text-only study, planning, or implementation requests require explicit
-  confirmation of the target `FEAT-XXX` before work starts.
+  confirmation of the target work item ID before work starts.
 
 ## Production Deploy Runbook
 
