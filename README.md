@@ -429,7 +429,7 @@ Production/runtime expectations:
 The repository uses an ID-driven delivery flow:
 
 ```text
-intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> PR -> release -> done
+intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> implement -> checks -> commit -> PR -> squash merge to main -> release -> done
 ```
 
 Rules:
@@ -449,6 +449,9 @@ Rules:
 - Implementation must follow the local work item spec.
 - If the spec does not exist, Codex must stop and wait for explicit approval
   before implementing without a spec.
+- By default, `implement FEAT-XXX|REF-XXX|FIX-XXX` means end-to-end delivery:
+  create the branch, implement the change, run checks, create the commit, open
+  the PR, merge to `main`, and switch back to `main`.
 - One work item ID maps to one dedicated branch with the exact same name.
 - Work item branches are created from `main`.
 - Merge policy to `main` is squash merge.
@@ -456,7 +459,9 @@ Rules:
 - A work item is marked `done` only after confirmed production/market deployment.
 - After production release, update the corresponding bank status. Update
   `docs/roadmap.active.md` only when roadmap visibility changes.
-- After implementation work and PR handoff are complete, switch back to `main`.
+- Do not stop at PR handoff unless the Product Owner explicitly asks to pause
+  before merge.
+- After merge, switch back to `main`.
 
 Classification:
 

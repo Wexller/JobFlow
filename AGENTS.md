@@ -54,7 +54,7 @@ See `docs/agents/registry.md` for the complete registry.
 - Every non-trivial change needs tests and useful logging.
 - Verification evidence beats confidence. "Looks right" is not a release gate.
 - Work item delivery is ID-driven: one work item ID, one dedicated branch, one
-  PR.
+  PR, one merge to `main`.
 - A work item is marked `done` only after confirmed production release.
 - `README.md` is required, must be written in English, and must be kept current
   whenever setup, architecture, dependencies, commands, environment variables, or
@@ -107,6 +107,10 @@ See `docs/agents/registry.md` for the complete registry.
   `implement FIX-012`).
 - Implementation uses `docs/workitems/<ID>.md` as the working technical
   specification.
+- Unless the Product Owner explicitly asks to stop earlier, an implementation
+  command means the full delivery flow: create branch from `main`, implement,
+  run required checks, create commit, open PR, merge to `main`, and switch back
+  to `main`.
 - If the spec file is missing, Codex must stop, report that
   `docs/workitems/<ID>.md` does not exist, and wait for explicit Product Owner
   approval before implementing without a spec.
@@ -132,9 +136,13 @@ See `docs/agents/registry.md` for the complete registry.
   ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
 - Work item branches are created from `main`.
 - One work item branch must not include scope for multiple work item IDs.
+- Default implementation sequence is:
+  create branch -> implement -> verify -> commit -> PR -> squash merge to
+  `main` -> switch back to `main`.
 - Merge strategy to `main` is squash merge.
-- After implementation work and PR handoff are complete, Codex switches back to
-  `main`.
+- Codex should not stop at "PR handoff" unless the Product Owner explicitly asks
+  to pause before merge.
+- After merge to `main`, Codex switches back to `main`.
 - A merged work item is not automatically `done`.
 - Work item status changes to `done` only after confirmed production/market
   deployment. Until then, it remains `in_review` or `released`.

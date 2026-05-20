@@ -15,6 +15,9 @@ This file is the primary fix intake and lifecycle registry.
   spec at `docs/workitems/FIX-XXX.md`.
 - Implementation starts only from a targeted ID command (`implement FIX-XXX`
   or `реализуй FIX-XXX`).
+- Unless the Product Owner explicitly asks to stop earlier, implementation runs
+  the full delivery flow: branch, implementation, checks, commit, PR, squash
+  merge to `main`, then return to `main`.
 - Text-only study, planning, or implementation requests are allowed only after
   explicit confirmation of the matched fix ID.
 - `docs/workitems/FIX-XXX.md` is a local working spec and must not be added to
@@ -50,5 +53,6 @@ Optional terminal status: `cancelled`.
 - The local spec path for each fix is `docs/workitems/FIX-XXX.md`.
 - Specs under `docs/workitems/` are intentionally local-only and must not be
   staged, committed, or linked as tracked artifacts.
+- Move status to `in_review` once the commit exists and the PR is open.
 - Move status to `released` after merge and release preparation is complete.
 - Move status to `done` only after production deployment is verified.

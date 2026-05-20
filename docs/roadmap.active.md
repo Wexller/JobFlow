@@ -66,6 +66,8 @@ Exit criteria:
   entry in `docs/feature-bank.md`.
 - Planning and implementation expect a local spec at `docs/workitems/<ID>.md`.
 - Feature development branch must match feature ID exactly (`FEAT-XXX`).
+- Default implementation flow is branch -> implementation -> verification ->
+  commit -> PR -> squash merge to `main` -> switch back to `main`.
 - Merge policy is squash merge to `main`.
 - Feature is marked done only after confirmed production release and
   corresponding status updates in `docs/feature-bank.md`.

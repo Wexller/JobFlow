@@ -15,6 +15,9 @@ This file is the primary feature intake and feature lifecycle registry.
   local spec at `docs/workitems/FEAT-XXX.md`.
 - Implementation starts only from a targeted ID command (`implement FEAT-XXX`
   or `реализуй FEAT-XXX`).
+- Unless the Product Owner explicitly asks to stop earlier, implementation runs
+  the full delivery flow: branch, implementation, checks, commit, PR, squash
+  merge to `main`, then return to `main`.
 - Text-only study, planning, or implementation requests are allowed only after
   explicit confirmation of the matched feature ID.
 - `docs/workitems/FEAT-XXX.md` is a local working spec and must not be added to
@@ -58,5 +61,6 @@ Optional terminal status: `cancelled`.
 - The local spec path for each feature is `docs/workitems/FEAT-XXX.md`.
 - Specs under `docs/workitems/` are intentionally local-only and must not be
   staged, committed, or linked as tracked artifacts.
+- Move status to `in_review` once the commit exists and the PR is open.
 - Move status to `released` after merge and release preparation is complete.
 - Move status to `done` only after production deployment is verified.
