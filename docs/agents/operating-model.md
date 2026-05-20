@@ -38,6 +38,8 @@ together from request intake to release.
    - The Lead records planning output in `docs/workitems/<ID>.md`.
    - `docs/workitems/<ID>.md` is a local-only working spec, not a git-tracked
      artifact.
+   - After merge, completed local specs are moved to
+     `docs/workitems/done/<ID>.md`.
    - Minimum spec structure: summary, goals, scope, non-goals, affected areas,
      acceptance criteria, risks, verification.
 
@@ -46,6 +48,8 @@ together from request intake to release.
    - Each slice has one owner and a clear write scope.
    - Shared contracts are updated before dependent UI work begins.
    - Implementation reads from `docs/workitems/<ID>.md`.
+   - Unless the Product Owner explicitly asks to stop earlier, an implementation
+     request means the full delivery path through merge to `main`.
    - If the spec file does not exist, the Lead stops and asks the Product Owner
      for explicit approval before implementing without a spec.
    - Work item implementation branch must be created from `main` and match the
@@ -64,8 +68,15 @@ together from request intake to release.
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
      release checklist, or rollback planning.
    - The Lead merges reports and gives a go/no-go recommendation.
+   - The default implementation sequence is:
+     branch -> implementation -> verification -> commit -> PR -> squash merge to
+     `main` -> move spec to `docs/workitems/done/<ID>.md` -> switch back to
+     `main`.
    - Merge policy to `main` is squash merge.
-   - After PR handoff is complete, Codex switches back to `main`.
+   - Codex does not stop at PR handoff unless the Product Owner explicitly asks
+     to pause before merge.
+   - After merge to `main`, Codex moves the local spec to
+     `docs/workitems/done/<ID>.md` and switches back to `main`.
    - Work item status moves to `done` only after confirmed production
      deployment.
 

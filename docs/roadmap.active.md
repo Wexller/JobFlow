@@ -47,6 +47,8 @@ Exit criteria:
 - [ ] FEAT-008 Mobile-first UI baseline (`in_review`)
 - [ ] FEAT-009 Text audit and copy cleanup (`in_review`)
 - [ ] FEAT-010 Presentable home page with product value (`new`)
+- [ ] FEAT-011 Replace vacancy select with searchable vacancy field (`new`)
+- [ ] FEAT-012 Reduce desktop header height and keep menu in one row (`new`)
 
 ## Backlog Candidates
 
@@ -63,7 +65,11 @@ Exit criteria:
 - Any roadmap item that maps to a feature must have a corresponding `FEAT-XXX`
   entry in `docs/feature-bank.md`.
 - Planning and implementation expect a local spec at `docs/workitems/<ID>.md`.
+- After merge, completed local specs move to `docs/workitems/done/<ID>.md`.
 - Feature development branch must match feature ID exactly (`FEAT-XXX`).
+- Default implementation flow is branch -> implementation -> verification ->
+  commit -> PR -> squash merge to `main` -> move spec to
+  `docs/workitems/done/<ID>.md` -> switch back to `main`.
 - Merge policy is squash merge to `main`.
 - Feature is marked done only after confirmed production release and
   corresponding status updates in `docs/feature-bank.md`.

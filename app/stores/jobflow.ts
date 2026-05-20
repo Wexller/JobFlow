@@ -1,3 +1,4 @@
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { addDays, isBefore, parseISO, startOfDay } from 'date-fns'
 import { vacancyStatusIds, type VacancyPriorityId, type VacancyStatusId, type WorkFormatId } from '../domain/vacancies'
@@ -161,138 +162,148 @@ function isWithinUpcomingWindow(value: string, referenceDateIso: string, days: n
   return !isBefore(date, start) && isBefore(date, end)
 }
 
-export const useJobflowStore = defineStore('jobflow', {
-  state: () => ({
-    filters: { ...defaultFilters } as VacancyFilters,
-    interviews: [] as Interview[],
-    offers: [] as Offer[],
-    pipelineEvents: [] as PipelineEvent[],
-    referenceDateIso: new Date().toISOString(),
-    sort: {
-      direction: 'desc',
-      key: 'applied_at',
-    } as VacancySort,
-    sync: {
-      status: 'idle',
-    } as SyncState,
-    vacancies: [] as Vacancy[],
-  }),
-  getters: {
-    activeVacancies: (state) => state.vacancies.filter((vacancy) => activeStatuses.has(vacancy.status)),
-    dashboardMetrics(state): SummaryMetric[] {
-      const totalApplications = state.vacancies.filter((vacancy) => vacancy.appliedAt !== undefined).length
-      const activeProcesses = state.vacancies.filter((vacancy) => activeStatuses.has(vacancy.status)).length
-      const interviewsThisWeek = state.interviews.filter((interview) =>
-        interview.result === 'pending' && isWithinUpcomingWindow(interview.scheduledAt, state.referenceDateIso, 7),
-      ).length
-      const offers = state.offers.filter((offer) => offer.decision === 'pending' || offer.decision === 'accepted').length
-      const replied = state.vacancies.filter((vacancy) =>
-        ['screening', 'interviewing', 'offer', 'accepted', 'rejected'].includes(vacancy.status),
-      ).length
-      const interviewed = state.vacancies.filter((vacancy) =>
-        state.interviews.some((interview) => interview.vacancyId === vacancy.id),
-      ).length
-      const nextActions = state.vacancies.filter((vacancy) =>
-        vacancy.nextActionAt !== undefined
-        && !isBefore(parseISO(vacancy.nextActionAt), startOfDay(parseISO(state.referenceDateIso))),
-      ).length
-      const rate = (value: number) => totalApplications === 0 ? 0 : Math.round((value / totalApplications) * 1000) / 10
+export const useJobflowStore = defineStore('jobflow', () => {
+  const filters = ref<VacancyFilters>({ ...defaultFilters })
+  const interviews = ref<Interview[]>([])
+  const offers = ref<Offer[]>([])
+  const pipelineEvents = ref<PipelineEvent[]>([])
+  const referenceDateIso = ref(new Date().toISOString())
+  const sort = ref<VacancySort>({
+    direction: 'desc',
+    key: 'applied_at',
+  })
+  const sync = ref<SyncState>({
+    status: 'idle',
+  })
+  const vacancies = ref<Vacancy[]>([])
 
-      return [
-        { id: 'total_applications', value: totalApplications },
-        { id: 'active_processes', value: activeProcesses },
-        { id: 'interviews_this_week', value: interviewsThisWeek },
-        { id: 'offers', value: offers },
-        { id: 'reply_rate', value: rate(replied), rate: rate(replied) },
-        { id: 'interview_rate', value: rate(interviewed), rate: rate(interviewed) },
-        { id: 'offer_rate', value: rate(offers), rate: rate(offers) },
-        { id: 'next_actions', value: nextActions },
-      ]
-    },
-    filteredVacancies(state): Vacancy[] {
-      return sortVacancies(filterVacancies(state.vacancies, state.filters), state.sort)
-    },
-    kanbanGroups(state): Record<VacancyStatusId, Vacancy[]> {
-      const groups = vacancyStatusIds.reduce<Record<VacancyStatusId, Vacancy[]>>((accumulator, status) => {
-        accumulator[status] = []
-        return accumulator
-      }, {
-        accepted: [],
-        applied: [],
-        archived: [],
-        interviewing: [],
-        offer: [],
-        rejected: [],
-        screening: [],
-        unknown: [],
-        wishlist: [],
-      })
+  const activeVacancies = computed(() =>
+    vacancies.value.filter((vacancy) => activeStatuses.has(vacancy.status)),
+  )
 
-      for (const vacancy of state.vacancies) {
-        groups[vacancy.status].push(vacancy)
-      }
+  const dashboardMetrics = computed<SummaryMetric[]>(() => {
+    const totalApplications = vacancies.value.filter((vacancy) => vacancy.appliedAt !== undefined).length
+    const activeProcesses = vacancies.value.filter((vacancy) => activeStatuses.has(vacancy.status)).length
+    const interviewsThisWeek = interviews.value.filter((interview) =>
+      interview.result === 'pending' && isWithinUpcomingWindow(interview.scheduledAt, referenceDateIso.value, 7),
+    ).length
+    const activeOffers = offers.value.filter((offer) => offer.decision === 'pending' || offer.decision === 'accepted').length
+    const replied = vacancies.value.filter((vacancy) =>
+      ['screening', 'interviewing', 'offer', 'accepted', 'rejected'].includes(vacancy.status),
+    ).length
+    const interviewed = vacancies.value.filter((vacancy) =>
+      interviews.value.some((interview) => interview.vacancyId === vacancy.id),
+    ).length
+    const nextActions = vacancies.value.filter((vacancy) =>
+      vacancy.nextActionAt !== undefined
+      && !isBefore(parseISO(vacancy.nextActionAt), startOfDay(parseISO(referenceDateIso.value))),
+    ).length
+    const rate = (value: number) => totalApplications === 0 ? 0 : Math.round((value / totalApplications) * 1000) / 10
 
-      for (const status of vacancyStatusIds) {
-        groups[status] = sortVacancies(groups[status], state.sort)
-      }
+    return [
+      { id: 'total_applications', value: totalApplications },
+      { id: 'active_processes', value: activeProcesses },
+      { id: 'interviews_this_week', value: interviewsThisWeek },
+      { id: 'offers', value: activeOffers },
+      { id: 'reply_rate', value: rate(replied), rate: rate(replied) },
+      { id: 'interview_rate', value: rate(interviewed), rate: rate(interviewed) },
+      { id: 'offer_rate', value: rate(activeOffers), rate: rate(activeOffers) },
+      { id: 'next_actions', value: nextActions },
+    ]
+  })
 
-      return groups
-    },
-  },
-  actions: {
-    applySnapshot(snapshot: JobflowSnapshot) {
-      this.vacancies = snapshot.vacancies
-      this.pipelineEvents = snapshot.pipelineEvents
-      this.interviews = snapshot.interviews
-      this.offers = snapshot.offers
-      this.sync = {
-        lastLoadedAt: new Date().toISOString(),
-        status: 'success',
-      }
-    },
-    async load(repository?: JobflowReadRepository) {
-      const activeRepository = repository ?? createJobflowApiRepository()
-      this.sync = { status: 'loading' }
+  const filteredVacancies = computed<Vacancy[]>(() =>
+    sortVacancies(filterVacancies(vacancies.value, filters.value), sort.value),
+  )
 
-      const result = await activeRepository.getSnapshot()
+  const kanbanGroups = computed<Record<VacancyStatusId, Vacancy[]>>(() => {
+    const groups = vacancyStatusIds.reduce<Record<VacancyStatusId, Vacancy[]>>((accumulator, status) => {
+      accumulator[status] = []
+      return accumulator
+    }, {
+      accepted: [],
+      applied: [],
+      archived: [],
+      interviewing: [],
+      offer: [],
+      rejected: [],
+      screening: [],
+      unknown: [],
+      wishlist: [],
+    })
 
-      if (!result.ok) {
-        this.sync = {
-          errorMessage: result.error.message,
-          status: 'error',
-        }
-        return result
-      }
+    for (const vacancy of vacancies.value) {
+      groups[vacancy.status].push(vacancy)
+    }
 
-      this.applySnapshot(result.value)
-      return result
-    },
-    setLoadError(errorMessage: string, requestId?: string) {
-      this.sync = {
-        errorMessage,
-        requestId,
+    for (const status of vacancyStatusIds) {
+      groups[status] = sortVacancies(groups[status], sort.value)
+    }
+
+    return groups
+  })
+
+  function applySnapshot(snapshot: JobflowSnapshot) {
+    vacancies.value = snapshot.vacancies
+    pipelineEvents.value = snapshot.pipelineEvents
+    interviews.value = snapshot.interviews
+    offers.value = snapshot.offers
+    sync.value = {
+      lastLoadedAt: new Date().toISOString(),
+      status: 'success',
+    }
+  }
+
+  async function load(repository?: JobflowReadRepository) {
+    const activeRepository = repository ?? createJobflowApiRepository()
+    sync.value = { status: 'loading' }
+
+    const result = await activeRepository.getSnapshot()
+
+    if (!result.ok) {
+      sync.value = {
+        errorMessage: result.error.message,
         status: 'error',
       }
-    },
-    setLoading() {
-      this.sync = { status: 'loading' }
-    },
-    resetFilters() {
-      this.filters = { ...defaultFilters }
-    },
-    setFilters(filters: Partial<VacancyFilters>) {
-      this.filters = {
-        ...this.filters,
-        ...filters,
-      }
-    },
-    setReferenceDate(referenceDateIso: string) {
-      this.referenceDateIso = referenceDateIso
-    },
-    setSort(sort: VacancySort) {
-      this.sort = sort
-    },
-    async saveVacancy(payload: unknown, repository?: JobflowWriteRepository) {
+      return result
+    }
+
+    applySnapshot(result.value)
+    return result
+  }
+
+  function setLoadError(errorMessage: string, requestId?: string) {
+    sync.value = {
+      errorMessage,
+      requestId,
+      status: 'error',
+    }
+  }
+
+  function setLoading() {
+    sync.value = { status: 'loading' }
+  }
+
+  function resetFilters() {
+    filters.value = { ...defaultFilters }
+  }
+
+  function setFilters(updatedFilters: Partial<VacancyFilters>) {
+    filters.value = {
+      ...filters.value,
+      ...updatedFilters,
+    }
+  }
+
+  function setReferenceDate(nextReferenceDateIso: string) {
+    referenceDateIso.value = nextReferenceDateIso
+  }
+
+  function setSort(nextSort: VacancySort) {
+    sort.value = nextSort
+  }
+
+  async function saveVacancy(payload: unknown, repository?: JobflowWriteRepository) {
       const normalized = normalizeVacancyPayload(payload)
 
       if (!normalized.ok) {
@@ -300,7 +311,7 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       const activeRepository = repository ?? createJobflowApiRepository()
-      const exists = this.vacancies.some((vacancy) => vacancy.id === normalized.value.id)
+      const exists = vacancies.value.some((vacancy) => vacancy.id === normalized.value.id)
       const result = exists
         ? await activeRepository.updateVacancy(normalized.value.id, normalized.value)
         : await activeRepository.createVacancy(normalized.value)
@@ -309,10 +320,11 @@ export const useJobflowStore = defineStore('jobflow', {
         return result
       }
 
-      this.vacancies = upsertById(this.vacancies, result.value)
+      vacancies.value = upsertById(vacancies.value, result.value)
       return result
-    },
-    async savePipelineEvent(payload: unknown, repository?: JobflowWriteRepository) {
+  }
+
+  async function savePipelineEvent(payload: unknown, repository?: JobflowWriteRepository) {
       const normalized = normalizePipelineEventPayload(payload)
 
       if (!normalized.ok) {
@@ -320,7 +332,7 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       const activeRepository = repository ?? createJobflowApiRepository()
-      const exists = this.pipelineEvents.some((pipelineEvent) => pipelineEvent.id === normalized.value.id)
+      const exists = pipelineEvents.value.some((pipelineEvent) => pipelineEvent.id === normalized.value.id)
       const result = exists
         ? await activeRepository.updatePipelineEvent(normalized.value.id, normalized.value)
         : await activeRepository.createPipelineEvent(normalized.value)
@@ -329,10 +341,11 @@ export const useJobflowStore = defineStore('jobflow', {
         return result
       }
 
-      this.pipelineEvents = upsertById(this.pipelineEvents, result.value)
+      pipelineEvents.value = upsertById(pipelineEvents.value, result.value)
       return result
-    },
-    async saveInterview(payload: unknown, repository?: JobflowWriteRepository) {
+  }
+
+  async function saveInterview(payload: unknown, repository?: JobflowWriteRepository) {
       const normalized = normalizeInterviewPayload(payload)
 
       if (!normalized.ok) {
@@ -340,7 +353,7 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       const activeRepository = repository ?? createJobflowApiRepository()
-      const exists = this.interviews.some((interview) => interview.id === normalized.value.id)
+      const exists = interviews.value.some((interview) => interview.id === normalized.value.id)
       const result = exists
         ? await activeRepository.updateInterview(normalized.value.id, normalized.value)
         : await activeRepository.createInterview(normalized.value)
@@ -349,10 +362,11 @@ export const useJobflowStore = defineStore('jobflow', {
         return result
       }
 
-      this.interviews = upsertById(this.interviews, result.value)
+      interviews.value = upsertById(interviews.value, result.value)
       return result
-    },
-    async saveOffer(payload: unknown, repository?: JobflowWriteRepository) {
+  }
+
+  async function saveOffer(payload: unknown, repository?: JobflowWriteRepository) {
       const normalized = normalizeOfferPayload(payload)
 
       if (!normalized.ok) {
@@ -360,7 +374,7 @@ export const useJobflowStore = defineStore('jobflow', {
       }
 
       const activeRepository = repository ?? createJobflowApiRepository()
-      const existingOffer = this.offers.find((offer) => offer.id === normalized.value.id)
+      const existingOffer = offers.value.find((offer) => offer.id === normalized.value.id)
       const result = existingOffer === undefined
         ? await activeRepository.createOffer(normalized.value)
         : await activeRepository.updateOffer(normalized.value.id, normalized.value)
@@ -369,25 +383,59 @@ export const useJobflowStore = defineStore('jobflow', {
         return result
       }
 
-      this.offers = upsertById(this.offers, result.value)
+      offers.value = upsertById(offers.value, result.value)
       return result
-    },
-    applyPipelineEvent(pipelineEvent: PipelineEvent) {
-      this.pipelineEvents = upsertById(this.pipelineEvents, pipelineEvent)
-    },
-    applyInterview(interview: Interview) {
-      this.interviews = upsertById(this.interviews, interview)
-    },
-    applyOffer(offer: Offer) {
-      this.offers = upsertById(this.offers, offer)
-    },
-    vacancyDetails(vacancyId: string): VacancyDetails | undefined {
-      return buildVacancyDetails({
-        interviews: this.interviews,
-        offers: this.offers,
-        pipelineEvents: this.pipelineEvents,
-        vacancies: this.vacancies,
-      }, vacancyId)
-    },
-  },
+  }
+
+  function applyPipelineEvent(pipelineEvent: PipelineEvent) {
+    pipelineEvents.value = upsertById(pipelineEvents.value, pipelineEvent)
+  }
+
+  function applyInterview(interview: Interview) {
+    interviews.value = upsertById(interviews.value, interview)
+  }
+
+  function applyOffer(offer: Offer) {
+    offers.value = upsertById(offers.value, offer)
+  }
+
+  function vacancyDetails(vacancyId: string): VacancyDetails | undefined {
+    return buildVacancyDetails({
+      interviews: interviews.value,
+      offers: offers.value,
+      pipelineEvents: pipelineEvents.value,
+      vacancies: vacancies.value,
+    }, vacancyId)
+  }
+
+  return {
+    activeVacancies,
+    applyInterview,
+    applyOffer,
+    applyPipelineEvent,
+    applySnapshot,
+    dashboardMetrics,
+    filteredVacancies,
+    filters,
+    interviews,
+    kanbanGroups,
+    load,
+    offers,
+    pipelineEvents,
+    referenceDateIso,
+    resetFilters,
+    saveInterview,
+    saveOffer,
+    savePipelineEvent,
+    saveVacancy,
+    setFilters,
+    setLoadError,
+    setLoading,
+    setReferenceDate,
+    setSort,
+    sort,
+    sync,
+    vacancies,
+    vacancyDetails,
+  }
 })

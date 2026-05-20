@@ -40,6 +40,7 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Follow each process from application to decision.')
     expect(wrapper.text()).toContain('Interviews')
     expect(wrapper.text()).toContain('Offers')
+    expect(wrapper.text()).not.toContain('Swipe horizontally to view all table columns.')
   })
 
 

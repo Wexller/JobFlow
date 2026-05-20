@@ -429,7 +429,7 @@ Production/runtime expectations:
 The repository uses an ID-driven delivery flow:
 
 ```text
-intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> PR -> release -> done
+intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> implement -> checks -> commit -> PR -> squash merge to main -> move spec to docs/workitems/done/<ID>.md -> release -> done
 ```
 
 Rules:
@@ -446,9 +446,16 @@ Rules:
   `docs/workitems/<ID>.md`.
 - Local specs in `docs/workitems/` are intentionally not tracked in git and must
   not be staged, committed, or included in PR scope.
+- After merge to `main`, move the local spec to
+  `docs/workitems/done/<ID>.md`.
+- Moving the spec file into `docs/workitems/done/` is an archive step for local
+  working materials and does not by itself mark the work item as `done`.
 - Implementation must follow the local work item spec.
 - If the spec does not exist, Codex must stop and wait for explicit approval
   before implementing without a spec.
+- By default, `implement FEAT-XXX|REF-XXX|FIX-XXX` means end-to-end delivery:
+  create the branch, implement the change, run checks, create the commit, open
+  the PR, merge to `main`, and switch back to `main`.
 - One work item ID maps to one dedicated branch with the exact same name.
 - Work item branches are created from `main`.
 - Merge policy to `main` is squash merge.
@@ -456,7 +463,10 @@ Rules:
 - A work item is marked `done` only after confirmed production/market deployment.
 - After production release, update the corresponding bank status. Update
   `docs/roadmap.active.md` only when roadmap visibility changes.
-- After implementation work and PR handoff are complete, switch back to `main`.
+- Do not stop at PR handoff unless the Product Owner explicitly asks to pause
+  before merge.
+- After merge, move the local spec to `docs/workitems/done/<ID>.md` and switch
+  back to `main`.
 
 Classification:
 
