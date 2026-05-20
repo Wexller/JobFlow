@@ -10,10 +10,33 @@
     </div>
 
     <div class="rounded-lg border border-default">
-      <p class="border-b border-default px-3 py-2 text-xs text-muted md:hidden">
-        {{ $t('home.mobile.tableHint') }}
-      </p>
-      <div class="overflow-x-auto">
+      <ul class="divide-y divide-default md:hidden">
+        <li v-for="vacancy in vacancies" :key="vacancy.id" class="space-y-2 px-4 py-3">
+          <div class="space-y-1">
+            <p class="font-medium">
+              {{ vacancy.company }}
+            </p>
+            <p class="text-sm text-muted">
+              {{ vacancy.role }}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <UBadge color="neutral" variant="soft">
+              {{ $t(`domain.status.${vacancy.status}`) }}
+            </UBadge>
+            <span class="text-sm">
+              {{ $t(`domain.priority.${vacancy.priority}`) }}
+            </span>
+          </div>
+
+          <p class="text-sm text-muted">
+            {{ $t('home.table.nextAction') }}: {{ formatDate(vacancy.nextActionAt) }}
+          </p>
+        </li>
+      </ul>
+
+      <div class="hidden overflow-x-auto md:block">
         <table class="w-full min-w-[640px] text-left text-sm" :aria-label="$t('home.active.tableLabel')">
         <thead class="bg-muted/40 text-xs uppercase text-muted">
           <tr>
