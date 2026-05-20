@@ -1,8 +1,13 @@
 # Jobflow Active Roadmap
 
-This is the only active roadmap for regular planning and delivery tracking.
+This is a legacy planning snapshot from the pre-GitHub-Issues workflow.
 
-`docs/roadmap.md` is legacy reference and should be used only by explicit Product Owner request.
+Active planning and delivery tracking now live in GitHub Issues. Keep this file
+as read-only history unless the Product Owner explicitly requests archival
+maintenance.
+
+The remaining content in this file is preserved as historical context and may
+describe superseded pre-migration planning rules.
 
 ## Planning Sources
 

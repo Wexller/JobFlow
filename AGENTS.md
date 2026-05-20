@@ -75,11 +75,12 @@ See `docs/agents/registry.md` for the complete registry.
 - Codex must not create a commit while the pre-commit agent review has blocking
   findings. The final handoff before commit must summarize agent findings,
   executed commands, and any accepted residual risk.
-- Default active roadmap is `docs/roadmap.active.md`. `docs/roadmap.md` is
-  legacy context and must not be used for active planning unless the Product
-  Owner explicitly requests it.
-- `docs/workitems/` is a local-only workspace for work item specs. Its
-  contents are intentionally excluded from git.
+- Active work item planning and delivery now live in GitHub Issues.
+- `docs/feature-bank.md`, `docs/refactor-bank.md`, `docs/fix-bank.md`,
+  `docs/workitems/`, and `docs/roadmap.active.md` are legacy read-only history
+  unless the Product Owner explicitly requests archival updates.
+- `docs/roadmap.md` remains legacy context and must not be used for active
+  planning unless the Product Owner explicitly requests it.
 
 ## Work Item Intake And Lifecycle
 
@@ -89,40 +90,31 @@ See `docs/agents/registry.md` for the complete registry.
   without naming the type, Codex classifies the intake as `FEAT`, `REF`, or
   `FIX` using the work item classification rules and records it in the
   corresponding bank.
-- Feature requests are recorded in `docs/feature-bank.md` with IDs `FEAT-XXX`.
-- Refactor requests are recorded in `docs/refactor-bank.md` with IDs
-  `REF-XXX`.
-- Fix requests are recorded in `docs/fix-bank.md` with IDs `FIX-XXX`.
-- IDs are sequential, unique, and never reused within their own namespace.
+- New accepted work items are created as GitHub issues.
+- Legacy `FEAT-XXX`, `REF-XXX`, and `FIX-XXX` IDs remain historical references
+  only and are no longer the active source of truth for new work.
 - Work item lifecycle statuses are:
   `new -> triage -> discovery -> planned -> in_progress -> in_review -> released -> done`
   with optional terminal status `cancelled`.
-- Study or planning starts with a direct command that targets the work item ID
-  (for example, `plan FEAT-007`, `plan REF-003`, or `plan FIX-012`).
-- For study or planning requests, the Lead reads the work item from its bank,
-  activates the required agents, and creates or updates a local-only spec in
-  `docs/workitems/<ID>.md`.
-- Implementation starts with a direct command that targets the work item ID
-  (for example, `implement FEAT-007`, `implement REF-003`, or
-  `implement FIX-012`).
-- Implementation uses `docs/workitems/<ID>.md` as the working technical
+- Intake creates or updates a GitHub issue using the GitHub naming policy and
+  label rules.
+- Study or planning starts with a direct command that targets the GitHub issue
+  number (for example, `plan #123` or `изучи #123`).
+- For study or planning requests, the Lead reads the issue, activates the
+  required agents, and updates the issue body as the working technical spec.
+- Implementation starts with a direct command that targets the GitHub issue
+  number (for example, `implement #123` or `реализуй #123`).
+- Implementation uses the GitHub issue body as the working technical
   specification.
 - Unless the Product Owner explicitly asks to stop earlier, an implementation
   command means the full delivery flow: create branch from `main`, implement,
   run required checks, create commit, open PR, merge to `main`, and switch back
   to `main`.
-- If the spec file is missing, Codex must stop, report that
-  `docs/workitems/<ID>.md` does not exist, and wait for explicit Product Owner
-  approval before implementing without a spec.
-- `docs/workitems/<ID>.md` is a local working artifact. It must not be
-  staged, committed, or included in PR scope.
-- After implementation is completed and the PR is merged to `main`, move the
-  local spec from `docs/workitems/<ID>.md` to `docs/workitems/done/<ID>.md`.
-- Moving the local spec into `docs/workitems/done/` does not by itself change
-  the bank status to `done`; `done` still requires confirmed production
-  release.
+- If the issue body does not contain the required planning sections, Codex must
+  stop and wait for explicit Product Owner approval before implementing without
+  a complete spec.
 - Text-only study, planning, or implementation requests without ID are allowed
-  only after explicit confirmation of the matched work item ID.
+  only after explicit confirmation of the matched GitHub issue number.
 
 ## Work Item Classification
 
@@ -138,12 +130,10 @@ See `docs/agents/registry.md` for the complete registry.
 ## Branch And Release Policy
 
 - One work item equals one branch.
-- Legacy bank-tracked flow may use a branch name that matches the local work
-  item ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
-- GitHub issue-backed flow must use the GitHub naming policy branch format:
+- Active GitHub issue-backed flow must use the GitHub naming policy branch format:
   `type/<issue-number>-short-description`.
 - Work item branches are created from `main`.
-- One work item branch must not include scope for multiple work item IDs.
+- One work item branch must not include scope for multiple work items.
 - Default implementation sequence is:
   create branch -> implement -> verify -> commit -> PR -> squash merge to
   `main` -> switch back to `main`.
@@ -151,19 +141,17 @@ See `docs/agents/registry.md` for the complete registry.
 - Codex should not stop at "PR handoff" unless the Product Owner explicitly asks
   to pause before merge.
 - After merge to `main`, Codex switches back to `main`.
-- After merge to `main`, Codex moves the local spec to
-  `docs/workitems/done/<ID>.md` and then switches back to `main`.
 - A merged work item is not automatically `done`.
+- After merge, move the GitHub issue to `status:released`.
 - Work item status changes to `done` only after confirmed production/market
   deployment. Until then, it remains `in_review` or `released`.
-- After production release, update the corresponding bank status/link fields.
-- Update `docs/roadmap.active.md` only when the released item affects active
-  roadmap visibility.
+- After confirmed production release, move the GitHub issue to `status:done`
+  and close it.
 
 ## GitHub Naming Policy
 
-- When a task is tracked by a GitHub issue, use the GitHub issue number as the
-  canonical implementation reference for branch names, commits, and PR titles.
+- Use the GitHub issue number as the canonical implementation reference for
+  branch names, commits, and PR titles.
 - The issue type must stay consistent across issue title, branch name, commit
   messages, and PR title.
 - Do not use an `ISSUE-*` prefix in branch names, commits, or PR titles.
@@ -216,6 +204,19 @@ Guardrails:
 - Use product or system areas as scopes, not filenames.
 - Avoid generic scopes like `misc`.
 - Keep branch descriptions short and readable.
+- Required labels:
+  - one `type:*`
+  - one `status:*`
+  - one `priority:*`
+- Required issue body sections:
+  - `Summary`
+  - `Goals`
+  - `Scope`
+  - `Non-Goals`
+  - `Affected Areas`
+  - `Acceptance Criteria`
+  - `Risks`
+  - `Verification`
 
 ## Token Budget And Small Task Mode
 
@@ -244,7 +245,7 @@ Guardrails:
 - New fix: nearest owner agent for the failing area, then Testing Agent and
   Security & Review Agent.
 - Study or planning of a work item: required owner agents first, with the
-  outcome recorded in `docs/workitems/<ID>.md`.
+  outcome recorded in the GitHub issue body.
 - BFF, Nitro routes, server validation, or persistence orchestration: Backend /
   BFF Agent, Testing Agent, Security & Review Agent.
 - UI or UX work: Frontend UI Agent, Testing Agent, Security & Review Agent.
@@ -312,7 +313,8 @@ A work item is done only when:
 
 - Testing Agent confirms the focused and broad verification commands appropriate
   for the change.
-- The Lead confirms no local spec under `docs/workitems/` is staged for commit.
+- The Lead confirms the PR is linked to one primary GitHub issue and that the
+  issue body is complete enough for implementation.
 - Backend / BFF Agent is required when server routes, Nitro handlers, SSR data
   loading, auth/session logic, or privileged integrations are touched.
 - Security & Review Agent reviews the diff for code quality, data leakage,
@@ -344,13 +346,11 @@ A work item is done only when:
 - Keep project documentation close to the code. Update the English README in the
   same change that modifies developer setup, commands, dependencies, environment
   variables, architecture, or release process.
-- Keep roadmap status current in `docs/roadmap.active.md`. Update completed
-  checklist items in the same commit that implements them.
-- Keep `docs/feature-bank.md`, `docs/refactor-bank.md`, and
-  `docs/fix-bank.md` current when intake, planning state, branch tracking, PR
-  links, or release evidence changes.
-- Keep local specs in `docs/workitems/<ID>.md` out of git. They are working
-  documents for Codex and the Product Owner, not tracked repository artifacts.
+- Keep active task tracking in GitHub Issues, not in repository-local work item
+  docs.
+- Treat `docs/feature-bank.md`, `docs/refactor-bank.md`, `docs/fix-bank.md`,
+  `docs/workitems/`, and `docs/roadmap.active.md` as legacy read-only history
+  unless the Product Owner explicitly requests archival maintenance.
 - Treat `docs/roadmap.md` as legacy history. Do not modify it for normal
   delivery tracking unless explicitly requested by the Product Owner.
 

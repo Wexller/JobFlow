@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Workflow Notes
+    url: https://github.com/Wexller/JobFlow/blob/main/docs/github-issues-workflow.md
+    about: Read the GitHub Issues workflow, naming policy, and automation rules before opening a task.

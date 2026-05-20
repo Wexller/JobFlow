@@ -1,0 +1,41 @@
+name: Validate Issue Format
+
+on:
+  issues:
+    types: [opened, edited, reopened, labeled, unlabeled]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate title and labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const issue = context.payload.issue
+            const labels = issue.labels.map((label) => label.name)
+            const titlePattern = /^\[(feat|fix|ref)\]\[[a-z0-9-]+(?:,[a-z0-9-]+){0,2}\] .+/
+            if (!titlePattern.test(issue.title)) {
+              core.setFailed('Issue title must match `[type][scope1,scope2] Human-readable title`.')
+              return
+            }
+
+            const [, type] = issue.title.match(/^\[(feat|fix|ref)\]/) || []
+            const expectedTypeLabel = `type:${type}`
+            const statusLabels = labels.filter((label) => label.startsWith('status:'))
+            const priorityLabels = labels.filter((label) => label.startsWith('priority:'))
+
+            if (!labels.includes(expectedTypeLabel)) {
+              core.setFailed(`Issue must include matching type label: ${expectedTypeLabel}.`)
+              return
+            }
+
+            if (statusLabels.length !== 1) {
+              core.setFailed('Issue must have exactly one `status:*` label.')
+              return
+            }
+
+            if (priorityLabels.length !== 1) {
+              core.setFailed('Issue must have exactly one `priority:*` label.')
+              return
+            }

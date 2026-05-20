@@ -1,6 +1,10 @@
 # Jobflow Feature Bank
 
-This file is the primary feature intake and feature lifecycle registry.
+This file is a legacy read-only snapshot from the pre-GitHub-Issues workflow.
+Active feature intake, planning, and delivery now live in GitHub Issues.
+
+The remaining content in this file is preserved as historical context and may
+describe superseded pre-migration rules.
 
 ## Rules
 

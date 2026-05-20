@@ -1,0 +1,64 @@
+name: Fix
+description: Create a new fix task using the GitHub Issues workflow.
+title: "[fix][scope] "
+labels:
+  - "type:fix"
+  - "status:new"
+  - "priority:medium"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use the title format `[fix][scope1,scope2] Human-readable title`.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the incorrect behavior or regression.
+    validations:
+      required: true
+  - type: textarea
+    id: goals
+    attributes:
+      label: Goals
+      description: What expected behavior should be restored?
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is explicitly in scope?
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-Goals
+      description: What should stay out of scope?
+  - type: textarea
+    id: affected_areas
+    attributes:
+      label: Affected Areas
+      description: Pages, modules, services, or workflows likely to change.
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Concrete expectations for completion.
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks
+      description: Key risks, tradeoffs, or open questions.
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Expected checks, tests, or validation steps.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: true

@@ -1,6 +1,10 @@
 # Jobflow Fix Bank
 
-This file is the primary fix intake and lifecycle registry.
+This file is a legacy read-only snapshot from the pre-GitHub-Issues workflow.
+Active fix intake, planning, and delivery now live in GitHub Issues.
+
+The remaining content in this file is preserved as historical context and may
+describe superseded pre-migration rules.
 
 ## Rules
 

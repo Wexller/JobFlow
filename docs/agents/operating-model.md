@@ -3,20 +3,19 @@
 This document defines how the Product Owner, Lead, and specialist agents work
 together from request intake to release.
 
+GitHub Issues is the canonical source of truth for active work items. Legacy
+bank files and `docs/workitems/` remain read-only historical context.
+
 ## Lifecycle
 
 1. Intake
    - Product Owner describes the outcome, priority, constraints, and success
      criteria.
    - When the intake is a free-form thought, idea, or problem statement without
-     an explicit type, the Lead classifies it as `FEAT`, `REF`, or `FIX`
-     before registering it.
-   - Accepted features are registered in `docs/feature-bank.md` with unique
-     IDs (`FEAT-XXX`).
-   - Accepted refactors are registered in `docs/refactor-bank.md` with unique
-     IDs (`REF-XXX`).
-   - Accepted fixes are registered in `docs/fix-bank.md` with unique IDs
-     (`FIX-XXX`).
+     an explicit type, the Lead classifies it as `feat`, `fix`, or `ref`
+     before creating the GitHub issue.
+   - Accepted work items are created as GitHub issues with the naming format
+     `[type][scope1,scope2] Human-readable title`.
    - Lead identifies the owner agent, required reviewers, and whether reserve
      agents are needed.
 
@@ -35,11 +34,7 @@ together from request intake to release.
      long-term maintainability are affected.
    - Backend / BFF Agent is used when the Nuxt server boundary, request
      contracts, or persistence orchestration are affected.
-   - The Lead records planning output in `docs/workitems/<ID>.md`.
-   - `docs/workitems/<ID>.md` is a local-only working spec, not a git-tracked
-     artifact.
-   - After merge, completed local specs are moved to
-     `docs/workitems/done/<ID>.md`.
+   - The Lead records planning output in the GitHub issue body.
    - Minimum spec structure: summary, goals, scope, non-goals, affected areas,
      acceptance criteria, risks, verification.
 
@@ -47,17 +42,16 @@ together from request intake to release.
    - Work is split into small vertical slices.
    - Each slice has one owner and a clear write scope.
    - Shared contracts are updated before dependent UI work begins.
-   - Implementation reads from `docs/workitems/<ID>.md`.
+   - Implementation reads from the GitHub issue body.
    - Unless the Product Owner explicitly asks to stop earlier, an implementation
      request means the full delivery path through merge to `main`.
-   - If the spec file does not exist, the Lead stops and asks the Product Owner
-     for explicit approval before implementing without a spec.
+   - If the issue body does not contain the required planning sections, the Lead
+     stops and asks the Product Owner for explicit approval before implementing
+     without a complete spec.
    - Work item implementation branch must be created from `main`.
-   - Legacy bank-tracked flow may use a branch name that matches the local work
-     item ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
-   - GitHub issue-backed flow must use the branch format:
+   - Branch format:
      `type/<issue-number>-short-description`.
-   - One work item branch must not include scope for multiple work item IDs.
+   - One work item branch must not include scope for multiple work items.
 
 5. Verification
    - Testing Agent defines and verifies the test strategy.
@@ -65,7 +59,8 @@ together from request intake to release.
    - Security & Review Agent performs final code and security review.
    - Before any Codex-created commit, the Lead runs the pre-commit agent review
      gate and resolves all blocking findings.
-   - The Lead verifies that no file from `docs/workitems/` is staged for commit.
+   - The Lead verifies that the PR is linked to one primary issue and that the
+     issue body is complete enough for implementation.
 
 6. Release
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
@@ -73,20 +68,19 @@ together from request intake to release.
    - The Lead merges reports and gives a go/no-go recommendation.
    - The default implementation sequence is:
      branch -> implementation -> verification -> commit -> PR -> squash merge to
-     `main` -> move spec to `docs/workitems/done/<ID>.md` -> switch back to
-     `main`.
+     `main` -> move issue to `status:released` -> switch back to `main`.
    - Merge policy to `main` is squash merge.
    - Codex does not stop at PR handoff unless the Product Owner explicitly asks
      to pause before merge.
-   - After merge to `main`, Codex moves the local spec to
-     `docs/workitems/done/<ID>.md` and switches back to `main`.
+   - After confirmed production release, Codex moves the issue to `status:done`
+     and closes it.
    - Work item status moves to `done` only after confirmed production
      deployment.
 
 ## GitHub Naming Policy
 
-- For GitHub issue-backed work, use the GitHub issue number as the canonical
-  implementation reference for branch names, commits, and PR titles.
+- Use the GitHub issue number as the canonical implementation reference for
+  branch names, commits, and PR titles.
 - Issue title format:
   `[type][scope1,scope2] Human-readable title`
 - Branch format:
@@ -97,6 +91,11 @@ together from request intake to release.
 - Use one to three lowercase kebab-case scopes that describe product or system
   areas.
 - Avoid `ISSUE-*` prefixes in branch names, commits, and PR titles.
+- Required labels:
+  one `type:*`, one `status:*`, and one `priority:*`.
+- Required issue body sections:
+  `Summary`, `Goals`, `Scope`, `Non-Goals`, `Affected Areas`,
+  `Acceptance Criteria`, `Risks`, `Verification`.
 
 ## Assignment Template
 
@@ -183,9 +182,8 @@ Codex must run this gate automatically before creating any commit:
   lists, or Core Web Vitals risk changes.
 
 The Lead must not commit with unresolved blocking findings. The pre-commit
-handoff must include the agent review summary, executed commands, and accepted
-non-blocking risks. It must also confirm that local specs under `docs/workitems/`
-are not staged.
+handoff must include the agent review summary, executed commands, accepted
+non-blocking risks, and the linked GitHub issue number.
 
 ## Token Budget Rules
 

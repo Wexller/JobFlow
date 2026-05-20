@@ -1,0 +1,31 @@
+name: Validate PR Format
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch, title, and body
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request
+            const titlePattern = /^(feat|fix|ref)\([a-z0-9-]+(?:,[a-z0-9-]+){0,2}\): .+ \(#\d+\)$/
+            const branchPattern = /^(feat|fix|ref)\/\d+-[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+            if (!titlePattern.test(pr.title)) {
+              core.setFailed('PR title must match `type(scope1,scope2): message (#issue-number)`.')
+              return
+            }
+
+            if (!branchPattern.test(pr.head.ref)) {
+              core.setFailed('PR branch must match `type/<issue-number>-short-description`.')
+              return
+            }
+
+            if (!/Issue:\s+#\d+/.test(pr.body || '')) {
+              core.setFailed('PR body must include `Issue: #<number>`.')
+            }

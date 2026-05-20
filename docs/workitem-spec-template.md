@@ -1,10 +1,9 @@
 # Work Item Spec Template
 
-Use this tracked template for local work item specs stored under
-`docs/workitems/<ID>.md`.
+This tracked template is legacy-only and applies to pre-migration local work
+item specs stored under `docs/workitems/<ID>.md`.
 
-After merge to `main`, move the completed local spec to
-`docs/workitems/done/<ID>.md`.
+Active planning now happens in GitHub issue bodies, not in local spec files.
 
 ## Minimum Template
 
