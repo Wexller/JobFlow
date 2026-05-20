@@ -8,8 +8,8 @@ together from request intake to release.
 1. Intake
    - Product Owner describes the outcome, priority, constraints, and success
      criteria.
-   - Accepted features are registered in `docs/idea-bank.md` with unique IDs
-     (`IDEA-xxx`).
+   - Accepted features are registered in `docs/feature-bank.md` with unique IDs
+     (`FEAT-XXX`).
    - Lead identifies the owner agent, required reviewers, and whether reserve
      agents are needed.
 
@@ -28,13 +28,21 @@ together from request intake to release.
      long-term maintainability are affected.
    - Backend / BFF Agent is used when the Nuxt server boundary, request
      contracts, or persistence orchestration are affected.
+   - The Lead records planning output in `docs/features/FEAT-XXX.md`.
+   - `docs/features/FEAT-XXX.md` is a local-only working spec, not a git-tracked
+     artifact.
+   - Minimum spec structure: summary, goals, scope, non-goals, affected areas,
+     acceptance criteria, risks, verification.
 
 4. Implementation
    - Work is split into small vertical slices.
    - Each slice has one owner and a clear write scope.
    - Shared contracts are updated before dependent UI work begins.
+   - Implementation reads from `docs/features/FEAT-XXX.md`.
+   - If the spec file does not exist, the Lead stops and asks the Product Owner
+     for explicit approval before implementing without a spec.
    - Feature implementation branch must be created from `main` and match the
-     feature ID exactly (`IDEA-xxx`).
+     feature ID exactly (`FEAT-XXX`).
    - One feature branch must not include scope for multiple feature IDs.
 
 5. Verification
@@ -43,12 +51,14 @@ together from request intake to release.
    - Security & Review Agent performs final code and security review.
    - Before any Codex-created commit, the Lead runs the pre-commit agent review
      gate and resolves all blocking findings.
+   - The Lead verifies that no file from `docs/features/` is staged for commit.
 
 6. Release
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
      release checklist, or rollback planning.
    - The Lead merges reports and gives a go/no-go recommendation.
    - Merge policy to `main` is squash merge.
+   - After PR handoff is complete, Codex switches back to `main`.
    - Feature status moves to `done` only after confirmed production deployment.
 
 ## Assignment Template
@@ -130,7 +140,8 @@ Codex must run this gate automatically before creating any commit:
 
 The Lead must not commit with unresolved blocking findings. The pre-commit
 handoff must include the agent review summary, executed commands, and accepted
-non-blocking risks.
+non-blocking risks. It must also confirm that local specs under `docs/features/`
+are not staged.
 
 ## Token Budget Rules
 

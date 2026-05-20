@@ -77,33 +77,50 @@ See `docs/agents/registry.md` for the complete registry.
 - Default active roadmap is `docs/roadmap.active.md`. `docs/roadmap.md` is
   legacy context and must not be used for active planning unless the Product
   Owner explicitly requests it.
+- `docs/features/` is a local-only workspace for feature specs. Its contents
+  are intentionally excluded from git.
 
-## Idea Intake And Feature Lifecycle
+## Feature Intake And Lifecycle
 
-- Product Owner submits ideas using a natural-language intake request (for
-  example, "new idea: ...").
-- Every accepted idea is recorded in `docs/idea-bank.md` with a unique ID:
-  `IDEA-xxx`.
+- Product Owner submits feature requests using a natural-language intake request
+  (for example, "new idea: ...", "запиши идею: ...", or "новая идея: ...").
+- Every accepted feature is recorded in `docs/feature-bank.md` with a
+  unique ID: `FEAT-XXX`.
+- IDs are sequential, unique, and never reused.
 - Feature lifecycle statuses are:
   `new -> triage -> discovery -> planned -> in_progress -> in_review -> released -> done`
   with optional terminal status `cancelled`.
-- Implementation starts with a direct command that targets the idea ID (for
-  example, `implement IDEA-007` or `реализуй IDEA-007`).
-- Text-only implementation requests without ID are allowed only after explicit
-  confirmation of the matched `IDEA-xxx`.
+- Study or planning starts with a direct command that targets the feature ID
+  (for example, `plan FEAT-007`, `изучи FEAT-007`, or `спланируй FEAT-007`).
+- For study or planning requests, the Lead reads the feature from
+  `docs/feature-bank.md`, activates the required agents, and creates or updates
+  a local-only spec in `docs/features/FEAT-XXX.md`.
+- Implementation starts with a direct command that targets the feature ID (for
+  example, `implement FEAT-007` or `реализуй FEAT-007`).
+- Implementation uses `docs/features/FEAT-XXX.md` as the working technical
+  specification.
+- If the spec file is missing, Codex must stop, report that
+  `docs/features/FEAT-XXX.md` does not exist, and wait for explicit Product
+  Owner approval before implementing without a spec.
+- `docs/features/FEAT-XXX.md` is a local working artifact. It must not be
+  staged, committed, or included in PR scope.
+- Text-only study, planning, or implementation requests without ID are allowed
+  only after explicit confirmation of the matched `FEAT-XXX`.
 
 ## Branch And Release Policy
 
 - One feature equals one branch. Branch name must exactly match the feature ID
-  (`IDEA-xxx`).
+  (`FEAT-XXX`).
 - Feature branches are created from `main`.
 - One feature branch must not include scope for multiple feature IDs.
 - Merge strategy to `main` is squash merge.
+- After implementation work and PR handoff are complete, Codex switches back to
+  `main`.
 - A merged feature is not automatically `done`.
 - Feature status changes to `done` only after confirmed production/market
   deployment. Until then, it remains `in_review` or `released`.
-- After production release, update both `docs/idea-bank.md` (status/link fields)
-  and `docs/roadmap.active.md` in the same change.
+- After production release, update both `docs/feature-bank.md` (status/link
+  fields) and `docs/roadmap.active.md` in the same change.
 
 ## Token Budget And Small Task Mode
 
@@ -126,6 +143,9 @@ See `docs/agents/registry.md` for the complete registry.
 
 - New feature: Product / Domain Agent, then Solution Architect Agent when needed,
   then implementation owner, then Testing Agent and Security & Review Agent.
+- Study or planning of a feature: Product / Domain Agent, then Solution
+  Architect Agent when needed, then the implementation owner agent, with the
+  outcome recorded in `docs/features/FEAT-XXX.md`.
 - BFF, Nitro routes, server validation, or persistence orchestration: Backend /
   BFF Agent, Testing Agent, Security & Review Agent.
 - UI or UX work: Frontend UI Agent, Testing Agent, Security & Review Agent.
@@ -193,6 +213,7 @@ A feature is done only when:
 
 - Testing Agent confirms the focused and broad verification commands appropriate
   for the change.
+- The Lead confirms no local spec under `docs/features/` is staged for commit.
 - Backend / BFF Agent is required when server routes, Nitro handlers, SSR data
   loading, auth/session logic, or privileged integrations are touched.
 - Security & Review Agent reviews the diff for code quality, data leakage,
@@ -226,6 +247,10 @@ A feature is done only when:
   variables, architecture, or release process.
 - Keep roadmap status current in `docs/roadmap.active.md`. Update completed
   checklist items in the same commit that implements them.
+- Keep `docs/feature-bank.md` current when feature intake, planning state,
+  branch tracking, PR links, or release evidence changes.
+- Keep local specs in `docs/features/FEAT-XXX.md` out of git. They are working
+  documents for Codex and the Product Owner, not tracked repository artifacts.
 - Treat `docs/roadmap.md` as legacy history. Do not modify it for normal
   delivery tracking unless explicitly requested by the Product Owner.
 

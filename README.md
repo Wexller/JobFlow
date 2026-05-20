@@ -83,7 +83,8 @@ The current architecture direction is documented in:
 - `docs/architecture/overview.md`
 - `docs/roadmap.active.md` (active planning)
 - `docs/roadmap.md` (legacy reference, read-only by default)
-- `docs/idea-bank.md` (feature idea intake and lifecycle registry)
+- `docs/feature-bank.md` (feature intake and lifecycle registry)
+- `docs/features/` (local-only feature specs, intentionally excluded from git)
 - `docs/architecture/adr/0001-frontend-only-google-sheets.md`
 - `docs/architecture/adr/0002-i18n-browser-locale.md`
 - `docs/architecture/adr/0003-data-state-boundaries.md`
@@ -422,30 +423,39 @@ Production/runtime expectations:
 
 ## Feature Delivery Workflow
 
-The repository uses an idea-driven delivery flow:
+The repository uses a feature-driven delivery flow:
 
 ```text
-idea intake -> IDEA-xxx -> feature branch IDEA-xxx -> PR -> release -> done
+idea intake -> feature bank FEAT-XXX -> local spec docs/features/FEAT-XXX.md -> branch FEAT-XXX -> PR -> release -> done
 ```
 
 Rules:
 
-- Every accepted feature idea must be tracked in `docs/idea-bank.md`.
-- Feature IDs use `IDEA-xxx` format and are unique.
+- Every accepted feature must be tracked in `docs/feature-bank.md`.
+- Feature IDs use `FEAT-XXX` format and are unique.
+- Study or planning of a feature creates or updates a local-only spec at
+  `docs/features/FEAT-XXX.md`.
+- Local specs in `docs/features/` are intentionally not tracked in git and must
+  not be staged, committed, or included in PR scope.
+- Implementation must follow the local feature spec.
+- If the spec does not exist, Codex must stop and wait for explicit approval
+  before implementing without a spec.
 - One feature ID maps to one dedicated branch with the exact same name.
 - Feature branches are created from `main`.
 - Merge policy to `main` is squash merge.
 - A merged PR does not automatically mark a feature as done.
 - A feature is marked `done` only after confirmed production/market deployment.
-- After production release, update idea status in `docs/idea-bank.md` and
+- After production release, update feature status in `docs/feature-bank.md` and
   reflect roadmap impact in `docs/roadmap.active.md`.
+- After implementation work and PR handoff are complete, switch back to `main`.
 
 PO command conventions:
 
 - Intake: `new idea: ...` / `новая идея: ...`
-- Implementation: `implement IDEA-xxx` / `реализуй IDEA-xxx`
-- Text-only implementation requests require explicit confirmation of the target
-  `IDEA-xxx` before work starts.
+- Study or planning: `plan FEAT-XXX` / `изучи FEAT-XXX` / `спланируй FEAT-XXX`
+- Implementation: `implement FEAT-XXX` / `реализуй FEAT-XXX`
+- Text-only study, planning, or implementation requests require explicit
+  confirmation of the target `FEAT-XXX` before work starts.
 
 ## Production Deploy Runbook
 

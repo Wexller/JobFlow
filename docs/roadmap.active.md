@@ -7,7 +7,7 @@ This is the only active roadmap for regular planning and delivery tracking.
 ## Planning Sources
 
 - Unfinished roadmap items migrated from legacy roadmap.
-- Planned and in-progress items from `docs/idea-bank.md`.
+- Planned and in-progress items from `docs/feature-bank.md`.
 
 ## Near Term
 
@@ -33,18 +33,18 @@ Exit criteria:
 
 ## Next
 
-### From Idea Bank
+### From Feature Bank
 
-- [ ] IDEA-001 Google Sheets import gateway (`planned`)
-- [ ] IDEA-002 Multi-user auth and permissions (`triage`)
-- [ ] IDEA-003 Background sync jobs (`new`)
-- [ ] IDEA-004 Simplify home page and add entity pages (`in_review`)
-- [ ] IDEA-005 UI import/export for data (`triage`)
-- [ ] IDEA-006 Backup management workflow (`triage`)
-- [ ] IDEA-007 Service usage guide page (`new`)
-- [ ] IDEA-008 Mobile-first UI baseline (`in_review`)
-- [ ] IDEA-009 Text audit and copy cleanup (`in_review`)
-- [ ] IDEA-010 Presentable home page with product value (`new`)
+- [ ] FEAT-001 Google Sheets import gateway (`planned`)
+- [ ] FEAT-002 Multi-user auth and permissions (`triage`)
+- [ ] FEAT-003 Background sync jobs (`new`)
+- [ ] FEAT-004 Simplify home page and add entity pages (`in_review`)
+- [ ] FEAT-005 UI import/export for data (`triage`)
+- [ ] FEAT-006 Backup management workflow (`triage`)
+- [ ] FEAT-007 Service usage guide page (`new`)
+- [ ] FEAT-008 Mobile-first UI baseline (`in_review`)
+- [ ] FEAT-009 Text audit and copy cleanup (`in_review`)
+- [ ] FEAT-010 Presentable home page with product value (`new`)
 
 ## Backlog Candidates
 
@@ -58,7 +58,11 @@ Exit criteria:
 
 ## Delivery Policy
 
-- Any roadmap item that maps to a feature must have a corresponding `IDEA-xxx` entry.
-- Feature development branch must match feature ID exactly (`IDEA-xxx`).
+- Any roadmap item that maps to a feature must have a corresponding `FEAT-XXX`
+  entry in `docs/feature-bank.md`.
+- Planning and implementation expect a local spec at
+  `docs/features/FEAT-XXX.md`.
+- Feature development branch must match feature ID exactly (`FEAT-XXX`).
 - Merge policy is squash merge to `main`.
-- Feature is marked done only after confirmed production release and corresponding status updates in `docs/idea-bank.md`.
+- Feature is marked done only after confirmed production release and
+  corresponding status updates in `docs/feature-bank.md`.
