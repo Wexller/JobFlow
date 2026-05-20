@@ -19,7 +19,7 @@
             {{ vacancy.role }}
           </p>
         </div>
-        <div class="flex items-center justify-between gap-3 text-sm">
+        <div class="flex flex-col items-start gap-2 text-sm sm:flex-row sm:items-center sm:justify-between">
           <UBadge color="primary" variant="soft">
             {{ $t(`domain.status.${vacancy.status}`) }}
           </UBadge>

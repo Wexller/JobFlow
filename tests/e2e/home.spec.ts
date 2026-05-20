@@ -52,3 +52,21 @@ test.describe('mobile home pipeline', () => {
     await expect(mobileList.getByText('SignalWorks')).toBeVisible()
   })
 })
+
+test.describe('mobile next actions', () => {
+  test.use({ viewport: { width: 390, height: 844 } })
+
+  test('renders readable next actions without horizontal overflow', async ({ page }) => {
+    await page.goto('/')
+
+    const nextActions = page.locator('aside').filter({
+      has: page.getByRole('heading', { level: 2, name: 'Next actions' }),
+    }).first()
+
+    await expect(nextActions).toBeVisible()
+    await expect(nextActions.getByText('Interviewing').first()).toBeVisible()
+
+    const hasOverflow = await nextActions.evaluate((node) => node.scrollWidth > node.clientWidth)
+    expect(hasOverflow).toBe(false)
+  })
+})

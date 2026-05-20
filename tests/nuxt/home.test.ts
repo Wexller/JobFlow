@@ -55,6 +55,8 @@ describe('home page', () => {
     await flushPromises()
 
     expect(wrapper.text()).toContain('Поиск работы под контролем')
+    expect(wrapper.text()).toContain('Следующие действия')
+    expect(wrapper.text()).toContain('Интервью')
   })
 
   it('does not render heavy management forms on home page', async () => {
