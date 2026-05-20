@@ -434,6 +434,9 @@ intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> bran
 
 Rules:
 
+- Free-form thoughts, ideas, and problem statements do not need an explicit
+  type from the Product Owner. Codex classifies them as `FEAT`, `REF`, or
+  `FIX` before creating the bank entry.
 - Every accepted feature must be tracked in `docs/feature-bank.md`.
 - Every accepted refactor must be tracked in `docs/refactor-bank.md`.
 - Every accepted fix must be tracked in `docs/fix-bank.md`.
@@ -460,10 +463,14 @@ Classification:
 - `FEAT`: new capability or new user-facing outcome.
 - `REF`: structural improvement without changing intended behavior.
 - `FIX`: defect, regression, or incorrect behavior correction.
+- If the intake does not specify the type, Codex assigns the work item to the
+  best matching classification before generating the ID.
 
 PO command conventions:
 
 - Intake: `new idea: ...` / `новая идея: ...`
+- Free-form intake without an explicit type is allowed. Codex decides whether it
+  belongs in `FEAT`, `REF`, or `FIX`.
 - Refactor intake: `new refactor: ...` / `запиши refactor: ...`
 - Fix intake: `new fix: ...` / `запиши fix: ...`
 - Study or planning: `plan FEAT-XXX|REF-XXX|FIX-XXX` / `изучи ...` /

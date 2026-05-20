@@ -8,6 +8,8 @@ This file is the primary feature intake and feature lifecycle registry.
 - IDs are sequential and never reused.
 - Feature intake requests such as `new idea: ...`, `запиши идею: ...`, or
   `новая идея: ...` are recorded here.
+- Free-form thoughts or ideas without an explicit type are recorded here when
+  Codex classifies them as `FEAT`.
 - Study or planning starts only from a targeted ID command (`plan FEAT-XXX`,
   `изучи FEAT-XXX`, or `спланируй FEAT-XXX`) and must create or update the
   local spec at `docs/workitems/FEAT-XXX.md`.

@@ -8,6 +8,9 @@ together from request intake to release.
 1. Intake
    - Product Owner describes the outcome, priority, constraints, and success
      criteria.
+   - When the intake is a free-form thought, idea, or problem statement without
+     an explicit type, the Lead classifies it as `FEAT`, `REF`, or `FIX`
+     before registering it.
    - Accepted features are registered in `docs/feature-bank.md` with unique
      IDs (`FEAT-XXX`).
    - Accepted refactors are registered in `docs/refactor-bank.md` with unique

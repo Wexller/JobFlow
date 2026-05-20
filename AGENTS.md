@@ -85,6 +85,10 @@ See `docs/agents/registry.md` for the complete registry.
 
 - Product Owner submits work item requests using a natural-language intake
   request.
+- If the Product Owner shares free-form thoughts, ideas, or problem statements
+  without naming the type, Codex classifies the intake as `FEAT`, `REF`, or
+  `FIX` using the work item classification rules and records it in the
+  corresponding bank.
 - Feature requests are recorded in `docs/feature-bank.md` with IDs `FEAT-XXX`.
 - Refactor requests are recorded in `docs/refactor-bank.md` with IDs
   `REF-XXX`.
@@ -119,6 +123,8 @@ See `docs/agents/registry.md` for the complete registry.
   internal performance improvement without changing intended behavior.
 - `FIX`: defect correction, regression repair, recovery of expected behavior,
   or production issue resolution.
+- When intake does not explicitly name the type, Codex chooses the best match
+  from these rules before assigning the ID and bank.
 
 ## Branch And Release Policy
 

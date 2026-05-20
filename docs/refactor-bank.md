@@ -8,6 +8,8 @@ This file is the primary refactor intake and lifecycle registry.
 - IDs are sequential and never reused within the refactor namespace.
 - Refactor intake requests such as `new refactor: ...` or `запиши refactor: ...`
   are recorded here.
+- Free-form thoughts or ideas without an explicit type are recorded here when
+  Codex classifies them as `REF`.
 - Study or planning starts only from a targeted ID command (`plan REF-XXX`,
   `изучи REF-XXX`, or `спланируй REF-XXX`) and must create or update the local
   spec at `docs/workitems/REF-XXX.md`.

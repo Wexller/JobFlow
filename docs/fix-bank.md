@@ -8,6 +8,8 @@ This file is the primary fix intake and lifecycle registry.
 - IDs are sequential and never reused within the fix namespace.
 - Fix intake requests such as `new fix: ...` or `запиши fix: ...` are recorded
   here.
+- Free-form thoughts or ideas without an explicit type are recorded here when
+  Codex classifies them as `FIX`.
 - Study or planning starts only from a targeted ID command (`plan FIX-XXX`,
   `изучи FIX-XXX`, or `спланируй FIX-XXX`) and must create or update the local
   spec at `docs/workitems/FIX-XXX.md`.
