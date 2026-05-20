@@ -42,7 +42,7 @@ Optional terminal status: `cancelled`.
 
 | ID | Title | Problem | Value | Priority | Status | Branch | PR | Release | Updated |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| FIX-001 | Make the main page table usable on mobile | The main table does not fit on mobile screens and is currently hard or impossible to use there | Restores expected mobile usability for one of the core home screen workflows | High | new | - | - | - | 2026-05-20 |
+| FIX-001 | Make the main page table usable on mobile | The main table does not fit on mobile screens and is currently hard or impossible to use there | Restores expected mobile usability for one of the core home screen workflows | High | in_progress | FIX-001 | - | - | 2026-05-20 |
 | FIX-002 | Fix home screen next actions responsiveness | The next actions block on the home screen is not adaptive on mobile layouts | Restores expected responsive behavior and prevents layout breakage on small screens | High | new | - | - | - | 2026-05-20 |
 | FIX-003 | Restore mobile spacing between page blocks | Multiple pages currently have missing vertical spacing between blocks on mobile layouts | Improves readability, visual hierarchy, and baseline mobile polish across the app | High | new | - | - | - | 2026-05-20 |
 | FIX-004 | Use two-column dashboard stats on 375px mobile screens | The main dashboard stats area does not use available width efficiently on mobile screens wide enough for a denser layout | Improves information density and readability on common mobile widths without waiting for a larger redesign | Medium | new | - | - | - | 2026-05-20 |

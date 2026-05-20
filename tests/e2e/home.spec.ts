@@ -33,3 +33,22 @@ test('switches locale between english and russian', async ({ page }) => {
   await page.getByRole('button', { exact: true, name: 'EN' }).click()
   await expect(page.getByRole('heading', { name: /Keep your job search on track/i })).toBeVisible()
 })
+
+test.describe('mobile home pipeline', () => {
+  test.use({ viewport: { width: 390, height: 844 } })
+
+  test('shows active opportunities without horizontal table scrolling hints', async ({ page }) => {
+    await page.goto('/')
+
+    const activeSection = page.locator('section').filter({
+      has: page.getByRole('heading', { level: 2, name: 'Active opportunities' }),
+    })
+
+    await expect(activeSection.last()).toBeVisible()
+    await expect(activeSection.last()).not.toContainText('Swipe horizontally to view all table columns.')
+    await expect(page.getByRole('table', { name: 'Active opportunities table' })).toBeHidden()
+    const mobileList = activeSection.last().locator('ul')
+    await expect(mobileList.getByText('Northstar Labs')).toBeVisible()
+    await expect(mobileList.getByText('SignalWorks')).toBeVisible()
+  })
+})
