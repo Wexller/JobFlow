@@ -24,20 +24,20 @@ vi.mock('~/composables/useJobflowSnapshot', () => ({
 }))
 
 describe('home page', () => {
-  it('renders the localized dashboard from CRM data', async () => {
+  it('renders the localized job search overview', async () => {
     const wrapper = await mountSuspended(HomePage)
     await flushPromises()
 
-    expect(wrapper.text()).toContain('A job-search CRM with a server-backed workflow')
+    expect(wrapper.text()).toContain('Keep your job search on track')
     expect(wrapper.text()).toContain('Total applications')
-    expect(wrapper.text()).toContain('Active pipeline')
+    expect(wrapper.text()).toContain('Active opportunities')
     expect(wrapper.text()).toContain('Northstar Labs')
     expect(wrapper.text()).toContain('SignalWorks')
     expect(wrapper.text()).toContain('Next actions')
     expect(wrapper.text()).toContain('Vacancies')
-    expect(wrapper.text()).toContain('Open vacancy list and details page.')
-    expect(wrapper.text()).toContain('Pipeline events')
-    expect(wrapper.text()).toContain('Track pipeline timeline entries by stage and status.')
+    expect(wrapper.text()).toContain('Collect roles, stacks, salaries, and priorities.')
+    expect(wrapper.text()).toContain('Hiring steps')
+    expect(wrapper.text()).toContain('Follow each process from application to decision.')
     expect(wrapper.text()).toContain('Interviews')
     expect(wrapper.text()).toContain('Offers')
   })
@@ -53,8 +53,7 @@ describe('home page', () => {
     await wrapper.vm.$i18n.setLocale('ru')
     await flushPromises()
 
-    expect(wrapper.text()).toContain('CRM для поиска работы с серверной обработкой процессов')
-    expect(wrapper.text()).toContain('Данные успешно загружены')
+    expect(wrapper.text()).toContain('Поиск работы под контролем')
   })
 
   it('does not render heavy management forms on home page', async () => {

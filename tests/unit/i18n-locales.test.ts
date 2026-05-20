@@ -8,9 +8,23 @@ const localePath = (locale: string) =>
 const en = JSON.parse(readFileSync(localePath('en'), 'utf8'))
 const ru = JSON.parse(readFileSync(localePath('ru'), 'utf8'))
 
+function collectMessagePaths(value: unknown, prefix = ''): string[] {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return [prefix]
+  }
+
+  return Object.entries(value)
+    .flatMap(([key, nestedValue]) => collectMessagePaths(nestedValue, prefix ? `${prefix}.${key}` : key))
+    .sort()
+}
+
 describe('i18n locale messages', () => {
   it('keeps required top-level namespaces in sync', () => {
     expect(Object.keys(ru).sort()).toEqual(Object.keys(en).sort())
+  })
+
+  it('keeps nested message keys in sync', () => {
+    expect(collectMessagePaths(ru)).toEqual(collectMessagePaths(en))
   })
 
   it('defines the application name in both supported locales', () => {

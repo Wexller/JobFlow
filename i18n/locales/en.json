@@ -7,13 +7,13 @@
     "primaryNav": "Primary navigation",
     "homeLink": "Home",
     "vacanciesLink": "Vacancies",
-    "pipelineEventsLink": "Pipeline events",
+    "pipelineEventsLink": "Hiring steps",
     "interviewsLink": "Interviews",
     "offersLink": "Offers"
   },
   "vacanciesPage": {
     "title": "Vacancies",
-    "description": "Route-backed vacancy list and detail flow from the BFF.",
+    "description": "Keep every IT role organized, compare the fit, and move faster on the best opportunities.",
     "state": {
       "loadingList": "Loading vacancies...",
       "errorList": "Failed to load vacancy list.",
@@ -21,7 +21,7 @@
       "loadingDetails": "Loading vacancy details...",
       "errorDetails": "Failed to load vacancy details.",
       "retry": "Retry",
-      "requestFailed": "Request failed"
+      "requestFailed": "Something went wrong"
     },
     "list": {
       "aria": "Vacancy list"
@@ -31,18 +31,15 @@
     }
   },
   "home": {
-    "badge": "Jobflow dashboard",
-    "title": "A job-search CRM with a server-backed workflow",
-    "description": "Track vacancies, applications, pipeline stages, interviews, offers, and dashboard metrics from one focused Nuxt application.",
-    "sync": {
-      "loaded": "Data loaded successfully"
-    },
+    "badge": "Job tracker",
+    "title": "Keep your job search on track",
+    "description": "Save roles, track stages and interviews, record offers, and keep every important next step in sight.",
     "state": {
-      "loading": "Loading CRM snapshot...",
-      "error": "Failed to load data snapshot.",
+      "loading": "Loading your job search...",
+      "error": "We couldn't load your job search right now.",
       "retry": "Retry",
       "empty": "No vacancies match the current filters.",
-      "requestId": "Request ID"
+      "requestId": "Support code"
     },
     "metrics": {
       "total_applications": "Total applications",
@@ -55,9 +52,9 @@
       "next_actions": "Next actions"
     },
     "active": {
-      "title": "Active pipeline",
-      "description": "Open opportunities sorted by the current store state.",
-      "tableLabel": "Active pipeline table"
+      "title": "Active opportunities",
+      "description": "Roles that still need your attention, sorted by the next step.",
+      "tableLabel": "Active opportunities table"
     },
     "table": {
       "company": "Company",
@@ -72,12 +69,12 @@
     },
     "nextActions": {
       "title": "Next actions",
-      "description": "Upcoming follow-ups from your vacancy pipeline.",
+      "description": "Upcoming follow-ups, interviews, and decisions you don't want to miss.",
       "empty": "No upcoming actions."
     },
     "vacancies": {
       "title": "Vacancies",
-      "description": "Filter and sort the vacancy list by stable CRM fields.",
+      "description": "Search, filter, and compare roles by company, stack, format, and priority.",
       "tableLabel": "Vacancies table"
     },
     "filters": {
@@ -93,7 +90,7 @@
       "source": "Source",
       "status": "Status",
       "statusAria": "Vacancy status filter",
-      "techStack": "Tech stack"
+      "techStack": "Stack"
     },
     "sort": {
       "appliedDesc": "Newest applications first",
@@ -103,8 +100,8 @@
       "salaryDesc": "Highest salary first"
     },
     "kanban": {
-      "title": "Kanban by status",
-      "description": "A status-board view of the same normalized vacancy data.",
+      "title": "Status board",
+      "description": "See where each role stands and what should happen next.",
       "empty": "No vacancies in this status."
     },
     "details": {
@@ -112,7 +109,7 @@
       "open": "Details",
       "mainInfo": "Main info",
       "techStack": "Tech stack",
-      "timeline": "Pipeline timeline",
+      "timeline": "Hiring timeline",
       "interviews": "Interviews",
       "noInterviews": "No interviews yet.",
       "offer": "Offer",
@@ -123,9 +120,9 @@
     },
     "form": {
       "title": "Add or edit vacancy",
-      "description": "Save vacancies through the same validated data boundary.",
-      "id": "Stable ID",
-      "techStackPlaceholder": "Vue, TypeScript, Nuxt",
+      "description": "Save the role, stack, salary range, and next step while the details are fresh.",
+      "id": "Vacancy code",
+      "techStackPlaceholder": "React, Node.js, PostgreSQL",
       "salaryMin": "Salary min",
       "salaryMax": "Salary max",
       "currency": "Currency",
@@ -134,29 +131,29 @@
       "new": "New vacancy",
       "loading": "Saving vacancy...",
       "success": "Vacancy saved.",
-      "error": "Check required fields and stable enum values."
+      "error": "Fill in the required fields and check the values."
     },
     "pipelineForm": {
-      "title": "Pipeline event",
-      "description": "Create or update a pipeline timeline event through the BFF.",
-      "id": "Event ID",
+      "title": "Hiring step",
+      "description": "Add the next hiring step so the full process stays visible.",
+      "id": "Step code",
       "stage": "Stage",
       "status": "Stage status",
       "titleField": "Title",
       "scheduledAt": "Scheduled at",
       "occurredAt": "Occurred at",
       "completedAt": "Completed at",
-      "save": "Save pipeline event",
-      "new": "New event",
-      "loading": "Saving pipeline event...",
-      "success": "Pipeline event saved.",
-      "error": "Check required fields and enum values.",
+      "save": "Save hiring step",
+      "new": "New step",
+      "loading": "Saving hiring step...",
+      "success": "Hiring step saved.",
+      "error": "Fill in the required fields and check the values.",
       "selectVacancyFirst": "Select a vacancy first"
     },
     "interviewForm": {
       "title": "Interview",
-      "description": "Create or update interview records through the BFF.",
-      "id": "Interview ID",
+      "description": "Plan interview rounds and keep results close to the vacancy.",
+      "id": "Interview code",
       "stage": "Interview stage",
       "result": "Result",
       "scheduledAt": "Scheduled at",
@@ -166,13 +163,13 @@
       "new": "New interview",
       "loading": "Saving interview...",
       "success": "Interview saved.",
-      "error": "Check required fields and enum values.",
+      "error": "Fill in the required fields and check the values.",
       "selectVacancyFirst": "Select a vacancy first"
     },
     "offerForm": {
       "title": "Offer",
-      "description": "Create or update offer records through the BFF.",
-      "id": "Offer ID",
+      "description": "Record compensation, deadlines, and your decision in one place.",
+      "id": "Offer code",
       "decision": "Decision",
       "offeredAt": "Offered at",
       "decisionDueAt": "Decision due",
@@ -180,18 +177,18 @@
       "new": "New offer",
       "loading": "Saving offer...",
       "success": "Offer saved.",
-      "error": "Check required fields and enum values.",
+      "error": "Fill in the required fields and check the values.",
       "selectVacancyFirst": "Select a vacancy first"
     },
     "entities": {
       "vacancies": "Vacancies",
-      "vacanciesDescription": "Open vacancy list and details page.",
-      "pipeline": "Pipeline events",
-      "pipelineDescription": "Track pipeline timeline entries by stage and status.",
+      "vacanciesDescription": "Collect roles, stacks, salaries, and priorities.",
+      "pipeline": "Hiring steps",
+      "pipelineDescription": "Follow each process from application to decision.",
       "interviews": "Interviews",
-      "interviewsDescription": "Review interview records and outcomes.",
+      "interviewsDescription": "Keep rounds, people, locations, and outcomes together.",
       "offers": "Offers",
-      "offersDescription": "Review offer decisions and amounts."
+      "offersDescription": "Compare offers, deadlines, and final decisions."
     },
     "mobile": {
       "tableHint": "Swipe horizontally to view all table columns."
@@ -226,7 +223,7 @@
       "sourced": "Sourced",
       "applied": "Applied",
       "recruiter_screen": "Recruiter screen",
-      "technical_screen": "Technical screen",
+      "technical_screen": "Technical interview",
       "take_home": "Take-home",
       "onsite": "On-site",
       "offer": "Offer",
@@ -259,40 +256,40 @@
     }
   },
   "pipelineEventsPage": {
-    "title": "Pipeline events",
-    "description": "Dedicated page for pipeline timeline entities.",
+    "title": "Hiring steps",
+    "description": "Track every stage of the hiring process and keep the next move clear.",
     "state": {
-      "loading": "Loading pipeline events...",
-      "error": "Failed to load pipeline events.",
-      "empty": "No pipeline events available.",
+      "loading": "Loading hiring steps...",
+      "error": "We couldn't load hiring steps right now.",
+      "empty": "No hiring steps yet.",
       "retry": "Retry",
-      "requestFailed": "Request failed"
+      "requestFailed": "Something went wrong"
     },
     "selectVacancy": "Vacancy",
     "noVacancy": "All vacancies"
   },
   "interviewsPage": {
     "title": "Interviews",
-    "description": "Dedicated page for interview entities.",
+    "description": "Plan interview rounds, capture outcomes, and keep preparation focused.",
     "state": {
       "loading": "Loading interviews...",
       "error": "Failed to load interviews.",
       "empty": "No interviews available.",
       "retry": "Retry",
-      "requestFailed": "Request failed"
+      "requestFailed": "Something went wrong"
     },
     "selectVacancy": "Vacancy",
     "noVacancy": "All vacancies"
   },
   "offersPage": {
     "title": "Offers",
-    "description": "Dedicated page for offer entities.",
+    "description": "Compare compensation, deadlines, and decisions before you choose.",
     "state": {
       "loading": "Loading offers...",
       "error": "Failed to load offers.",
       "empty": "No offers available.",
       "retry": "Retry",
-      "requestFailed": "Request failed"
+      "requestFailed": "Something went wrong"
     },
     "selectVacancy": "Vacancy",
     "noVacancy": "All vacancies"

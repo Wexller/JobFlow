@@ -3,11 +3,11 @@ import { expect, test } from '@playwright/test'
 test('renders the localized home page', async ({ page }) => {
   await page.goto('/')
 
-  await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Keep your job search on track/i })).toBeVisible()
   await expect(page.getByText('Total applications')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Next actions' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Vacancies', exact: true })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Pipeline events', exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Hiring steps', exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Interviews', exact: true })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Offers', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { exact: true, name: 'EN' })).toBeVisible()
@@ -25,11 +25,11 @@ test('renders the localized home page', async ({ page }) => {
 test('switches locale between english and russian', async ({ page }) => {
   await page.goto('/')
 
-  await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Keep your job search on track/i })).toBeVisible()
   await page.getByRole('button', { exact: true, name: 'RU' }).click()
-  await expect(page.getByRole('heading', { name: /CRM для поиска работы/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Поиск работы под контролем/i })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Вакансии', exact: true })).toBeVisible()
 
   await page.getByRole('button', { exact: true, name: 'EN' }).click()
-  await expect(page.getByRole('heading', { name: /job-search CRM/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Keep your job search on track/i })).toBeVisible()
 })
