@@ -65,9 +65,11 @@ Exit criteria:
 - Any roadmap item that maps to a feature must have a corresponding `FEAT-XXX`
   entry in `docs/feature-bank.md`.
 - Planning and implementation expect a local spec at `docs/workitems/<ID>.md`.
+- After merge, completed local specs move to `docs/workitems/done/<ID>.md`.
 - Feature development branch must match feature ID exactly (`FEAT-XXX`).
 - Default implementation flow is branch -> implementation -> verification ->
-  commit -> PR -> squash merge to `main` -> switch back to `main`.
+  commit -> PR -> squash merge to `main` -> move spec to
+  `docs/workitems/done/<ID>.md` -> switch back to `main`.
 - Merge policy is squash merge to `main`.
 - Feature is marked done only after confirmed production release and
   corresponding status updates in `docs/feature-bank.md`.

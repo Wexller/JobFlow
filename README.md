@@ -429,7 +429,7 @@ Production/runtime expectations:
 The repository uses an ID-driven delivery flow:
 
 ```text
-intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> implement -> checks -> commit -> PR -> squash merge to main -> release -> done
+intake -> bank entry (FEAT/REF/FIX) -> local spec docs/workitems/<ID>.md -> branch <ID> -> implement -> checks -> commit -> PR -> squash merge to main -> move spec to docs/workitems/done/<ID>.md -> release -> done
 ```
 
 Rules:
@@ -446,6 +446,10 @@ Rules:
   `docs/workitems/<ID>.md`.
 - Local specs in `docs/workitems/` are intentionally not tracked in git and must
   not be staged, committed, or included in PR scope.
+- After merge to `main`, move the local spec to
+  `docs/workitems/done/<ID>.md`.
+- Moving the spec file into `docs/workitems/done/` is an archive step for local
+  working materials and does not by itself mark the work item as `done`.
 - Implementation must follow the local work item spec.
 - If the spec does not exist, Codex must stop and wait for explicit approval
   before implementing without a spec.
@@ -461,7 +465,8 @@ Rules:
   `docs/roadmap.active.md` only when roadmap visibility changes.
 - Do not stop at PR handoff unless the Product Owner explicitly asks to pause
   before merge.
-- After merge, switch back to `main`.
+- After merge, move the local spec to `docs/workitems/done/<ID>.md` and switch
+  back to `main`.
 
 Classification:
 

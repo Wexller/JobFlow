@@ -22,6 +22,8 @@ This file is the primary feature intake and feature lifecycle registry.
   explicit confirmation of the matched feature ID.
 - `docs/workitems/FEAT-XXX.md` is a local working spec and must not be added to
   git.
+- After merge to `main`, move the local spec to
+  `docs/workitems/done/FEAT-XXX.md`.
 - A feature is marked `done` only after confirmed production/market release.
 
 ## When To Use FEAT
@@ -59,6 +61,7 @@ Optional terminal status: `cancelled`.
 - `PR` stores the merge candidate URL or identifier.
 - `Release` stores release evidence (deploy record/tag/build link).
 - The local spec path for each feature is `docs/workitems/FEAT-XXX.md`.
+- Completed local specs move to `docs/workitems/done/FEAT-XXX.md` after merge.
 - Specs under `docs/workitems/` are intentionally local-only and must not be
   staged, committed, or linked as tracked artifacts.
 - Move status to `in_review` once the commit exists and the PR is open.

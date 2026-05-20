@@ -22,6 +22,8 @@ This file is the primary refactor intake and lifecycle registry.
   explicit confirmation of the matched refactor ID.
 - `docs/workitems/REF-XXX.md` is a local working spec and must not be added to
   git.
+- After merge to `main`, move the local spec to
+  `docs/workitems/done/REF-XXX.md`.
 - A refactor is marked `done` only after confirmed production/market release.
 
 ## Status Lifecycle
@@ -51,6 +53,7 @@ Optional terminal status: `cancelled`.
 - `PR` stores the merge candidate URL or identifier.
 - `Release` stores release evidence (deploy record/tag/build link).
 - The local spec path for each refactor is `docs/workitems/REF-XXX.md`.
+- Completed local specs move to `docs/workitems/done/REF-XXX.md` after merge.
 - Specs under `docs/workitems/` are intentionally local-only and must not be
   staged, committed, or linked as tracked artifacts.
 - Move status to `in_review` once the commit exists and the PR is open.

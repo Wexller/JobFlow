@@ -38,6 +38,8 @@ together from request intake to release.
    - The Lead records planning output in `docs/workitems/<ID>.md`.
    - `docs/workitems/<ID>.md` is a local-only working spec, not a git-tracked
      artifact.
+   - After merge, completed local specs are moved to
+     `docs/workitems/done/<ID>.md`.
    - Minimum spec structure: summary, goals, scope, non-goals, affected areas,
      acceptance criteria, risks, verification.
 
@@ -68,11 +70,13 @@ together from request intake to release.
    - The Lead merges reports and gives a go/no-go recommendation.
    - The default implementation sequence is:
      branch -> implementation -> verification -> commit -> PR -> squash merge to
-     `main` -> switch back to `main`.
+     `main` -> move spec to `docs/workitems/done/<ID>.md` -> switch back to
+     `main`.
    - Merge policy to `main` is squash merge.
    - Codex does not stop at PR handoff unless the Product Owner explicitly asks
      to pause before merge.
-   - After merge to `main`, Codex switches back to `main`.
+   - After merge to `main`, Codex moves the local spec to
+     `docs/workitems/done/<ID>.md` and switches back to `main`.
    - Work item status moves to `done` only after confirmed production
      deployment.
 

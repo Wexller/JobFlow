@@ -116,6 +116,11 @@ See `docs/agents/registry.md` for the complete registry.
   approval before implementing without a spec.
 - `docs/workitems/<ID>.md` is a local working artifact. It must not be
   staged, committed, or included in PR scope.
+- After implementation is completed and the PR is merged to `main`, move the
+  local spec from `docs/workitems/<ID>.md` to `docs/workitems/done/<ID>.md`.
+- Moving the local spec into `docs/workitems/done/` does not by itself change
+  the bank status to `done`; `done` still requires confirmed production
+  release.
 - Text-only study, planning, or implementation requests without ID are allowed
   only after explicit confirmation of the matched work item ID.
 
@@ -143,6 +148,8 @@ See `docs/agents/registry.md` for the complete registry.
 - Codex should not stop at "PR handoff" unless the Product Owner explicitly asks
   to pause before merge.
 - After merge to `main`, Codex switches back to `main`.
+- After merge to `main`, Codex moves the local spec to
+  `docs/workitems/done/<ID>.md` and then switches back to `main`.
 - A merged work item is not automatically `done`.
 - Work item status changes to `done` only after confirmed production/market
   deployment. Until then, it remains `in_review` or `released`.
