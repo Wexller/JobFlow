@@ -456,7 +456,10 @@ Rules:
 - By default, `implement FEAT-XXX|REF-XXX|FIX-XXX` means end-to-end delivery:
   create the branch, implement the change, run checks, create the commit, open
   the PR, merge to `main`, and switch back to `main`.
-- One work item ID maps to one dedicated branch with the exact same name.
+- Legacy bank-tracked flow may use a branch name that matches the local work
+  item ID.
+- GitHub issue-backed flow must use the branch format
+  `type/<issue-number>-short-description`.
 - Work item branches are created from `main`.
 - Merge policy to `main` is squash merge.
 - A merged PR does not automatically mark a work item as done.
@@ -488,6 +491,50 @@ PO command conventions:
 - Implementation: `implement FEAT-XXX|REF-XXX|FIX-XXX` / `реализуй ...`
 - Text-only study, planning, or implementation requests require explicit
   confirmation of the target work item ID before work starts.
+
+## GitHub Naming Policy
+
+When work is tracked by GitHub issue, use the GitHub issue number as the
+canonical implementation reference for branches, commits, and PR titles.
+
+Issue title:
+
+- Format: `[type][scope1,scope2] Human-readable title`
+- Types: `feat`, `fix`, `ref`
+- Example: `[fix][home,mobile] Main page table is unusable on mobile`
+
+Branch name:
+
+- Format: `type/<issue-number>-short-description`
+- Examples:
+  - `fix/123-home-mobile-table`
+  - `feat/145-vacancy-search`
+  - `ref/203-store-composition-api`
+
+Commit message:
+
+- Format: `type(scope1,scope2): message (#issue-number)`
+- Examples:
+  - `fix(home,mobile): make main page table usable on mobile (#123)`
+  - `feat(vacancies,forms): replace vacancy select with searchable input (#145)`
+  - `ref(store,pinia): move jobflow store to composition api (#203)`
+
+PR title:
+
+- Use the same format as the final squash commit title.
+- Example:
+  - `fix(home,mobile): make main page table usable on mobile (#123)`
+
+Rules:
+
+- Do not use an `ISSUE-*` prefix in branch names, commits, or PR titles.
+- Type must stay consistent across issue title, branch name, commit, and PR.
+- Use one to three lowercase kebab-case scopes.
+- Prefer product or system areas such as `home`, `mobile`, `vacancies`,
+  `forms`, `store`, `pinia`, `api`, `db`, `tests`, or `docs`.
+- One branch and one PR should map to one primary issue.
+- Do not rely on automatic issue closing keywords when a task becomes `done`
+  only after confirmed release.
 
 ## Production Deploy Runbook
 

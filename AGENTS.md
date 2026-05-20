@@ -137,8 +137,11 @@ See `docs/agents/registry.md` for the complete registry.
 
 ## Branch And Release Policy
 
-- One work item equals one branch. Branch name must exactly match the work item
-  ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
+- One work item equals one branch.
+- Legacy bank-tracked flow may use a branch name that matches the local work
+  item ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
+- GitHub issue-backed flow must use the GitHub naming policy branch format:
+  `type/<issue-number>-short-description`.
 - Work item branches are created from `main`.
 - One work item branch must not include scope for multiple work item IDs.
 - Default implementation sequence is:
@@ -156,6 +159,63 @@ See `docs/agents/registry.md` for the complete registry.
 - After production release, update the corresponding bank status/link fields.
 - Update `docs/roadmap.active.md` only when the released item affects active
   roadmap visibility.
+
+## GitHub Naming Policy
+
+- When a task is tracked by a GitHub issue, use the GitHub issue number as the
+  canonical implementation reference for branch names, commits, and PR titles.
+- The issue type must stay consistent across issue title, branch name, commit
+  messages, and PR title.
+- Do not use an `ISSUE-*` prefix in branch names, commits, or PR titles.
+
+Issue title format:
+
+- `[type][scope1,scope2] Human-readable title`
+- Allowed types: `feat`, `fix`, `ref`
+- Use one to three scopes in lowercase kebab-case.
+- The human-readable title should describe the problem or outcome, not an
+  implementation step.
+
+Branch name format:
+
+- `type/<issue-number>-short-description`
+- Examples:
+  - `fix/123-home-mobile-table`
+  - `feat/145-vacancy-search`
+  - `ref/203-store-composition-api`
+
+Commit message format:
+
+- `type(scope1,scope2): message (#issue-number)`
+- Use conventional commit style.
+- Start the message with an imperative verb.
+- Examples:
+  - `fix(home,mobile): make main page table usable on mobile (#123)`
+  - `feat(vacancies,forms): replace vacancy select with searchable input (#145)`
+  - `ref(store,pinia): move jobflow store to composition api (#203)`
+
+PR title format:
+
+- PR title should usually match the final squash commit title.
+- Use the same format as commits:
+  `type(scope1,scope2): message (#issue-number)`.
+- Link the PR to the issue, but do not rely on auto-closing keywords when the
+  workflow requires post-merge release confirmation before the task is truly
+  done.
+
+Preferred scope vocabulary includes:
+
+- `home`, `mobile`, `desktop`, `layout`, `vacancies`, `pipeline`,
+  `interviews`, `offers`, `forms`, `table`, `dashboard`, `store`, `pinia`,
+  `api`, `server`, `db`, `migrations`, `auth`, `i18n`, `tests`, `docs`
+
+Guardrails:
+
+- One branch maps to one primary issue.
+- One PR maps to one primary issue.
+- Use product or system areas as scopes, not filenames.
+- Avoid generic scopes like `misc`.
+- Keep branch descriptions short and readable.
 
 ## Token Budget And Small Task Mode
 

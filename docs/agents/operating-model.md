@@ -52,8 +52,11 @@ together from request intake to release.
      request means the full delivery path through merge to `main`.
    - If the spec file does not exist, the Lead stops and asks the Product Owner
      for explicit approval before implementing without a spec.
-   - Work item implementation branch must be created from `main` and match the
-     work item ID exactly (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
+   - Work item implementation branch must be created from `main`.
+   - Legacy bank-tracked flow may use a branch name that matches the local work
+     item ID (`FEAT-XXX`, `REF-XXX`, or `FIX-XXX`).
+   - GitHub issue-backed flow must use the branch format:
+     `type/<issue-number>-short-description`.
    - One work item branch must not include scope for multiple work item IDs.
 
 5. Verification
@@ -79,6 +82,21 @@ together from request intake to release.
      `docs/workitems/done/<ID>.md` and switches back to `main`.
    - Work item status moves to `done` only after confirmed production
      deployment.
+
+## GitHub Naming Policy
+
+- For GitHub issue-backed work, use the GitHub issue number as the canonical
+  implementation reference for branch names, commits, and PR titles.
+- Issue title format:
+  `[type][scope1,scope2] Human-readable title`
+- Branch format:
+  `type/<issue-number>-short-description`
+- Commit and PR title format:
+  `type(scope1,scope2): message (#issue-number)`
+- Keep the type consistent across issue, branch, commit, and PR.
+- Use one to three lowercase kebab-case scopes that describe product or system
+  areas.
+- Avoid `ISSUE-*` prefixes in branch names, commits, and PR titles.
 
 ## Assignment Template
 
