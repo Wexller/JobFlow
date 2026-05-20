@@ -38,6 +38,8 @@ Optional terminal status: `cancelled`.
 
 | ID | Title | Problem | Value | Priority | Status | Branch | PR | Release | Updated |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| REF-001 | Move stores to Composition API | Current stores still use older patterns and do not align with the preferred Composition API direction | Improves maintainability, consistency, and future refactor safety across state management | Medium | new | - | - | - | 2026-05-20 |
+| REF-002 | Evaluate automatic migrations in container build workflow | Container delivery still expects migrations to be run as a separate step, which adds operational overhead and requires a clearer deployment approach | Can simplify deployment workflow if a safe automatic strategy is validated and adopted | Medium | new | - | - | - | 2026-05-20 |
 
 ## Operational Notes
 

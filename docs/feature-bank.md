@@ -47,6 +47,8 @@ Optional terminal status: `cancelled`.
 | FEAT-008 | Mobile-first UI baseline | Current UI is not explicitly optimized from mobile-first constraints | Improves usability and conversion on phones and small screens | High | in_review | `FEAT-008` | - | - | 2026-05-19 |
 | FEAT-009 | Text audit and copy cleanup | Product copy still contains outdated terms (e.g., Google Sheets, mock wording) | Aligns UX language with actual runtime and improves trust | High | in_review | `FEAT-009` | - | - | 2026-05-19 |
 | FEAT-010 | Presentable home page with product value | Home page needs a stronger presentation layer and value proposition | Improves first impression, clarity, and product positioning | High | new | - | - | - | 2026-05-19 |
+| FEAT-011 | Replace vacancy select with searchable vacancy field | A plain select control will become hard to use as the vacancy list grows, and users need a faster way to find the right option | Improves scalability and usability of vacancy selection, ideally by reusing a proven Nuxt UI solution if available | High | new | - | - | - | 2026-05-20 |
+| FEAT-012 | Reduce desktop header height and keep menu in one row | The desktop header is visually oversized and takes more vertical space than needed | Improves information density and makes the primary navigation feel lighter on desktop screens | Medium | new | - | - | - | 2026-05-20 |
 
 ## Operational Notes
 

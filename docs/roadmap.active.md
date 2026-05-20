@@ -47,6 +47,8 @@ Exit criteria:
 - [ ] FEAT-008 Mobile-first UI baseline (`in_review`)
 - [ ] FEAT-009 Text audit and copy cleanup (`in_review`)
 - [ ] FEAT-010 Presentable home page with product value (`new`)
+- [ ] FEAT-011 Replace vacancy select with searchable vacancy field (`new`)
+- [ ] FEAT-012 Reduce desktop header height and keep menu in one row (`new`)
 
 ## Backlog Candidates
 
