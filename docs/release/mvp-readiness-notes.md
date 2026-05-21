@@ -22,6 +22,7 @@ Scope: Jobflow Nuxt BFF + Postgres-first runtime
 
 Treat current state as MVP-ready for controlled PG-first environments when all of the following pass:
 
+- `pnpm release:branch -- --version <SemVer>`
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm test:unit`
@@ -31,5 +32,5 @@ Treat current state as MVP-ready for controlled PG-first environments when all o
 
 ## Risk acceptance guidance
 
-- If deploying without CI automation, require manual gate evidence attached to the release candidate.
+- If deploying without CI automation, require manual gate evidence attached to the release branch candidate.
 - If deploying to managed Postgres, confirm migration execution ownership and rollback authority in advance.

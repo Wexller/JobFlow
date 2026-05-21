@@ -160,6 +160,12 @@ User command examples:
   deployment. Until then, it remains `in_review` or `released`.
 - After confirmed production release, move the GitHub issue to `status:done`
   and close it.
+- Production release branches are created from `main` with
+  `pnpm release:branch -- --version <SemVer>`.
+- Production release branch format is exactly `release/<SemVer>`.
+- Release branches are persistent and serve as the Docker build branch and
+  release record.
+- Production release flow does not require Git tags.
 
 ## GitHub Naming Policy
 

@@ -10,23 +10,27 @@
 
 1. Confirm backup currency for target database.
 2. Run migration plan review for pending SQL files in `db/migrations`.
-3. Validate release candidate quality gates:
+3. Create or confirm the release branch from `main`:
+   - `pnpm release:branch -- --version <SemVer>`
+   - Expected branch format: `release/<SemVer>`
+4. Validate release branch quality gates:
    - `pnpm lint`
    - `pnpm typecheck`
    - `pnpm test:unit`
    - `pnpm test:nuxt`
    - `pnpm test:e2e`
-4. Validate Postgres verification lane in isolated environment:
+5. Validate Postgres verification lane in isolated environment:
    - `pnpm db:test:up:compose`
    - `JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check`
    - `pnpm db:test:down:compose`
 
 ## Deploy sequence
 
-1. Apply migrations against target Postgres:
+1. Build and deploy from the release branch `release/<SemVer>`.
+2. Apply migrations against target Postgres:
    - `JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate`
-2. Deploy application runtime.
-3. Run post-deploy smoke checks for API routes:
+3. Deploy application runtime.
+4. Run post-deploy smoke checks for API routes:
    - `GET /api/jobflow/snapshot`
    - `GET /api/vacancies`
    - one write-path smoke in controlled environment
@@ -39,21 +43,23 @@ For self-hosted production-like runtime (`docker-compose.prod.yml`):
    - `export JOBFLOW_PROD_DB_USER=...`
    - `export JOBFLOW_PROD_DB_PASSWORD=...`
    - `export JOBFLOW_PROD_DB_NAME=...`
-1. Build application image:
+1. Check out the release branch `release/<SemVer>`.
+2. Build application image:
    - `docker compose -f docker-compose.prod.yml build`
-2. Start Postgres:
+3. Start Postgres:
    - `docker compose -f docker-compose.prod.yml up -d postgres`
-3. Apply migrations via one-off job:
+4. Apply migrations via one-off job:
    - `docker compose -f docker-compose.prod.yml run --rm migrate`
-4. Start application service:
+5. Start application service:
    - `docker compose -f docker-compose.prod.yml up -d app`
-5. Run smoke checks:
+6. Run smoke checks:
    - `curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/jobflow/snapshot`
    - `curl -f http://localhost:${JOBFLOW_APP_PORT:-3000}/api/vacancies`
 
 Important:
 
 - Keep `JOBFLOW_PERSISTENCE_DRIVER=postgres`.
+- Build Docker images from the release branch, not from a Git tag.
 - `docker-compose.prod.yml` keeps Postgres internal to the compose network
   (no host port exposure by default).
 - `migrate` is intentionally separate from app startup to keep deploy control explicit.

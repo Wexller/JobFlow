@@ -442,6 +442,9 @@ Production/runtime expectations:
 
 - `docs/release/mvp-readiness-notes.md` documents current MVP verification scope,
   residual operational gaps, and manual release gate expectations.
+- Start a release candidate with
+  `pnpm release:branch -- --version <SemVer>`, which creates and pushes
+  `release/<SemVer>` from `main`.
 
 ## Work Item Delivery Workflow
 
@@ -476,6 +479,32 @@ Rules:
 - A work item is marked `done` only after confirmed production/market deployment.
 - After confirmed production release, move the issue to `status:done` and close
   it.
+
+## Release Branch Workflow
+
+Release candidates use persistent branches, not tags.
+
+Flow:
+
+```text
+main -> release/<SemVer> -> run release gates -> build and deploy Docker image from release branch -> confirm production release
+```
+
+Rules:
+
+- Create release branches from `main` only.
+- Branch format is exactly `release/<SemVer>`, for example `release/1.4.0`.
+- Start a release branch with:
+  `pnpm release:branch -- --version 1.4.0`
+- The command creates the branch locally, switches to it, pushes it to `origin`,
+  and sets upstream tracking.
+- Release branches are kept after release and serve as the Docker build branch
+  and release record.
+- No Git tag is required for the release flow.
+- Release evidence should reference the release branch name plus the build or
+  deploy record.
+- Only after confirmed production release should related issues move from
+  `status:released` to `status:done`.
 
 Classification:
 
@@ -556,6 +585,7 @@ Automation:
 - `pnpm github:issue:new -- --type <feat|fix|ref> --scopes <scope1,scope2> --title "..."`
 - `pnpm github:issue:status -- --issue 123 --status <new|triage|discovery|planned|in_progress|in_review|released|done|cancelled>`
 - `pnpm github:issues:migrate-legacy`
+- `pnpm release:branch -- --version <SemVer>`
 
 See `docs/github-issues-workflow.md` for the full workflow, labels, and
 migration notes.
