@@ -26,6 +26,21 @@ issue numbers.
 intake -> GitHub issue -> planning in issue body -> branch -> implementation -> checks -> commit -> PR -> squash merge to main -> issue status: released -> confirmed release -> issue status: done and close
 ```
 
+## User Commands
+
+Use GitHub issue numbers in direct commands:
+
+- `plan #23`
+- `изучи #23`
+- `implement #23`
+- `реализуй #23 полностью`
+
+If you want Codex to stop before the full delivery flow completes, say so
+explicitly:
+
+- `implement #23 but stop before PR`
+- `реализуй #23, но остановись перед коммитом`
+
 ## Naming Policy
 
 Issue title:

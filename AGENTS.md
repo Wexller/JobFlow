@@ -116,6 +116,15 @@ See `docs/agents/registry.md` for the complete registry.
 - Text-only study, planning, or implementation requests without ID are allowed
   only after explicit confirmation of the matched GitHub issue number.
 
+User command examples:
+
+- `plan #23`
+- `изучи #23`
+- `implement #23`
+- `реализуй #23 полностью`
+- `implement #23 but stop before PR`
+- `реализуй #23, но остановись перед коммитом`
+
 ## Work Item Classification
 
 - `FEAT`: new capability, new user-facing outcome, or noticeable product

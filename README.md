@@ -472,6 +472,15 @@ PO command conventions:
 - Text-only study, planning, or implementation requests require explicit
   confirmation of the target GitHub issue number before work starts.
 
+Examples:
+
+- `plan #23`
+- `изучи #16`
+- `implement #23`
+- `реализуй #23 полностью`
+- `implement #24 but stop before PR`
+- `реализуй #20, но остановись перед коммитом`
+
 ## GitHub Naming Policy
 
 Use the GitHub issue number as the canonical implementation reference for
