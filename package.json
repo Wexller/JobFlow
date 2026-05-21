@@ -7,6 +7,18 @@
     "node": ">=22.0.0",
     "pnpm": ">=11.1.3"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "msw",
+      "prisma",
+      "unrs-resolver",
+      "vue-demi"
+    ]
+  },
   "scripts": {
     "verify:node": "node scripts/check-node-version.mjs",
     "dev": "pnpm verify:node && nuxt dev",
