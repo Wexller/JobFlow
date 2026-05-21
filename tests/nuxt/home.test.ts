@@ -41,6 +41,7 @@ describe('home page', () => {
     expect(wrapper.text()).toContain('Interviews')
     expect(wrapper.text()).toContain('Offers')
     expect(wrapper.text()).not.toContain('Swipe horizontally to view all table columns.')
+    expect(wrapper.html()).toContain('min-[375px]:grid-cols-2')
   })
 
 
