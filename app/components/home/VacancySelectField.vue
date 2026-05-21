@@ -2,7 +2,7 @@
   <label class="space-y-1 text-sm">
     <span class="font-medium">{{ label }}</span>
     <USelectMenu
-      v-model="model"
+      v-model="selectValue"
       :content="{ align: 'start' }"
       :items="items"
       :label-key="'label'"
@@ -29,11 +29,18 @@ const props = defineProps<{
   emptySearchMessage: string
 }>()
 
+const allVacanciesValue = '__all_vacancies__'
 const model = defineModel<string>({ default: '' })
+const selectValue = computed({
+  get: () => model.value || allVacanciesValue,
+  set: (value: string) => {
+    model.value = value === allVacanciesValue ? '' : value
+  },
+})
 
 const items = computed(() => [
   {
-    id: '',
+    id: allVacanciesValue,
     label: props.noVacancyLabel,
   },
   ...props.vacancies.map((vacancy) => ({

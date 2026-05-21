@@ -16,7 +16,7 @@
     </div>
 
     <template v-else>
-      <VacancySelectField
+      <HomeVacancySelectField
         v-model="selectedVacancyId"
         :empty-search-message="$t('interviewsPage.search.empty')"
         :label="$t('interviewsPage.selectVacancy')"
