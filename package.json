@@ -62,9 +62,6 @@
   "devDependencies": {
     "@nuxt/eslint": "latest",
     "@nuxt/test-utils": "latest",
-    "@oxc-minify/binding-darwin-arm64": "0.128.0",
-    "@oxc-parser/binding-darwin-arm64": "0.128.0",
-    "@oxc-transform/binding-darwin-arm64": "0.128.0",
     "@pinia/testing": "latest",
     "@playwright/test": "latest",
     "@vue/test-utils": "latest",
