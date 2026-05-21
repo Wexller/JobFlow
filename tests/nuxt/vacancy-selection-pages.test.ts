@@ -2,7 +2,7 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { flushPromises } from '@vue/test-utils'
 import { defineComponent, ref } from 'vue'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { JobflowSnapshot } from '../../app/schemas/jobflow.schema'
 import InterviewsPage from '../../app/pages/interviews.vue'
 import OffersPage from '../../app/pages/offers.vue'
@@ -162,6 +162,34 @@ describe('vacancy select field', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([['vacancy-product-crm']])
   })
 
+  it('uses a non-empty internal value for the all-vacancies option while keeping the external model empty', async () => {
+    const wrapper = await mountSuspended(VacancySelectField, {
+      global: {
+        stubs: {
+          USelectMenu: USelectMenuStub,
+        },
+      },
+      props: {
+        emptySearchMessage: 'No vacancies match your search.',
+        label: 'Vacancy',
+        modelValue: '',
+        noVacancyLabel: 'All vacancies',
+        searchPlaceholder: 'Search vacancies',
+        vacancies: mockVacancies,
+      },
+    })
+
+    await flushPromises()
+
+    const options = wrapper.findAll('[data-testid="vacancy-select"] option')
+    expect(options[0]?.attributes('value')).toBe('__all_vacancies__')
+
+    await wrapper.get('[data-testid="vacancy-select"]').setValue('vacancy-product-crm')
+    await wrapper.get('[data-testid="vacancy-select"]').setValue('__all_vacancies__')
+
+    expect(wrapper.emitted('update:modelValue')).toEqual([['vacancy-product-crm'], ['']])
+  })
+
   it('renders an empty-state message when the search has no matches', async () => {
     const wrapper = await mountSuspended(VacancySelectField, {
       global: {
@@ -186,12 +214,15 @@ describe('vacancy select field', () => {
 })
 
 describe('vacancy-driven management pages', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('keeps interviews filtered by the selected vacancy and preserves the default selection', async () => {
     const wrapper = await mountSuspended(InterviewsPage, {
       global: {
         stubs: {
           HomeInterviewForm: FormStub,
-          VacancySelectField: VacancySelectFieldStub,
         },
       },
     })
@@ -202,8 +233,7 @@ describe('vacancy-driven management pages', () => {
     expect(wrapper.text()).toContain('Technical interview')
     expect(wrapper.text()).not.toContain('Recruiter screen')
 
-    await wrapper.get('[data-testid="vacancy-page-select"]').setValue('vacancy-product-crm')
-    await flushPromises()
+    await selectVacancy(wrapper, 'SignalWorks · Product Engineer')
 
     expect(wrapper.get('[data-testid="form-state"]').text()).toContain('vacancy=vacancy-product-crm')
     expect(wrapper.text()).toContain('Recruiter screen')
@@ -215,7 +245,6 @@ describe('vacancy-driven management pages', () => {
       global: {
         stubs: {
           HomeOfferForm: FormStub,
-          VacancySelectField: VacancySelectFieldStub,
         },
       },
     })
@@ -225,8 +254,7 @@ describe('vacancy-driven management pages', () => {
     expect(wrapper.get('[data-testid="form-state"]').text()).toContain('vacancy=vacancy-frontend-platform')
     expect(wrapper.text()).toContain('No offers available.')
 
-    await wrapper.get('[data-testid="vacancy-page-select"]').setValue('vacancy-design-systems')
-    await flushPromises()
+    await selectVacancy(wrapper, 'Atlas Cloud · Design Systems Engineer')
 
     expect(wrapper.get('[data-testid="form-state"]').text()).toContain('vacancy=vacancy-design-systems')
     expect(wrapper.text()).toContain('Pending')
@@ -238,7 +266,6 @@ describe('vacancy-driven management pages', () => {
       global: {
         stubs: {
           HomePipelineEventForm: FormStub,
-          VacancySelectField: VacancySelectFieldStub,
         },
       },
     })
@@ -249,11 +276,23 @@ describe('vacancy-driven management pages', () => {
     expect(wrapper.findAll('li')).toHaveLength(2)
     expect(wrapper.text()).toContain('Vue architecture interview')
 
-    await wrapper.get('[data-testid="vacancy-page-select"]').setValue('vacancy-design-systems')
-    await flushPromises()
+    await selectVacancy(wrapper, 'Atlas Cloud · Design Systems Engineer')
 
     expect(wrapper.get('[data-testid="form-state"]').text()).toContain('vacancy=vacancy-design-systems')
     expect(wrapper.findAll('li')).toHaveLength(1)
     expect(wrapper.text()).not.toContain('Vue architecture interview')
   })
 })
+
+async function selectVacancy(wrapper: Awaited<ReturnType<typeof mountSuspended>>, optionLabel: string) {
+  await wrapper.get('button[aria-haspopup="listbox"]').trigger('click')
+  await flushPromises()
+
+  const option = Array.from(document.body.querySelectorAll('[role="option"]'))
+    .find((element) => element.textContent?.includes(optionLabel))
+
+  expect(option, `Expected combobox option "${optionLabel}" to be rendered`).toBeTruthy()
+
+  ;(option as HTMLElement).click()
+  await flushPromises()
+}
