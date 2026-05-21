@@ -165,7 +165,9 @@ User command examples:
 - Production release branch format is exactly `release/<SemVer>`.
 - Release branches are persistent and serve as the Docker build branch and
   release record.
-- Production release flow does not require Git tags.
+- Production releases must also be published in GitHub Releases.
+- GitHub Releases are created from a release tag, while deploy/build operations
+  still use the persistent release branch as the runtime source of truth.
 
 ## GitHub Naming Policy
 

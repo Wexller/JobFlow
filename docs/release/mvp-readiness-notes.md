@@ -23,6 +23,9 @@ Scope: Jobflow Nuxt BFF + Postgres-first runtime
 Treat current state as MVP-ready for controlled PG-first environments when all of the following pass:
 
 - `pnpm release:branch -- --version <SemVer>`
+- `git tag v<SemVer> release/<SemVer>`
+- `git push origin v<SemVer>`
+- `gh release create v<SemVer> --target release/<SemVer> --generate-notes`
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm test:unit`

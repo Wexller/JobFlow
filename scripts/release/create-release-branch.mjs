@@ -117,6 +117,8 @@ function main() {
 
   console.log(`Created and pushed ${branchName}`)
   console.log('Next steps:')
+  console.log(`- Create and push the GitHub Release tag: git tag v${version} ${branchName} && git push origin v${version}`)
+  console.log(`- Publish the GitHub Release entry: gh release create v${version} --target ${branchName} --generate-notes`)
   console.log('- Run release quality gates from this branch')
   console.log('- Build and deploy the Docker image from this release branch')
   console.log('- Keep the branch as the release record until production release is confirmed')

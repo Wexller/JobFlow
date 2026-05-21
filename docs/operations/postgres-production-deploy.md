@@ -13,13 +13,17 @@
 3. Create or confirm the release branch from `main`:
    - `pnpm release:branch -- --version <SemVer>`
    - Expected branch format: `release/<SemVer>`
-4. Validate release branch quality gates:
+4. Create the GitHub Release anchor from that branch:
+   - `git tag v<SemVer> release/<SemVer>`
+   - `git push origin v<SemVer>`
+   - `gh release create v<SemVer> --target release/<SemVer> --generate-notes`
+5. Validate release branch quality gates:
    - `pnpm lint`
    - `pnpm typecheck`
    - `pnpm test:unit`
    - `pnpm test:nuxt`
    - `pnpm test:e2e`
-5. Validate Postgres verification lane in isolated environment:
+6. Validate Postgres verification lane in isolated environment:
    - `pnpm db:test:up:compose`
    - `JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check`
    - `pnpm db:test:down:compose`
@@ -59,7 +63,7 @@ For self-hosted production-like runtime (`docker-compose.prod.yml`):
 Important:
 
 - Keep `JOBFLOW_PERSISTENCE_DRIVER=postgres`.
-- Build Docker images from the release branch, not from a Git tag.
+- Build Docker images from the release branch, not from the GitHub Release tag.
 - `docker-compose.prod.yml` keeps Postgres internal to the compose network
   (no host port exposure by default).
 - `migrate` is intentionally separate from app startup to keep deploy control explicit.

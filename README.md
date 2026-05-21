@@ -500,7 +500,11 @@ Rules:
   and sets upstream tracking.
 - Release branches are kept after release and serve as the Docker build branch
   and release record.
-- No Git tag is required for the release flow.
+- Publish every production release in GitHub Releases.
+- Create a release tag from the release branch using `v<SemVer>`, for example
+  `v1.4.0`, before publishing the GitHub Release entry.
+- GitHub Releases use the tag as the release anchor, while build and deploy
+  operations still run from the persistent `release/<SemVer>` branch.
 - Release evidence should reference the release branch name plus the build or
   deploy record.
 - Only after confirmed production release should related issues move from
