@@ -76,6 +76,23 @@ Use the repository Node version with:
 nvm use
 ```
 
+Verify that your shell resolves the expected runtime before running project
+commands:
+
+```bash
+node -v
+which node
+zsh -lc 'node -v && which node'
+bash -lc 'node -v && which node'
+```
+
+If the login-shell checks report `/usr/local/bin/node` or an older Node release,
+run `nvm use` again in the repository and make sure your shell startup files
+re-apply the NVM-managed Node path after macOS `path_helper` runs. Otherwise
+`pnpm lint` and `pnpm test:nuxt` may fail with runtime errors such as
+`Object.groupBy is not a function` or ESM/CJS loader mismatches even though the
+repository itself is configured for Node 22+.
+
 ## Architecture Decisions
 
 The current architecture direction is documented in:
