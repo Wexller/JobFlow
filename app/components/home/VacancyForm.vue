@@ -129,10 +129,9 @@
 </template>
 
 <script setup lang="ts">
+import { defaultVacancyFormValues, type FormStatus } from '../../domain/jobflow'
 import { vacancyPriorityIds, vacancyStatusIds, workFormatIds } from '../../domain/vacancies'
 import type { Vacancy } from '../../schemas/vacancies.schema'
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface VacancyFormModel {
   appliedAt: string
@@ -201,19 +200,19 @@ function createFormModel(vacancy: Vacancy | undefined): VacancyFormModel {
     company: vacancy?.company ?? '',
     createdAt: vacancy?.createdAt ?? timestamp,
     currency: vacancy?.currency ?? '',
-    format: vacancy?.format ?? 'remote',
+    format: vacancy?.format ?? defaultVacancyFormValues.format,
     id: vacancy?.id ?? createUniqueId('vacancy'),
     level: vacancy?.level ?? '',
     location: vacancy?.location ?? '',
     matchScore: vacancy?.matchScore?.toString() ?? '',
     nextActionAt: toDatetimeLocal(vacancy?.nextActionAt),
     notes: vacancy?.notes ?? '',
-    priority: vacancy?.priority ?? 'medium',
+    priority: vacancy?.priority ?? defaultVacancyFormValues.priority,
     role: vacancy?.role ?? '',
     salaryMax: vacancy?.salaryMax?.toString() ?? '',
     salaryMin: vacancy?.salaryMin?.toString() ?? '',
     source: vacancy?.source ?? '',
-    status: vacancy?.status ?? 'wishlist',
+    status: vacancy?.status ?? defaultVacancyFormValues.status,
     techStack: vacancy?.techStack.join(', ') ?? '',
     updatedAt: timestamp,
   }

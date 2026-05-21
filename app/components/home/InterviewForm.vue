@@ -58,10 +58,9 @@
 </template>
 
 <script setup lang="ts">
+import { defaultInterviewFormValues, type FormStatus } from '../../domain/jobflow'
 import { interviewResultIds, interviewStageIds } from '../../domain/interviews'
 import type { Interview } from '../../schemas/interviews.schema'
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface InterviewFormModel {
   id: string
@@ -120,9 +119,9 @@ function createFormModel(vacancyId: string | undefined, interview: Interview | u
     location: interview?.location ?? '',
     notes: interview?.notes ?? '',
     pipelineEventId: interview?.pipelineEventId ?? '',
-    result: interview?.result ?? 'pending',
+    result: interview?.result ?? defaultInterviewFormValues.result,
     scheduledAt: toDatetimeLocal(interview?.scheduledAt),
-    stage: interview?.stage ?? 'technical_screen',
+    stage: interview?.stage ?? defaultInterviewFormValues.stage,
     vacancyId: interview?.vacancyId ?? vacancyId ?? '',
   }
 }

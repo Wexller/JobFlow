@@ -61,10 +61,9 @@
 </template>
 
 <script setup lang="ts">
+import { defaultOfferFormValues, type FormStatus } from '../../domain/jobflow'
 import { offerDecisionIds } from '../../domain/offers'
 import type { Offer } from '../../schemas/offers.schema'
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface OfferFormModel {
   currency: string
@@ -119,7 +118,7 @@ function fromDatetimeLocal(value: string): string {
 function createFormModel(vacancyId: string | undefined, offer: Offer | undefined): OfferFormModel {
   return {
     currency: offer?.currency ?? '',
-    decision: offer?.decision ?? 'pending',
+    decision: offer?.decision ?? defaultOfferFormValues.decision,
     decisionDueAt: offer?.decisionDueAt?.slice(0, 10) ?? '',
     id: offer?.id ?? createUniqueId('offer'),
     notes: offer?.notes ?? '',

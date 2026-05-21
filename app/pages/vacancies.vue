@@ -58,27 +58,36 @@
 import type { FetchError } from 'ofetch'
 import { useJobflowSnapshot } from '~/composables/useJobflowSnapshot'
 import { useJobflowStore } from '~/stores/jobflow'
-import type { SortDirection, VacancySortKey } from '../stores/jobflow'
+import {
+  defaultFormStatus,
+  defaultVacancySort,
+  defaultVacancySortOption,
+  vacancyFilterAllValue,
+  type FormStatus,
+  type SortDirection,
+  type VacancySortKey,
+  type VacancySortOption,
+} from '../domain/jobflow'
 import type { VacancyFilterModel } from '../components/home/VacanciesFilters.vue'
 
 const store = useJobflowStore()
 const snapshotRequest = await useJobflowSnapshot()
 const { t } = useI18n()
 
-const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+const formStatus = ref<FormStatus>(defaultFormStatus)
 const isReady = ref(false)
 const selectedVacancyId = ref<string | undefined>(undefined)
 const filters = ref<VacancyFilterModel>({
-  format: 'all',
-  level: 'all',
-  location: 'all',
-  priority: 'all',
+  format: vacancyFilterAllValue,
+  level: vacancyFilterAllValue,
+  location: vacancyFilterAllValue,
+  priority: vacancyFilterAllValue,
   query: '',
-  source: 'all',
-  status: 'all',
-  techStack: 'all',
+  source: vacancyFilterAllValue,
+  status: vacancyFilterAllValue,
+  techStack: vacancyFilterAllValue,
 })
-const sortOption = ref(`${store.sort.key}:${store.sort.direction}`)
+const sortOption = ref<VacancySortOption>(defaultVacancySortOption)
 
 const isLoading = computed(() => snapshotRequest.status.value === 'pending' || snapshotRequest.status.value === 'idle')
 const loadError = computed(() => {
@@ -105,14 +114,14 @@ const techStackOptions = computed(() => uniqueValues(store.vacancies.flatMap((va
 
 watch(filters, (value) => {
   store.setFilters({
-    formats: value.format === 'all' ? [] : [value.format],
-    levels: value.level === 'all' ? [] : [value.level],
-    locations: value.location === 'all' ? [] : [value.location],
-    priorities: value.priority === 'all' ? [] : [value.priority],
+    formats: value.format === vacancyFilterAllValue ? [] : [value.format],
+    levels: value.level === vacancyFilterAllValue ? [] : [value.level],
+    locations: value.location === vacancyFilterAllValue ? [] : [value.location],
+    priorities: value.priority === vacancyFilterAllValue ? [] : [value.priority],
     query: value.query,
-    sources: value.source === 'all' ? [] : [value.source],
-    statuses: value.status === 'all' ? [] : [value.status],
-    techStack: value.techStack === 'all' ? [] : [value.techStack],
+    sources: value.source === vacancyFilterAllValue ? [] : [value.source],
+    statuses: value.status === vacancyFilterAllValue ? [] : [value.status],
+    techStack: value.techStack === vacancyFilterAllValue ? [] : [value.techStack],
   })
 }, { deep: true, immediate: true })
 
@@ -151,18 +160,18 @@ function uniqueValues<T extends string>(values: readonly (T | undefined)[]): T[]
 
 function resetFilters() {
   filters.value = {
-    format: 'all',
-    level: 'all',
-    location: 'all',
-    priority: 'all',
+    format: vacancyFilterAllValue,
+    level: vacancyFilterAllValue,
+    location: vacancyFilterAllValue,
+    priority: vacancyFilterAllValue,
     query: '',
-    source: 'all',
-    status: 'all',
-    techStack: 'all',
+    source: vacancyFilterAllValue,
+    status: vacancyFilterAllValue,
+    techStack: vacancyFilterAllValue,
   }
-  sortOption.value = 'applied_at:desc'
+  sortOption.value = defaultVacancySortOption
   store.resetFilters()
-  store.setSort({ direction: 'desc', key: 'applied_at' })
+  store.setSort({ ...defaultVacancySort })
 }
 
 async function reload() {

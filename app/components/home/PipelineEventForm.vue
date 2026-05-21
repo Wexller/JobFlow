@@ -83,10 +83,9 @@
 </template>
 
 <script setup lang="ts">
+import { defaultPipelineEventFormValues, type FormStatus } from '../../domain/jobflow'
 import { pipelineStageIds, pipelineStageStatusIds } from '../../domain/pipeline'
 import type { PipelineEvent } from '../../schemas/pipeline.schema'
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface PipelineEventFormModel {
   completedAt: string
@@ -145,8 +144,8 @@ function createFormModel(vacancyId: string | undefined, pipelineEvent: PipelineE
     notes: pipelineEvent?.notes ?? '',
     occurredAt: toDatetimeLocal(pipelineEvent?.occurredAt),
     scheduledAt: toDatetimeLocal(pipelineEvent?.scheduledAt),
-    stage: pipelineEvent?.stage ?? 'applied',
-    status: pipelineEvent?.status ?? 'planned',
+    stage: pipelineEvent?.stage ?? defaultPipelineEventFormValues.stage,
+    status: pipelineEvent?.status ?? defaultPipelineEventFormValues.status,
     title: pipelineEvent?.title ?? '',
     vacancyId: pipelineEvent?.vacancyId ?? vacancyId ?? '',
   }
