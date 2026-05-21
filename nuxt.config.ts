@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     googleSheetsPrivateKey: process.env.JOBFLOW_GOOGLE_SHEETS_PRIVATE_KEY ?? '',
     jobflowPersistenceDriver: process.env.JOBFLOW_PERSISTENCE_DRIVER ?? 'postgres',
     public: {
+      appVersion: process.env.NUXT_PUBLIC_APP_VERSION ?? process.env.npm_package_version ?? '0.0.0',
       appEnv: process.env.NUXT_PUBLIC_APP_ENV ?? 'local',
       defaultLocale: process.env.NUXT_PUBLIC_DEFAULT_LOCALE ?? 'en',
       fallbackLocale: process.env.NUXT_PUBLIC_FALLBACK_LOCALE ?? 'en',

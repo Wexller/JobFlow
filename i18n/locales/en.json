@@ -9,7 +9,8 @@
     "vacanciesLink": "Vacancies",
     "pipelineEventsLink": "Hiring steps",
     "interviewsLink": "Interviews",
-    "offersLink": "Offers"
+    "offersLink": "Offers",
+    "version": "Version {version}"
   },
   "vacanciesPage": {
     "title": "Vacancies",

@@ -9,7 +9,8 @@
     "vacanciesLink": "Вакансии",
     "pipelineEventsLink": "Этапы отбора",
     "interviewsLink": "Интервью",
-    "offersLink": "Оферы"
+    "offersLink": "Оферы",
+    "version": "Версия {version}"
   },
   "vacanciesPage": {
     "title": "Вакансии",
