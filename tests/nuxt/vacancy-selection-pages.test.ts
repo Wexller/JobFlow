@@ -26,37 +26,6 @@ vi.mock('~/composables/useJobflowSnapshot', () => ({
   }),
 }))
 
-const VacancySelectFieldStub = defineComponent({
-  props: {
-    emptySearchMessage: { type: String, required: true },
-    label: { type: String, required: true },
-    modelValue: { type: String, default: '' },
-    noVacancyLabel: { type: String, required: true },
-    searchPlaceholder: { type: String, required: true },
-    vacancies: { type: Array, required: true },
-  },
-  emits: ['update:modelValue'],
-  template: `
-    <label>
-      <span>{{ label }}</span>
-      <select
-        data-testid="vacancy-page-select"
-        :value="modelValue"
-        @change="$emit('update:modelValue', $event.target.value)"
-      >
-        <option value="">{{ noVacancyLabel }}</option>
-        <option
-          v-for="vacancy in vacancies"
-          :key="vacancy.id"
-          :value="vacancy.id"
-        >
-          {{ vacancy.company }} · {{ vacancy.role }}
-        </option>
-      </select>
-    </label>
-  `,
-})
-
 const FormStub = defineComponent({
   props: {
     interview: { type: Object, required: false },
