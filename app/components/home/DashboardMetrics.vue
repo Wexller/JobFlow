@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+  <div class="grid gap-3 min-[375px]:grid-cols-2 xl:grid-cols-4">
     <UCard v-for="metric in metrics" :key="metric.id">
       <div class="space-y-2">
         <p class="text-sm font-medium text-muted">
