@@ -48,6 +48,44 @@ Pages / components
 The UI should not call Google Sheets directly and should not bypass the BFF for
 application data.
 
+## Operator Workflow (Codex / Claude)
+
+Issue `#35` introduces a repository-defined operator flow for assisted intake.
+The flow is intentionally outside the end-user UI and runs through BFF routes.
+
+Endpoints:
+
+- `POST /api/operator/bundle/preview`
+- `POST /api/operator/bundle/commit`
+
+Preview request:
+
+```json
+{ "source": "company: ACME\nrole: Frontend Engineer\nstatus: applied\npriority: medium\nformat: remote" }
+```
+
+Preview returns a structured draft:
+
+- `vacancy`
+- `pipelineEvents[]`
+- `interviews[]`
+- `offer | null`
+- `warnings[]`
+- `assumptions[]`
+
+Commit request requires explicit confirmation:
+
+```json
+{ "confirm": true, "bundle": { "...": "preview payload" } }
+```
+
+Safety rules:
+
+- Writes are rejected unless `confirm=true`.
+- Ambiguous enum values fall back only to allowed stable IDs.
+- Missing required text fields stay empty and are reported via warnings.
+- Commit ordering is deterministic: vacancy -> pipeline events -> interviews -> offer.
+
 ## Preferred Stack
 
 - Nuxt 4
