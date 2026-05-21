@@ -463,10 +463,14 @@ Rules:
 - Implementation must follow the GitHub issue body.
 - If the issue body is incomplete, Codex must stop and wait for explicit
   approval before implementing without a complete spec.
-- By default, `implement #123` means end-to-end delivery: create the branch,
-  implement the change, run checks, create the commit, open the PR, merge to
-  `main`, switch the issue to `status:released`, and switch back to `main`.
-- Work item branches are created from `main`.
+- By default, `implement #123` means end-to-end delivery: create a
+  development-linked branch, implement the change, run checks, create the
+  commit, open the PR, merge to `main`, switch the issue to `status:released`,
+  and switch back to `main`.
+- Work item branches are created from `main` with
+  `gh issue develop <issue-number> --name type/<issue-number>-short-description --base main --checkout`.
+- Use linked development branches so the issue `Development` section shows the
+  branch and PR without relying on closing keywords.
 - Merge policy to `main` is squash merge.
 - A merged PR does not automatically mark a work item as done.
 - A work item is marked `done` only after confirmed production/market deployment.
@@ -497,6 +501,8 @@ Examples:
 - `реализуй #23 полностью`
 - `implement #24 but stop before PR`
 - `реализуй #20, но остановись перед коммитом`
+- `gh issue develop 23 --name fix/23-mobile-page-block-spacing --base main --checkout`
+- `gh pr create --fill`
 
 ## GitHub Naming Policy
 
@@ -539,6 +545,8 @@ Rules:
 - Prefer product or system areas such as `home`, `mobile`, `vacancies`,
   `forms`, `store`, `pinia`, `api`, `db`, `tests`, or `docs`.
 - One branch and one PR should map to one primary issue.
+- Every PR body must contain `Issue: #<number>`.
+- Do not use `Closes #123`, `Fixes #123`, or `Resolves #123` in PR bodies.
 - Do not rely on automatic issue closing keywords when a task becomes `done`
   only after confirmed release.
 

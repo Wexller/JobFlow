@@ -15,6 +15,8 @@ jobs:
             const pr = context.payload.pull_request
             const titlePattern = /^(feat|fix|ref)\([a-z0-9-]+(?:,[a-z0-9-]+){0,2}\): .+ \(#\d+\)$/
             const branchPattern = /^(feat|fix|ref)\/\d+-[a-z0-9]+(?:-[a-z0-9]+)*$/
+            const body = pr.body || ''
+            const closingKeywordPattern = /\b(close[sd]?|fix(e[sd])?|resolve[sd]?)\s*:\s*#\d+|\b(close[sd]?|fix(e[sd])?|resolve[sd]?)\s+#\d+/i
 
             if (!titlePattern.test(pr.title)) {
               core.setFailed('PR title must match `type(scope1,scope2): message (#issue-number)`.')
@@ -26,6 +28,11 @@ jobs:
               return
             }
 
-            if (!/Issue:\s+#\d+/.test(pr.body || '')) {
+            if (!/Issue:\s+#\d+/.test(body)) {
               core.setFailed('PR body must include `Issue: #<number>`.')
+              return
+            }
+
+            if (closingKeywordPattern.test(body)) {
+              core.setFailed('Do not use `Closes/Fixes/Resolves #...`; this workflow requires `Issue: #...` so the issue can remain open until confirmed release.')
             }

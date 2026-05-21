@@ -48,7 +48,8 @@ bank files and `docs/workitems/` remain read-only historical context.
    - If the issue body does not contain the required planning sections, the Lead
      stops and asks the Product Owner for explicit approval before implementing
      without a complete spec.
-   - Work item implementation branch must be created from `main`.
+   - Work item implementation branch must be created from `main` with
+     `gh issue develop <issue-number> --name type/<issue-number>-short-description --base main --checkout`.
    - Branch format:
      `type/<issue-number>-short-description`.
    - One work item branch must not include scope for multiple work items.
@@ -61,14 +62,16 @@ bank files and `docs/workitems/` remain read-only historical context.
      gate and resolves all blocking findings.
    - The Lead verifies that the PR is linked to one primary issue and that the
      issue body is complete enough for implementation.
+   - PR body must contain `Issue: #<number>` and must not use `Closes/Fixes/Resolves #...`.
 
 6. Release
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
      release checklist, or rollback planning.
    - The Lead merges reports and gives a go/no-go recommendation.
    - The default implementation sequence is:
-     branch -> implementation -> verification -> commit -> PR -> squash merge to
-     `main` -> move issue to `status:released` -> switch back to `main`.
+     development-linked branch -> implementation -> verification -> commit -> PR
+     -> squash merge to `main` -> move issue to `status:released` -> switch back
+     to `main`.
    - Merge policy to `main` is squash merge.
    - Codex does not stop at PR handoff unless the Product Owner explicitly asks
      to pause before merge.
@@ -87,10 +90,14 @@ bank files and `docs/workitems/` remain read-only historical context.
   `type/<issue-number>-short-description`
 - Commit and PR title format:
   `type(scope1,scope2): message (#issue-number)`
+- PR body issue link format:
+  `Issue: #<issue-number>`
 - Keep the type consistent across issue, branch, commit, and PR.
 - Use one to three lowercase kebab-case scopes that describe product or system
   areas.
 - Avoid `ISSUE-*` prefixes in branch names, commits, and PR titles.
+- Do not use `Closes #123`, `Fixes #123`, or `Resolves #123` in PR bodies
+  because those auto-close the issue after merge.
 - Required labels:
   one `type:*`, one `status:*`, and one `priority:*`.
 - Required issue body sections:

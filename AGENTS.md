@@ -107,9 +107,9 @@ See `docs/agents/registry.md` for the complete registry.
 - Implementation uses the GitHub issue body as the working technical
   specification.
 - Unless the Product Owner explicitly asks to stop earlier, an implementation
-  command means the full delivery flow: create branch from `main`, implement,
-  run required checks, create commit, open PR, merge to `main`, and switch back
-  to `main`.
+  command means the full delivery flow: create a development-linked branch from
+  `main`, implement, run required checks, create commit, open PR, merge to
+  `main`, and switch back to `main`.
 - If the issue body does not contain the required planning sections, Codex must
   stop and wait for explicit Product Owner approval before implementing without
   a complete spec.
@@ -124,6 +124,8 @@ User command examples:
 - `реализуй #23 полностью`
 - `implement #23 but stop before PR`
 - `реализуй #23, но остановись перед коммитом`
+- `gh issue develop 23 --name fix/23-mobile-page-block-spacing --base main --checkout`
+- `gh pr create --fill`
 
 ## Work Item Classification
 
@@ -141,11 +143,13 @@ User command examples:
 - One work item equals one branch.
 - Active GitHub issue-backed flow must use the GitHub naming policy branch format:
   `type/<issue-number>-short-description`.
-- Work item branches are created from `main`.
+- Work item branches are created from `main` through
+  `gh issue develop <issue-number> --name type/<issue-number>-short-description --base main --checkout`
+  so the branch appears in the issue's `Development` section.
 - One work item branch must not include scope for multiple work items.
 - Default implementation sequence is:
-  create branch -> implement -> verify -> commit -> PR -> squash merge to
-  `main` -> switch back to `main`.
+  create development-linked branch -> implement -> verify -> commit -> PR ->
+  squash merge to `main` -> switch back to `main`.
 - Merge strategy to `main` is squash merge.
 - Codex should not stop at "PR handoff" unless the Product Owner explicitly asks
   to pause before merge.
@@ -196,9 +200,10 @@ PR title format:
 - PR title should usually match the final squash commit title.
 - Use the same format as commits:
   `type(scope1,scope2): message (#issue-number)`.
-- Link the PR to the issue, but do not rely on auto-closing keywords when the
-  workflow requires post-merge release confirmation before the task is truly
-  done.
+- Link the PR to the issue using a development-linked branch and an `Issue: #123`
+  line in the PR body.
+- Do not use `Closes #123`, `Fixes #123`, or `Resolves #123` because those
+  auto-close the issue before confirmed release.
 
 Preferred scope vocabulary includes:
 

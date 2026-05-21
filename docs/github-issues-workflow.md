@@ -41,6 +41,15 @@ explicitly:
 - `implement #23 but stop before PR`
 - `реализуй #23, но остановись перед коммитом`
 
+Implementation branch creation:
+
+- `gh issue develop 23 --name fix/23-mobile-page-block-spacing --base main --checkout`
+- Create PRs from linked development branches so GitHub shows the branch and PR
+  in the issue's `Development` section.
+- Use `gh pr create --fill` after checks and commit creation.
+- A workflow comment mirrors the linked PR onto the issue timeline as a fallback
+  record and should not replace the `Development` section.
+
 ## Naming Policy
 
 Issue title:
@@ -60,6 +69,13 @@ Commit and PR title:
 - `type(scope1,scope2): message (#issue-number)`
 - Example:
   `fix(home,mobile): make main page table usable on mobile (#123)`
+
+PR body issue link:
+
+- `Issue: #123`
+- Do not use `Closes #123`, `Fixes #123`, or `Resolves #123`.
+- Closing keywords auto-close the issue after merge and bypass the intended
+  `released -> done` lifecycle.
 
 Types:
 
@@ -152,6 +168,9 @@ only after confirmed release.
 After merge:
 
 - set issue label to `status:released`
+- keep the issue open
+- record the PR link through the linked development branch and PR body issue
+  reference
 
 After confirmed production release:
 
