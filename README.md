@@ -93,6 +93,16 @@ re-apply the NVM-managed Node path after macOS `path_helper` runs. Otherwise
 `Object.groupBy is not a function` or ESM/CJS loader mismatches even though the
 repository itself is configured for Node 22+.
 
+If `pnpm` fails before scripts run with
+`ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING` from a Corepack-managed
+`.../corepack/.../pnpm/11.x` path, switch the repository toolchain back to the
+supported package manager version and retry:
+
+```bash
+corepack use pnpm@9.14.4
+pnpm -v
+```
+
 ## Architecture Decisions
 
 The current architecture direction is documented in:
