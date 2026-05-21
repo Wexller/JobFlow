@@ -19,7 +19,7 @@
         class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary"
         :disabled="!isReady"
       >
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="status in statusOptions" :key="status" :value="status">
@@ -31,7 +31,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.priority') }}</span>
       <select v-model="model.priority" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="priority in priorityOptions" :key="priority" :value="priority">
@@ -43,7 +43,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.format') }}</span>
       <select v-model="model.format" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="format in formatOptions" :key="format" :value="format">
@@ -55,7 +55,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.source') }}</span>
       <select v-model="model.source" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="source in sourceOptions" :key="source" :value="source">
@@ -67,7 +67,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.level') }}</span>
       <select v-model="model.level" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="level in levelOptions" :key="level" :value="level">
@@ -79,7 +79,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.location') }}</span>
       <select v-model="model.location" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="location in locationOptions" :key="location" :value="location">
@@ -91,7 +91,7 @@
     <label class="space-y-1 text-sm">
       <span class="font-medium">{{ $t('home.filters.techStack') }}</span>
       <select v-model="model.techStack" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary" :disabled="!isReady">
-        <option value="all">
+        <option :value="vacancyFilterAllValue">
           {{ $t('home.filters.all') }}
         </option>
         <option v-for="tech in techStackOptions" :key="tech" :value="tech">
@@ -130,16 +130,17 @@
 </template>
 
 <script setup lang="ts">
+import { vacancyFilterAllValue, type VacancyFilterSentinel, type VacancySortOption } from '../../domain/jobflow'
 import type { VacancyPriorityId, VacancyStatusId, WorkFormatId } from '../../domain/vacancies'
 
 export interface VacancyFilterModel {
-  format: WorkFormatId | 'all'
+  format: WorkFormatId | VacancyFilterSentinel
   level: string
   location: string
-  priority: VacancyPriorityId | 'all'
+  priority: VacancyPriorityId | VacancyFilterSentinel
   query: string
   source: string
-  status: VacancyStatusId | 'all'
+  status: VacancyStatusId | VacancyFilterSentinel
   techStack: string
 }
 
@@ -159,5 +160,5 @@ defineProps<{
 }>()
 
 const model = defineModel<VacancyFilterModel>({ required: true })
-const sortModel = defineModel<string>('sort', { required: true })
+const sortModel = defineModel<VacancySortOption>('sort', { required: true })
 </script>

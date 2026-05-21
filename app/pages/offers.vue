@@ -52,13 +52,14 @@
 import type { FetchError } from 'ofetch'
 import { useJobflowSnapshot } from '~/composables/useJobflowSnapshot'
 import { useJobflowStore } from '~/stores/jobflow'
+import { defaultFormStatus, type FormStatus } from '../domain/jobflow'
 
 const store = useJobflowStore()
 const snapshotRequest = await useJobflowSnapshot()
 const { t } = useI18n()
 
 const selectedVacancyId = ref('')
-const formStatus = ref<'error' | 'idle' | 'loading' | 'success'>('idle')
+const formStatus = ref<FormStatus>(defaultFormStatus)
 
 const isLoading = computed(() => snapshotRequest.status.value === 'pending' || snapshotRequest.status.value === 'idle')
 const errorMessage = computed(() => {

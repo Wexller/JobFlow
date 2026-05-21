@@ -1,6 +1,17 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { addDays, isBefore, parseISO, startOfDay } from 'date-fns'
+import {
+  activeOfferDecisionIds,
+  activeVacancyStatusIds,
+  defaultFormStatus,
+  defaultVacancySort,
+  interviewResultsRequiringFollowUp,
+  repliedVacancyStatusIds,
+  type SortDirection,
+  type SyncStatus,
+  type VacancySortKey,
+} from '../domain/jobflow'
 import { vacancyStatusIds, type VacancyPriorityId, type VacancyStatusId, type WorkFormatId } from '../domain/vacancies'
 import type { Interview } from '../schemas/interviews.schema'
 import type { Offer } from '../schemas/offers.schema'
@@ -17,9 +28,6 @@ import {
 import { createJobflowApiRepository } from '../repositories/jobflowApiRepository'
 import type { JobflowReadRepository, JobflowWriteRepository } from '../repositories/jobflow'
 import { buildVacancyDetails, upsertById } from '../utils/jobflow'
-
-export type VacancySortKey = 'applied_at' | 'match_score' | 'priority' | 'salary'
-export type SortDirection = 'asc' | 'desc'
 
 export interface VacancyFilters {
   readonly statuses: VacancyStatusId[]
@@ -38,7 +46,7 @@ export interface VacancySort {
 }
 
 export interface SyncState {
-  readonly status: 'idle' | 'loading' | 'success' | 'error'
+  readonly status: SyncStatus
   readonly lastLoadedAt?: string
   readonly errorMessage?: string
   readonly requestId?: string
@@ -63,7 +71,10 @@ const priorityRank: Record<VacancyPriorityId, number> = {
   unknown: 0,
 }
 
-const activeStatuses = new Set<VacancyStatusId>(['applied', 'screening', 'interviewing', 'offer'])
+const activeStatuses = new Set<VacancyStatusId>(activeVacancyStatusIds)
+const replyRateStatuses = new Set<VacancyStatusId>(repliedVacancyStatusIds)
+const followUpInterviewResults = new Set<Interview['result']>(interviewResultsRequiringFollowUp)
+const activeOfferDecisions = new Set<Offer['decision']>(activeOfferDecisionIds)
 
 function normalizedText(value: string): string {
   return value.trim().toLocaleLowerCase()
@@ -168,12 +179,9 @@ export const useJobflowStore = defineStore('jobflow', () => {
   const offers = ref<Offer[]>([])
   const pipelineEvents = ref<PipelineEvent[]>([])
   const referenceDateIso = ref(new Date().toISOString())
-  const sort = ref<VacancySort>({
-    direction: 'desc',
-    key: 'applied_at',
-  })
+  const sort = ref<VacancySort>({ ...defaultVacancySort })
   const sync = ref<SyncState>({
-    status: 'idle',
+    status: defaultFormStatus,
   })
   const vacancies = ref<Vacancy[]>([])
 
@@ -185,11 +193,11 @@ export const useJobflowStore = defineStore('jobflow', () => {
     const totalApplications = vacancies.value.filter((vacancy) => vacancy.appliedAt !== undefined).length
     const activeProcesses = vacancies.value.filter((vacancy) => activeStatuses.has(vacancy.status)).length
     const interviewsThisWeek = interviews.value.filter((interview) =>
-      interview.result === 'pending' && isWithinUpcomingWindow(interview.scheduledAt, referenceDateIso.value, 7),
+      followUpInterviewResults.has(interview.result) && isWithinUpcomingWindow(interview.scheduledAt, referenceDateIso.value, 7),
     ).length
-    const activeOffers = offers.value.filter((offer) => offer.decision === 'pending' || offer.decision === 'accepted').length
+    const activeOffers = offers.value.filter((offer) => activeOfferDecisions.has(offer.decision)).length
     const replied = vacancies.value.filter((vacancy) =>
-      ['screening', 'interviewing', 'offer', 'accepted', 'rejected'].includes(vacancy.status),
+      replyRateStatuses.has(vacancy.status),
     ).length
     const interviewed = vacancies.value.filter((vacancy) =>
       interviews.value.some((interview) => interview.vacancyId === vacancy.id),
