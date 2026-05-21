@@ -33,7 +33,7 @@
     <template v-else>
       <HomeDashboardMetrics :metrics="visibleMetrics" />
 
-      <section class="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section class="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-4">
         <NuxtLinkLocale
           v-for="link in entityLinks"
           :key="link.to"
@@ -45,7 +45,7 @@
         </NuxtLinkLocale>
       </section>
 
-      <div class="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div class="grid gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <HomeActivePipelineTable :vacancies="activeVacancies" />
         <HomeNextActionsList :vacancies="nextActions" />
       </div>
