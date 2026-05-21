@@ -73,10 +73,42 @@ Preview returns a structured draft:
 - `warnings[]`
 - `assumptions[]`
 
+Preview is a draft step, not a guaranteed commit-ready payload. In the current
+implementation, operators should review the draft and enrich the vacancy payload
+with the persistence fields required by the normal vacancy schema before
+committing:
+
+- `vacancy.id`
+- `vacancy.createdAt`
+- `vacancy.updatedAt`
+- preferably an explicit `vacancy.appliedAt` in `YYYY-MM-DD` format when the
+  actual application date is known
+
 Commit request requires explicit confirmation:
 
 ```json
-{ "confirm": true, "bundle": { "...": "preview payload" } }
+{
+  "confirm": true,
+  "bundle": {
+    "warnings": [],
+    "assumptions": [],
+    "pipelineEvents": [],
+    "interviews": [],
+    "offer": null,
+    "vacancy": {
+      "id": "vacancy-acme-frontend-engineer",
+      "company": "ACME",
+      "role": "Frontend Engineer",
+      "status": "applied",
+      "priority": "medium",
+      "format": "remote",
+      "techStack": ["Nuxt", "TypeScript"],
+      "appliedAt": "2026-05-21",
+      "createdAt": "2026-05-21T12:00:00.000Z",
+      "updatedAt": "2026-05-21T12:00:00.000Z"
+    }
+  }
+}
 ```
 
 Safety rules:
@@ -85,6 +117,50 @@ Safety rules:
 - Ambiguous enum values fall back only to allowed stable IDs.
 - Missing required text fields stay empty and are reported via warnings.
 - Commit ordering is deterministic: vacancy -> pipeline events -> interviews -> offer.
+
+Operator notes from real usage:
+
+- `POST /api/operator/bundle/commit` writes through the same repository as the
+  running Nuxt server. If the server is using the in-memory adapter, the new
+  vacancy is temporary and disappears when that process stops.
+- For durable writes, run the target server with
+  `JOBFLOW_PERSISTENCE_DRIVER=postgres` and a valid `JOBFLOW_DATABASE_URL`.
+- `status`, `priority`, and `format` should use stable enum IDs only:
+  - `status`: `wishlist`, `applied`, `screening`, `interviewing`, `offer`,
+    `accepted`, `rejected`, `archived`, `unknown`
+  - `priority`: `low`, `medium`, `high`, `urgent`, `unknown`
+  - `format`: `remote`, `hybrid`, `onsite`, `unknown`
+- If `appliedAt` is omitted, preview fills it with the current timestamp. For
+  manual vacancy intake this can lead to an unintuitive stored date after
+  normalization, so operators should set it explicitly when accuracy matters.
+
+Recommended external vacancy intake flow:
+
+1. Read the source page and extract only stable facts first: company, role,
+   location, level, work format, source URL, and tech stack.
+2. Build a compact `source` text for preview using `label: value` lines.
+3. Call `POST /api/operator/bundle/preview`.
+4. Review `warnings[]` and `assumptions[]` before any write.
+5. Add `vacancy.id`, `createdAt`, `updatedAt`, and an explicit `appliedAt`
+   value to the bundle.
+6. Call `POST /api/operator/bundle/commit` with `confirm=true`.
+7. Verify the result with `GET /api/vacancies` and
+   `GET /api/vacancies/:id`.
+
+Example `source` text for a vacancy copied from LinkedIn or another public job page:
+
+```text
+company: ACME
+role: Frontend Engineer
+status: wishlist
+priority: medium
+format: remote
+source: linkedin
+location: Berlin
+level: Senior
+techStack: Nuxt, TypeScript, Vue, PostgreSQL
+notes: Public job page https://example.com/jobs/123
+```
 
 ## Preferred Stack
 

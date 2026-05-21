@@ -3,7 +3,9 @@ import { offerDecisionIds } from '../../app/domain/offers'
 import { pipelineStageIds, pipelineStageStatusIds } from '../../app/domain/pipeline'
 import { vacancyPriorityIds, vacancyStatusIds, workFormatIds } from '../../app/domain/vacancies'
 import { normalizeInterviewPayload, normalizeOfferPayload, normalizePipelineEventPayload, normalizeVacancyPayload } from '../../app/mappers/formPayloads'
-import type { JobflowService } from './jobflowService'
+import { createJobflowService } from './jobflowService'
+
+type JobflowService = ReturnType<typeof createJobflowService>
 
 export interface OperatorBundleDraft {
   assumptions: string[]

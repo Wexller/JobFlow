@@ -1,7 +1,7 @@
 import { readBody } from 'h3'
-import { createJobflowService } from '../../../../application/jobflowService'
-import { commitOperatorBundle, type OperatorBundleDraft } from '../../../../application/operatorBundle'
-import { createJobflowRepository } from '../../../../repositories/jobflowRepository'
+import { createJobflowService } from '../../../application/jobflowService'
+import { commitOperatorBundle, type OperatorBundleDraft } from '../../../application/operatorBundle'
+import { getServerJobflowRepository } from '../../../repositories/jobflowRepository'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ bundle?: OperatorBundleDraft, confirm?: boolean }>(event)
@@ -11,6 +11,6 @@ export default defineEventHandler(async (event) => {
   if (!body.bundle) {
     throw createError({ message: 'bundle is required', statusCode: 400 })
   }
-  const service = createJobflowService(createJobflowRepository())
+  const service = createJobflowService(getServerJobflowRepository())
   return commitOperatorBundle(service, body.bundle)
 })
