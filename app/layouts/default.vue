@@ -7,8 +7,18 @@
             <NuxtLinkLocale class="text-lg font-semibold" to="/">
               {{ $t('app.name') }}
             </NuxtLinkLocale>
-            <div class="flex items-center gap-2">
-              <nav class="hidden items-center gap-2 md:flex" :aria-label="$t('layout.languageNav')">
+            <div class="flex items-center gap-2 md:gap-3">
+              <nav class="hidden items-center gap-1 lg:gap-2 md:flex" :aria-label="$t('layout.primaryNav')">
+                <NuxtLinkLocale
+                  v-for="item in navItems"
+                  :key="item.to"
+                  :to="item.to"
+                  class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                >
+                  {{ $t(item.labelKey) }}
+                </NuxtLinkLocale>
+              </nav>
+              <nav class="hidden items-center gap-2 border-l border-default pl-2 md:flex" :aria-label="$t('layout.languageNav')">
                 <UButton
                   v-for="localeItem in availableLocales"
                   :key="localeItem.code"
@@ -34,25 +44,6 @@
               />
             </div>
           </div>
-          <nav class="hidden md:block" :aria-label="$t('layout.primaryNav')">
-            <div class="flex items-center gap-2">
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/">
-                {{ $t('layout.homeLink') }}
-              </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/vacancies">
-                {{ $t('layout.vacanciesLink') }}
-              </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/pipeline-events">
-                {{ $t('layout.pipelineEventsLink') }}
-              </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/interviews">
-                {{ $t('layout.interviewsLink') }}
-              </NuxtLinkLocale>
-              <NuxtLinkLocale class="rounded-md px-2 py-1 text-sm text-muted transition hover:bg-muted/30 hover:text-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60" to="/offers">
-                {{ $t('layout.offersLink') }}
-              </NuxtLinkLocale>
-            </div>
-          </nav>
           <div
             v-if="isMobileMenuOpen"
             id="mobile-primary-nav"
