@@ -16,15 +16,14 @@
     </div>
 
     <template v-else>
-      <label class="space-y-1 text-sm">
-        <span class="font-medium">{{ $t('pipelineEventsPage.selectVacancy') }}</span>
-        <select v-model="selectedVacancyId" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary">
-          <option value="">{{ $t('pipelineEventsPage.noVacancy') }}</option>
-          <option v-for="vacancy in store.vacancies" :key="vacancy.id" :value="vacancy.id">
-            {{ vacancy.company }} · {{ vacancy.role }}
-          </option>
-        </select>
-      </label>
+      <VacancySelectField
+        v-model="selectedVacancyId"
+        :empty-search-message="$t('pipelineEventsPage.search.empty')"
+        :label="$t('pipelineEventsPage.selectVacancy')"
+        :no-vacancy-label="$t('pipelineEventsPage.noVacancy')"
+        :search-placeholder="$t('pipelineEventsPage.search.placeholder')"
+        :vacancies="store.vacancies"
+      />
 
       <HomePipelineEventForm
         :pipeline-event="selectedPipelineEvent"

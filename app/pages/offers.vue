@@ -16,15 +16,14 @@
     </div>
 
     <template v-else>
-      <label class="space-y-1 text-sm">
-        <span class="font-medium">{{ $t('offersPage.selectVacancy') }}</span>
-        <select v-model="selectedVacancyId" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary">
-          <option value="">{{ $t('offersPage.noVacancy') }}</option>
-          <option v-for="vacancy in store.vacancies" :key="vacancy.id" :value="vacancy.id">
-            {{ vacancy.company }} · {{ vacancy.role }}
-          </option>
-        </select>
-      </label>
+      <VacancySelectField
+        v-model="selectedVacancyId"
+        :empty-search-message="$t('offersPage.search.empty')"
+        :label="$t('offersPage.selectVacancy')"
+        :no-vacancy-label="$t('offersPage.noVacancy')"
+        :search-placeholder="$t('offersPage.search.placeholder')"
+        :vacancies="store.vacancies"
+      />
 
       <HomeOfferForm
         :offer="selectedOffer"

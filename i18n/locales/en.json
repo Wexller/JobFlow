@@ -258,6 +258,10 @@
   "pipelineEventsPage": {
     "title": "Hiring steps",
     "description": "Track every stage of the hiring process and keep the next move clear.",
+    "search": {
+      "placeholder": "Search vacancies",
+      "empty": "No vacancies match your search."
+    },
     "state": {
       "loading": "Loading hiring steps...",
       "error": "We couldn't load hiring steps right now.",
@@ -271,6 +275,10 @@
   "interviewsPage": {
     "title": "Interviews",
     "description": "Plan interview rounds, capture outcomes, and keep preparation focused.",
+    "search": {
+      "placeholder": "Search vacancies",
+      "empty": "No vacancies match your search."
+    },
     "state": {
       "loading": "Loading interviews...",
       "error": "Failed to load interviews.",
@@ -284,6 +292,10 @@
   "offersPage": {
     "title": "Offers",
     "description": "Compare compensation, deadlines, and decisions before you choose.",
+    "search": {
+      "placeholder": "Search vacancies",
+      "empty": "No vacancies match your search."
+    },
     "state": {
       "loading": "Loading offers...",
       "error": "Failed to load offers.",
