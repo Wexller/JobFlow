@@ -1,0 +1,130 @@
+name: Release Tag Verification
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: release-tag-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.meta.outputs.tag_name }}
+      commit_sha: ${{ steps.meta.outputs.commit_sha }}
+      run_url: ${{ steps.meta.outputs.run_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "${GITHUB_REF}" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag ref: ${GITHUB_REF}" >&2
+            exit 1
+          fi
+          tag_name="${GITHUB_REF#refs/tags/}"
+          commit_sha="$(git rev-list -n 1 "$tag_name")"
+          echo "tag_name=${tag_name}" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=${commit_sha}" >> "$GITHUB_OUTPUT"
+          echo "run_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+          echo "Release tag: ${tag_name}"
+          echo "Commit SHA: ${commit_sha}"
+      - name: Ensure tagged commit is reachable from origin/main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          commit_sha="${{ steps.meta.outputs.commit_sha }}"
+          if ! git merge-base --is-ancestor "$commit_sha" origin/main; then
+            echo "Tagged commit ${commit_sha} is not reachable from origin/main" >&2
+            exit 1
+          fi
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: validate-tag
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm prisma:validate
+      - run: pnpm prisma:generate
+      - run: pnpm test:unit
+      - run: pnpm test:nuxt
+      - run: pnpm build
+
+  postgres:
+    runs-on: ubuntu-latest
+    needs: validate-tag
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:test:up:compose
+      - run: JOBFLOW_DATABASE_URL="$(pnpm -s db:test:url)" pnpm db:check
+      - if: always()
+        run: pnpm db:test:down:compose
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: validate-tag
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+
+  release-evidence:
+    runs-on: ubuntu-latest
+    needs:
+      - validate-tag
+      - verify
+      - postgres
+      - e2e
+    steps:
+      - name: Generate release evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > release-evidence.json <<JSON
+          {
+            "tag": "${{ needs.validate-tag.outputs.tag_name }}",
+            "commitSha": "${{ needs.validate-tag.outputs.commit_sha }}",
+            "workflowRunUrl": "${{ needs.validate-tag.outputs.run_url }}",
+            "timestampUtc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "summary": {
+              "validate-tag": "${{ needs.validate-tag.result }}",
+              "verify": "${{ needs.verify.result }}",
+              "postgres": "${{ needs.postgres.result }}",
+              "e2e": "${{ needs.e2e.result }}"
+            }
+          }
+          JSON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence-${{ needs.validate-tag.outputs.tag_name }}
+          path: release-evidence.json

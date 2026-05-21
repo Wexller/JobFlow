@@ -443,8 +443,7 @@ Production/runtime expectations:
 - `docs/release/mvp-readiness-notes.md` documents current MVP verification scope,
   residual operational gaps, and manual release gate expectations.
 - Start a release candidate with
-  `pnpm release:branch -- --version <SemVer>`, which creates and pushes
-  `release/<SemVer>` from `main`.
+  `pnpm release:tag -- --version <SemVer>`, which creates and pushes an annotated tag `v<SemVer>` from local `main`.
 
 ## Work Item Delivery Workflow
 
@@ -480,33 +479,27 @@ Rules:
 - After confirmed production release, move the issue to `status:done` and close
   it.
 
-## Release Branch Workflow
+## Tag-Based Release Workflow
 
-Release candidates use persistent branches, not tags.
+Release candidates use immutable annotated tags, not persistent release branches.
 
 Flow:
 
 ```text
-main -> release/<SemVer> -> run release gates -> build and deploy Docker image from release branch -> confirm production release
+main -> annotated tag v<SemVer> -> run release gates on tagged commit -> build and deploy from tag SHA -> confirm production release
 ```
 
 Rules:
 
-- Create release branches from `main` only.
-- Branch format is exactly `release/<SemVer>`, for example `release/1.4.0`.
-- Start a release branch with:
-  `pnpm release:branch -- --version 1.4.0`
-- The command creates the branch locally, switches to it, pushes it to `origin`,
-  and sets upstream tracking.
-- Release branches are kept after release and serve as the Docker build branch
-  and release record.
-- Publish every production release in GitHub Releases.
-- Create a release tag from the release branch using `v<SemVer>`, for example
-  `v1.4.0`, before publishing the GitHub Release entry.
-- GitHub Releases use the tag as the release anchor, while build and deploy
-  operations still run from the persistent `release/<SemVer>` branch.
-- Release evidence should reference the release branch name plus the build or
-  deploy record.
+- Create release tags from local `main` only.
+- Tag format is exactly `v<SemVer>`, for example `v1.4.0`.
+- Start a release tag with:
+  `pnpm release:tag -- --version 1.4.0`
+- The command creates and pushes an annotated tag and prints the tagged commit SHA.
+- Deploy/build operations must use that tagged commit SHA.
+- Release evidence must include tag name, commit SHA, CI workflow run, and deploy/build record.
+- GitHub Release entries are intentionally not used in this process version.
+- Rollback uses the previously validated release tag.
 - Only after confirmed production release should related issues move from
   `status:released` to `status:done`.
 
@@ -589,7 +582,7 @@ Automation:
 - `pnpm github:issue:new -- --type <feat|fix|ref> --scopes <scope1,scope2> --title "..."`
 - `pnpm github:issue:status -- --issue 123 --status <new|triage|discovery|planned|in_progress|in_review|released|done|cancelled>`
 - `pnpm github:issues:migrate-legacy`
-- `pnpm release:branch -- --version <SemVer>`
+- `pnpm release:tag -- --version <SemVer>`
 
 See `docs/github-issues-workflow.md` for the full workflow, labels, and
 migration notes.

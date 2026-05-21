@@ -40,9 +40,9 @@
     "github:issue:new": "node scripts/github/create-issue.mjs",
     "github:issue:status": "node scripts/github/set-issue-status.mjs",
     "github:issues:migrate-legacy": "node scripts/github/migrate-legacy-open-items.mjs",
-    "release:branch": "node scripts/release/create-release-branch.mjs",
     "prisma:generate": "prisma generate",
-    "prisma:validate": "prisma validate"
+    "prisma:validate": "prisma validate",
+    "release:tag": "node scripts/release/create-release-tag.mjs"
   },
   "dependencies": {
     "@nuxt/ui": "latest",

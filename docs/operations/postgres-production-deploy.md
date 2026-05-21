@@ -10,14 +10,13 @@
 
 1. Confirm backup currency for target database.
 2. Run migration plan review for pending SQL files in `db/migrations`.
-3. Create or confirm the release branch from `main`:
-   - `pnpm release:branch -- --version <SemVer>`
-   - Expected branch format: `release/<SemVer>`
-4. Create the GitHub Release anchor from that branch:
-   - `git tag v<SemVer> release/<SemVer>`
-   - `git push origin v<SemVer>`
-   - `gh release create v<SemVer> --target release/<SemVer> --generate-notes`
-5. Validate release branch quality gates:
+3. Create and push an annotated release tag from local `main`:
+   - `pnpm release:tag -- --version <SemVer>`
+   - Expected tag format: `v<SemVer>`
+4. Validate tag quality gates (GitHub Actions):
+   - workflow: `CI` jobs `verify`, `postgres`, `e2e` for `main`
+   - workflow: `Release Tag Verification` jobs `validate-tag`, `verify`, `postgres`, `e2e`, `release-evidence` for `v<SemVer>`
+5. Validate local quality gates when needed:
    - `pnpm lint`
    - `pnpm typecheck`
    - `pnpm test:unit`
@@ -30,7 +29,7 @@
 
 ## Deploy sequence
 
-1. Build and deploy from the release branch `release/<SemVer>`.
+1. Build and deploy from the tagged commit SHA referenced by `v<SemVer>`.
 2. Apply migrations against target Postgres:
    - `JOBFLOW_DATABASE_URL=postgres://... pnpm db:migrate`
 3. Deploy application runtime.
@@ -47,7 +46,7 @@ For self-hosted production-like runtime (`docker-compose.prod.yml`):
    - `export JOBFLOW_PROD_DB_USER=...`
    - `export JOBFLOW_PROD_DB_PASSWORD=...`
    - `export JOBFLOW_PROD_DB_NAME=...`
-1. Check out the release branch `release/<SemVer>`.
+1. Check out the release tag `v<SemVer>` (detached HEAD on tagged commit SHA).
 2. Build application image:
    - `docker compose -f docker-compose.prod.yml build`
 3. Start Postgres:
@@ -63,7 +62,7 @@ For self-hosted production-like runtime (`docker-compose.prod.yml`):
 Important:
 
 - Keep `JOBFLOW_PERSISTENCE_DRIVER=postgres`.
-- Build Docker images from the release branch, not from the GitHub Release tag.
+- Build Docker images from the validated commit SHA behind `v<SemVer>`.
 - `docker-compose.prod.yml` keeps Postgres internal to the compose network
   (no host port exposure by default).
 - `migrate` is intentionally separate from app startup to keep deploy control explicit.

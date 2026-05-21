@@ -68,10 +68,10 @@ bank files and `docs/workitems/` remain read-only historical context.
    - Release / DevOps Agent joins only for CI, deploy preview, production deploy,
      release checklist, or rollback planning.
    - The Lead merges reports and gives a go/no-go recommendation.
-   - Release candidates are created from `main` as persistent branches named
-     `release/<SemVer>`.
+   - Release candidates are created from `main` as annotated tags named
+     `v<SemVer>`.
    - Start a release candidate with
-     `pnpm release:branch -- --version <SemVer>`.
+     `pnpm release:tag -- --version <SemVer>`.
    - The default implementation sequence is:
      development-linked branch -> implementation -> verification -> commit -> PR
      -> squash merge to `main` -> move issue to `status:released` -> switch back
@@ -79,8 +79,8 @@ bank files and `docs/workitems/` remain read-only historical context.
    - Merge policy to `main` is squash merge.
    - Codex does not stop at PR handoff unless the Product Owner explicitly asks
      to pause before merge.
-   - Build and deploy Docker images from the release branch, not from a tag.
-   - Keep the release branch as the release record after deployment.
+   - Build and deploy from the commit SHA behind the validated release tag.
+   - Release record is tag + commit SHA + CI run + deploy/build evidence.
    - After confirmed production release, Codex moves the issue to `status:done`
      and closes it.
    - Work item status moves to `done` only after confirmed production

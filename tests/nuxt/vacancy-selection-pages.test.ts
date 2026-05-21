@@ -26,7 +26,7 @@ vi.mock('~/composables/useJobflowSnapshot', () => ({
   }),
 }))
 
-const VacancySelectFieldStub = defineComponent({
+const _VacancySelectFieldStub = defineComponent({
   props: {
     emptySearchMessage: { type: String, required: true },
     label: { type: String, required: true },
