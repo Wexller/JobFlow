@@ -16,15 +16,14 @@
     </div>
 
     <template v-else>
-      <label class="space-y-1 text-sm">
-        <span class="font-medium">{{ $t('interviewsPage.selectVacancy') }}</span>
-        <select v-model="selectedVacancyId" class="h-10 w-full rounded-md border border-default bg-default px-3 text-sm outline-none focus:border-primary">
-          <option value="">{{ $t('interviewsPage.noVacancy') }}</option>
-          <option v-for="vacancy in store.vacancies" :key="vacancy.id" :value="vacancy.id">
-            {{ vacancy.company }} · {{ vacancy.role }}
-          </option>
-        </select>
-      </label>
+      <VacancySelectField
+        v-model="selectedVacancyId"
+        :empty-search-message="$t('interviewsPage.search.empty')"
+        :label="$t('interviewsPage.selectVacancy')"
+        :no-vacancy-label="$t('interviewsPage.noVacancy')"
+        :search-placeholder="$t('interviewsPage.search.placeholder')"
+        :vacancies="store.vacancies"
+      />
 
       <HomeInterviewForm
         :interview="selectedInterview"
